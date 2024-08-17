@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    volumes:
+      - ./volumes:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  be_dev:
+    build:
+      context: ../../
+      dockerfile: ./build/docker/Dockerfile
+      target: BE_DEV
+    container_name: be_dev
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./.env
+    volumes:
+      - ../../app/backend:/app
+      - ../../app/backend/node_modules:/app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+
+  be_prod:
+    build:
+      context: ../../
+      dockerfile: ./build/docker/Dockerfile
+      target: BE_PROD
+    container_name: be_prod
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 5000:5000
+    command: npm run start
+
+  fe_dev:
+    build:
+      context: ../../
+      dockerfile: ./build/docker/Dockerfile
+      target: FE_DEV
+    volumes:
+      - ../../app/frontend:/app
+    command: npm run start
+    ports:
+      - 3000:3000
+
+  fe_prod:
+    build:
+      context: ../../
+      dockerfile: ./build/docker/Dockerfile
+      target: FE_PROD
+    ports:
+      - 8080:80
