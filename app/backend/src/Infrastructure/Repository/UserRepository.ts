@@ -101,4 +101,25 @@ export class UserRepository implements IUserRepository {
   async deleteUserByEmail(email: string): Promise<void> {
     return;
   }
+
+  async getUserByUniqueIdentity(uniqueIdentity: string): Promise<User | null> {
+    const sql = 'SELECT * FROM users WHERE username=? OR email=?';
+    const [result, fields]: [result: any[], fields: any] =
+      await this.dbConnection.query(sql, [uniqueIdentity, uniqueIdentity]);
+    if (!result.length) {
+      return null;
+    }
+    return new User(
+      new UserId(result[0].id),
+      result[0].username,
+      result[0].email,
+      result[0].password,
+      new Role(
+        result[0].role,
+        new RoleType(result[0].role === '1' ? 'admin' : 'user')
+      ),
+      result[0].is_verified,
+      result[0].created_at
+    );
+  }
 }

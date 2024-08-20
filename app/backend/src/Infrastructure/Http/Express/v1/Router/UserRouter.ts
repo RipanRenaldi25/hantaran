@@ -13,6 +13,7 @@ import { UserService } from '../../../../Service/UserService';
 import { UserRepository } from '../../../../Repository/UserRepository';
 import bcrypt from 'bcryptjs';
 import { VerifyUsecase } from '../../../../../Application/Usecase/User/VerifyUsecase';
+import { LoginUsecase } from '../../../../../Application/Usecase/User/LoginUsecase';
 
 // REPOSITORY
 const userRepository = new UserRepository(
@@ -41,10 +42,22 @@ const verifyUsecase = new VerifyUsecase(
   ConfigService.getInstance()
 );
 
-const userController = new UserController(registerUsecase, verifyUsecase);
+const loginUsecase = new LoginUsecase(
+  userRepository,
+  passwordHashService,
+  jwtService,
+  ConfigService.getInstance()
+);
+
+const userController = new UserController(
+  registerUsecase,
+  verifyUsecase,
+  loginUsecase
+);
 
 const userRouter = express.Router();
 userRouter.get('/', (req, res) => res.send('ok'));
 userRouter.post('/register', (req, res) => userController.register(req, res));
 userRouter.get('/verify', (req, res) => userController.verify(req, res));
+userRouter.post('/login', (req, res) => userController.login(req, res));
 export default userRouter;

@@ -9,4 +9,5 @@ export interface IUserRepository {
   checkAvailableEmail(email: string): Promise<boolean>;
   checkAvailableUsername(username: string): Promise<boolean>;
   deleteUserByEmail(email: string): Promise<void>;
+  getUserByUniqueIdentity(uniqueIdentity: string): Promise<User | null>;
 }
