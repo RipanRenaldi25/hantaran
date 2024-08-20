@@ -1,0 +1,104 @@
+HANTARAN APPLICATION
+
+User:
+1. id
+2. username
+3. email
+4. password
+5. createdAt
+6. updatedAt
+7. role         : Role
+8. isVerified boolean
+
+Role:
+1. id
+2. name
+
+Profile:
+1. id
+2. userId
+3. fullName
+4. phoneNumber
+5. address      : Address
+6. createdAt
+7. updatedAt
+
+Address:
+1. id
+2. city
+3. postalCode
+4. street
+5. details
+
+Order:
+1. id
+2. userId
+3. amount
+4. status
+5. created_at
+6. updated_at
+7. paymentMethod : Payment
+
+ "enabled_payments": ["credit_card", "mandiri_clickpay", "cimb_clicks","bca_klikbca", "bca_klikpay", "bri_epay", "echannel","mandiri_ecash", "permata_va", "bca_va", "bni_va", "other_va", "gopay", "indomaret", "alfamart", "danamon_online", "akulaku", "other_qris],
+
+Payment << bank_transfer, echannel, qris (airpay shopee, gopay)
+1. id
+2. payment_type
+3. transaction_details: {
+    gross_amount: number
+    order_id: anything
+}
+eChannel extends Payment
+1. bil_info1 Label 1. Mandiri allows only 10 characters. Exceeding characters will be truncated.
+2. bill_info2 Value for Label 1. Mandiri allows only 30 characters. Exceeding characters will be truncated.
+
+Qris extends Payment
+1. acquirer: << gopay / airpay shopee
+
+Bank
+1. name
+2. va_number
+
+BankTransfer extends Payment
+1. id
+2. payment_type = bank_transfer
+3. bank_transfer: Bank
+4. options: {
+    item_details: Item[],
+    customer_details: {
+        email: '',
+        first_name: '',
+        last_name: '',
+        phone: '',
+        address: '',
+        shipping_address: {
+            first_name,
+            last_name, 
+            phone,
+            address,
+            city,
+            postal_code
+        }
+    },
+    "custom_expiry": {
+        "order_time": "2016-12-07 11:54:12 +0700",
+        "expiry_duration": 60,
+        "unit": "minute" << e second, minute, hour, or day Note: Default value is minute.
+    }
+} 
+
+Item
+1. id
+2. price
+3. quantity
+4. name
+
+
+Transaction
+
+
+PaymentMethod:
+1. id
+2. paymentType
+3. payload
+
