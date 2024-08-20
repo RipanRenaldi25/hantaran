@@ -1,5 +1,5 @@
 export { IConfigService } from './IConfigService';
 export { IEmailConfig, IEmailService, ISendEmailOption } from './IEmailService';
-export { IUserService } from './UserService';
-export { IJwtOption, IJwtService } from './JwtService';
+export { IUserService } from './IUserService';
+export { IJwtOption, IJwtService } from './IJwtService';
 export { IPasswordHashService } from './IPasswordHashService';

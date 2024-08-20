@@ -8,7 +8,7 @@ export class User {
   private email: string;
   private password: string;
   private role: Role;
-  private readonly isVerified: boolean;
+  private isVerified: boolean;
   private readonly createdAt: string = new Date().toISOString();
   private updatedAt: string = new Date().toISOString();
 
@@ -34,7 +34,7 @@ export class User {
   }
 
   setIsVerified(isVerified: boolean) {
-    this.setIsVerified(isVerified);
+    this.isVerified = isVerified;
   }
 
   mapToDB() {

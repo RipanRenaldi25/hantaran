@@ -11,5 +11,13 @@ export class UserService implements IUserService {
     const userId = await this.userRepository.create(user);
     return userId;
   }
+  async getUserByEmail(email: string): Promise<User> {
+    return {} as User;
+  }
+
+  async getUserByUsername(username: string): Promise<User> {
+    return {} as User;
+  }
+
   async verifyUser(userId: UserId): Promise<void> {}
 }
