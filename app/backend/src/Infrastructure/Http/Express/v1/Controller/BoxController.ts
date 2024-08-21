@@ -6,11 +6,13 @@ import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteB
 import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
 import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
 import {
+  validateConnectBoxPayload,
   validateCreateBoxPayload,
   validateUpdateBoxPayload,
 } from '../../../../Helper/Validator/Box/BoxValidator';
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
+import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -18,19 +20,22 @@ export class BoxController {
   private readonly updateBoxUsecase: UpdateBoxUsecase;
   private readonly getBoxesUsecase: GetBoxesUsecase;
   private readonly getBoxByIdUsecase: GetBoxByIdUsecase;
+  private readonly connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase;
 
   constructor(
     createBoxUsecase: CreateBoxUsecase,
     deleteBoxUsecase: DeleteBoxUsecase,
     updateBoxUsecase: UpdateBoxUsecase,
     getBoxesUsecase: GetBoxesUsecase,
-    getBoxByIdUsecase: GetBoxByIdUsecase
+    getBoxByIdUsecase: GetBoxByIdUsecase,
+    connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
     this.updateBoxUsecase = updateBoxUsecase;
     this.getBoxesUsecase = getBoxesUsecase;
     this.getBoxByIdUsecase = getBoxByIdUsecase;
+    this.connectBoxUsecase = connectBoxUsecase;
   }
 
   async createBox(req: Request, res: Response) {
@@ -174,6 +179,34 @@ export class BoxController {
           price: box.getPrice().getValue(),
           imageUrl: box.getBoxImageUrl(),
         },
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+  async connectBox(req: Request, res: Response) {
+    try {
+      validateConnectBoxPayload(req.body);
+      const { boxId, colorId, decorationId } = req.body;
+      const box = await this.connectBoxUsecase.execute({
+        boxId,
+        colorId,
+        decorationId,
+      });
+      res.status(201).json({
+        status: 'Success',
+        message: 'Boxes connected',
+        data: box,
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

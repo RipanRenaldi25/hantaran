@@ -44,7 +44,6 @@ export class BoxRepository implements IBoxRepository {
       const query = 'SELECT * FROM boxes WHERE id = ?';
       const [rows, fields]: [rows: any[], fields: any[]] =
         await this.dbConnection.query(query, [id.toString()]);
-      console.log({ rows });
       return new Box(new BoxId(rows[0].id), rows[0].name, rows[0].image_url);
     } catch (err) {
       return null;
@@ -106,5 +105,29 @@ export class BoxRepository implements IBoxRepository {
     const [colors]: [rows: any[], fields: any[]] =
       await this.dbConnection.query(query, [names]);
     return colors.map((color) => new Color(new ColorId(color.id), color.name));
+  }
+
+  async connectBoxWithDecorationAndColor(box: Box): Promise<Box | undefined> {
+    try {
+      await this.dbConnection.query('START TRANSACTION');
+      const connectBoxWithDecorationQuery =
+        'INSERT INTO box_decorations (box_id, decoration_id) VALUES (?, ?)';
+      const connectBoxWithColorQuery =
+        'INSERT INTO box_colors (box_id, color_id) VALUES (?, ?)';
+      await this.dbConnection.query(connectBoxWithColorQuery, [
+        box.getId().toString(),
+        box.getcolor()?.getId().toString(),
+      ]);
+      await this.dbConnection.query(connectBoxWithDecorationQuery, [
+        box.getId().toString(),
+        box.getdecoration()?.getId().toString(),
+      ]);
+      await this.dbConnection.query('COMMIT');
+      return box;
+    } catch (err: any) {
+      console.log(`ROLLBACK ${err.message}`);
+      await this.dbConnection.query('ROLLBACK');
+      throw new InvariantError(err.message);
+    }
   }
 }

@@ -30,4 +30,18 @@ export class ColorRepository implements IColorRepository {
       return null;
     }
   }
+  async getColorById(id: ColorId): Promise<Color | null> {
+    try {
+      const query = `SELECT * FROM colors WHERE id = ?`;
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        id.toString(),
+      ]);
+      if (!result.length) {
+        return null;
+      }
+      return new Color(new ColorId(result[0].id), result[0].name);
+    } catch (err: any) {
+      return null;
+    }
+  }
 }

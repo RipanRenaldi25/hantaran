@@ -13,6 +13,5 @@ export interface IBoxRepository {
     boxes: Box[];
     page: number;
   }>;
-  // getBoxByDecoration(decoration: string): Promise<Box[]>;
-  // getBoxByColor(color: string): Promise<Box[]>;
+  connectBoxWithDecorationAndColor(box: Box): Promise<Box | undefined>;
 }
