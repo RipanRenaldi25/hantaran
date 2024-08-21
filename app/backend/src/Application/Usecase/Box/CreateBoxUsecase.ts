@@ -1,5 +1,6 @@
 import { Box, BoxId } from '../../../Domain/Entity';
 import { IBoxRepository } from '../../../Domain/Repository/IBoxRepository';
+import { Price } from '../../../Domain/ValueObject/Price';
 
 export class CreateBoxUsecase {
   private readonly boxRepository: IBoxRepository;
@@ -9,10 +10,11 @@ export class CreateBoxUsecase {
     this.idGenerator = idGenerator;
   }
 
-  async execute(payload: any) {
+  async execute(payload: { name: string; imageUrl: string; price: number }) {
     const { name, imageUrl } = payload;
     const boxId = new BoxId(this.idGenerator());
-    const box = new Box(boxId, name, imageUrl);
+    const boxPrice = new Price(payload.price);
+    const box = new Box(boxId, name, imageUrl, boxPrice);
     const boxCreatedId = await this.boxRepository.createBox(box);
 
     return boxCreatedId;

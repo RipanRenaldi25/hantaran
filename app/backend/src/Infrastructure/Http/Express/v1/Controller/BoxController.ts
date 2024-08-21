@@ -5,6 +5,11 @@ import { NotFoundError } from '../../../../../Domain/Exception/NotFoundError';
 import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
 import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
 import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
+import {
+  validateCreateBoxPayload,
+  validateUpdateBoxPayload,
+} from '../../../../Helper/Validator/Box/BoxValidator';
+import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -26,6 +31,7 @@ export class BoxController {
 
   async createBox(req: Request, res: Response) {
     try {
+      validateCreateBoxPayload(req.body);
       if (!req.file) {
         throw new NotFoundError('File not found');
       }
@@ -36,6 +42,7 @@ export class BoxController {
       const payload = {
         name: req.body.name,
         imageUrl: req.file.filename,
+        price: req.body.price,
       };
       const boxId = await this.createBoxUsecase.execute(payload);
       res
@@ -55,9 +62,13 @@ export class BoxController {
       }
     }
   }
+
   async deleteBox(req: Request, res: Response) {
     try {
       const { boxId } = req.params;
+      if (!boxId) {
+        throw new InvariantError('Box id is required in parameter');
+      }
       const deletedBoxId = await this.deleteBoxUsecase.execute(boxId);
       res.status(201).json({
         Status: 'Success',
@@ -82,11 +93,17 @@ export class BoxController {
   async updateBox(req: Request, res: Response) {
     try {
       const { boxId } = req.params;
-      const { name, imageUrl } = req.body;
+      if (!boxId) {
+        throw new InvariantError('Box id is required in parameter');
+      }
+      validateUpdateBoxPayload(req.body);
+      const { name, imageUrl, price } = req.body;
+
       const updatedBox = await this.updateBoxUsecase.execute({
         boxId,
         name,
         imageUrl,
+        price,
       });
       res.status(201).json({
         Status: 'Success',
@@ -95,6 +112,7 @@ export class BoxController {
           id: updatedBox.getId().toString(),
           name: updatedBox.getName(),
           imageUrl: updatedBox.getBoxImageUrl(),
+          price: updatedBox.getPrice().getValue(),
         },
       });
     } catch (err: any) {

@@ -58,8 +58,10 @@ export class SeedService {
                 id VARCHAR(255) PRIMARY KEY,
                 name VARCHAR(255),
                 image_url VARCHAR(255),
+                price BIGINT DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT boxes_price_check CHECK(price > 0)
             )
         `;
     await this.dbConnection.query(query);

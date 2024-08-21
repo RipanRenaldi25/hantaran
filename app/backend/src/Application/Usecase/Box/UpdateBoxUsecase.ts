@@ -1,6 +1,7 @@
 import { Box, BoxId } from '../../../Domain/Entity';
 import { NotFoundError } from '../../../Domain/Exception/NotFoundError';
 import { IBoxRepository } from '../../../Domain/Repository/IBoxRepository';
+import { Price } from '../../../Domain/ValueObject/Price';
 
 export class UpdateBoxUsecase {
   private readonly boxRepository: IBoxRepository;
@@ -9,13 +10,21 @@ export class UpdateBoxUsecase {
     this.boxRepository = boxRepository;
   }
 
-  async execute(payload: any) {
+  async execute(payload: {
+    name: string;
+    imageUrl: string;
+    boxId: string;
+    price: number;
+  }) {
     const box = await this.boxRepository.getBoxById(new BoxId(payload.boxId));
     if (!box) {
       throw new NotFoundError('Box not found');
     }
     box.setName(payload.name);
-    box.setBoxImageUrl(payload.imageUrl);
+    if (payload.imageUrl) {
+      box.setBoxImageUrl(payload.imageUrl);
+    }
+    box.setPrice(new Price(payload.price));
     await this.boxRepository.updateBox(box.getId(), box);
     return box;
   }

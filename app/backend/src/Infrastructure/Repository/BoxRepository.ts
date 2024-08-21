@@ -11,6 +11,7 @@ import { IBoxRepository } from '../../Domain/Repository/IBoxRepository';
 import { InvariantError } from '../../Domain/Exception/InvariantError';
 import { IColorRepository } from '../../Domain/Repository/IColorRepository';
 import { IDecorationRepository } from '../../Domain/Repository/IDecorationRepository';
+import { Price } from '../../Domain/ValueObject/Price';
 
 export class BoxRepository implements IBoxRepository {
   private readonly dbConnection: Pool;
@@ -50,10 +51,12 @@ export class BoxRepository implements IBoxRepository {
     }
   }
   async updateBox(id: BoxId, box: Box): Promise<Box> {
-    const query = 'UPDATE boxes SET name = ?, image_url = ? WHERE id = ?';
+    const query =
+      'UPDATE boxes SET name = ?, image_url = ?, price = ? WHERE id = ?';
     await this.dbConnection.query(query, [
       box.getName(),
       box.getBoxImageUrl(),
+      box.getPrice().getValue(),
       id.toString(),
     ]);
     return box;
@@ -63,11 +66,7 @@ export class BoxRepository implements IBoxRepository {
     const query = `SELECT * FROM boxes LIMIT ? OFFSET ?`;
     const [resultBox, fieldsBox]: [rows: any[], fields: any[]] =
       await this.dbConnection.query(query, [size, size * (page - 1)]);
-    const boxes = resultBox.map(
-      (box) => new Box(new BoxId(box.id), box.name, box.image_url)
-    );
-
-    return boxes;
+    return resultBox;
   }
 
   async getBoxes(

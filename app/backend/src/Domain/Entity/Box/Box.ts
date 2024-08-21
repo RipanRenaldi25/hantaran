@@ -1,3 +1,4 @@
+import { Price } from '../../ValueObject/Price';
 import { Color } from '../Color/Color';
 import { DecorationId } from '../Decoration';
 import { Decoration } from '../Decoration/Decoration';
@@ -9,11 +10,13 @@ export class Box {
   private decoration?: Decoration;
   private color?: Color;
   private boxImageUrl: string;
+  private price: Price;
 
   constructor(
     id: BoxId,
     name: string,
     boxImageUrl: string,
+    price: Price = new Price(0),
     decoration?: Decoration,
     color?: Color
   ) {
@@ -22,6 +25,7 @@ export class Box {
     this.color = color;
     this.name = name;
     this.boxImageUrl = boxImageUrl;
+    this.price = price;
   }
 
   getId() {
@@ -58,5 +62,13 @@ export class Box {
 
   setBoxImageUrl(boxImageUrl: string) {
     this.boxImageUrl = boxImageUrl;
+  }
+
+  getPrice() {
+    return this.price;
+  }
+
+  setPrice(price: Price) {
+    this.price = price;
   }
 }
