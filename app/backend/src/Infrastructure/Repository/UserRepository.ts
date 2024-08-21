@@ -39,7 +39,6 @@ export class UserRepository implements IUserRepository {
       mapDateToDB(new Date().toISOString()),
       email,
     ]);
-    console.log({ result });
   }
   async getUserByEmail(email: string): Promise<User | null> {
     const query = `SELECT * FROM users WHERE email = ?`;
@@ -121,5 +120,34 @@ export class UserRepository implements IUserRepository {
       result[0].is_verified,
       result[0].created_at
     );
+  }
+
+  async changeUserPassword(user: User): Promise<void> {
+    const query = `UPDATE users SET password = ?, updated_at = ? WHERE id = ?`;
+    const [result, fields] = await this.dbConnection.query(query, [
+      user.getPassword(),
+      mapDateToDB(new Date().toISOString()),
+      user.getId().toString(),
+    ]);
+  }
+  async getUserById(id: UserId): Promise<User | null> {
+    try {
+      const query = 'SELECT * FROM users WHERE id = ?';
+
+      const [result, fields]: [result: any[], fields: any] =
+        await this.dbConnection.query(query, [id.toString()]);
+      return new User(
+        id,
+        result[0].username,
+        result[0].email,
+        result[0].password,
+        new Role(
+          new RoleId(result[0].role),
+          new RoleType(result[0].role === '1' ? 'admin' : 'user')
+        )
+      );
+    } catch (err) {
+      return null;
+    }
   }
 }

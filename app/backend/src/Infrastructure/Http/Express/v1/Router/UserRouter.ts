@@ -14,6 +14,8 @@ import { UserRepository } from '../../../../Repository/UserRepository';
 import bcrypt from 'bcryptjs';
 import { VerifyUsecase } from '../../../../../Application/Usecase/User/VerifyUsecase';
 import { LoginUsecase } from '../../../../../Application/Usecase/User/LoginUsecase';
+import { UpdatePasswordUsecase } from '../../../../../Application/Usecase/User/UpdatePasswordUsecase';
+import { AuthMiddleware } from '../Middleware/Auth';
 
 // REPOSITORY
 const userRepository = new UserRepository(
@@ -49,10 +51,23 @@ const loginUsecase = new LoginUsecase(
   ConfigService.getInstance()
 );
 
+const updatePasswordUsecase = new UpdatePasswordUsecase(
+  userRepository,
+  passwordHashService
+);
+
+// CONTROLLER
 const userController = new UserController(
   registerUsecase,
   verifyUsecase,
-  loginUsecase
+  loginUsecase,
+  updatePasswordUsecase
+);
+
+// MIDLEWARE
+const authMiddleware = AuthMiddleware.getInstance(
+  jwtService,
+  ConfigService.getInstance()
 );
 
 const userRouter = express.Router();
@@ -60,4 +75,9 @@ userRouter.get('/', (req, res) => res.send('ok'));
 userRouter.post('/register', (req, res) => userController.register(req, res));
 userRouter.get('/verify', (req, res) => userController.verify(req, res));
 userRouter.post('/login', (req, res) => userController.login(req, res));
+userRouter.post(
+  '/password/',
+  authMiddleware.applyWithRole(['admin', 'user']),
+  (req, res) => userController.changeUserPassword(req, res)
+);
 export default userRouter;
