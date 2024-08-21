@@ -9,7 +9,7 @@ export class Color {
       throw new InvariantError('Color name cannot be empty');
     }
     this.id = id;
-    this.name = name;
+    this.name = name.toLowerCase();
   }
 
   getName() {

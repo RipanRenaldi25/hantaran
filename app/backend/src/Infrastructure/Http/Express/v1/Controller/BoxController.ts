@@ -10,23 +10,27 @@ import {
   validateUpdateBoxPayload,
 } from '../../../../Helper/Validator/Box/BoxValidator';
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
+import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
   private readonly deleteBoxUsecase: DeleteBoxUsecase;
   private readonly updateBoxUsecase: UpdateBoxUsecase;
   private readonly getBoxesUsecase: GetBoxesUsecase;
+  private readonly getBoxByIdUsecase: GetBoxByIdUsecase;
 
   constructor(
     createBoxUsecase: CreateBoxUsecase,
     deleteBoxUsecase: DeleteBoxUsecase,
     updateBoxUsecase: UpdateBoxUsecase,
-    getBoxesUsecase: GetBoxesUsecase
+    getBoxesUsecase: GetBoxesUsecase,
+    getBoxByIdUsecase: GetBoxByIdUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
     this.updateBoxUsecase = updateBoxUsecase;
     this.getBoxesUsecase = getBoxesUsecase;
+    this.getBoxByIdUsecase = getBoxByIdUsecase;
   }
 
   async createBox(req: Request, res: Response) {
@@ -138,6 +142,38 @@ export class BoxController {
         status: 'Success',
         message: 'Boxes retrieved',
         data: boxes,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async getBoxById(req: Request, res: Response) {
+    try {
+      const { boxId } = req.params;
+      if (!boxId) {
+        throw new InvariantError('Box id is required in parameter');
+      }
+      const box = await this.getBoxByIdUsecase.execute(boxId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Boxes retrieved',
+        data: {
+          id: box.getId().toString(),
+          name: box.getName(),
+          price: box.getPrice().getValue(),
+          imageUrl: box.getBoxImageUrl(),
+        },
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

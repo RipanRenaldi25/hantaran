@@ -17,13 +17,17 @@ export class ColorRepository implements IColorRepository {
     return color;
   }
   async getColorByName(name: string): Promise<Color | null> {
-    const query = `SELECT * FROM colors WHERE name = ?`;
-    const [result]: [any[], any[]] = await this.dbConnection.query(query, [
-      name,
-    ]);
-    if (!result.length) {
+    try {
+      const query = `SELECT * FROM colors WHERE name = ?`;
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        name,
+      ]);
+      if (!result.length) {
+        return null;
+      }
+      return new Color(new ColorId(result[0].id), result[0].name);
+    } catch (err: any) {
       return null;
     }
-    return new Color(new ColorId(result[0].id), result[0].name);
   }
 }
