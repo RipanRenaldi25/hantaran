@@ -12,6 +12,7 @@ import { ConfigService } from './Infrastructure/Service/ConfigService';
 import { SeedService } from './Infrastructure/Service/SeedService';
 import path from 'path';
 import colorRouter from './Infrastructure/Http/Express/v1/Router/ColorRouter';
+import decorationRouter from './Infrastructure/Http/Express/v1/Router/DecorationRouter';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -34,6 +35,7 @@ const init = async () => {
   app.use('/users', userRouter);
   app.use('/boxes', boxRouter);
   app.use('/colors', colorRouter);
+  app.use('/decorations', decorationRouter);
 
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(port, () => console.log(`Server started on port ${port}`));

@@ -10,7 +10,7 @@ export class Decoration {
       throw new InvariantError('Decoration name cannot be empty');
     }
     this.id = id;
-    this.name = name;
+    this.name = name.toLowerCase();
   }
 
   getName() {

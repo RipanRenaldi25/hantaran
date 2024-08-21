@@ -8,14 +8,15 @@ export class DecorationRepository implements IDecorationRepository {
     this.dbConnection = dbConnection;
   }
   async getDecorationByName(name: string): Promise<Decoration | null> {
-    const query = 'SELECT * FROM decorations WHERE name = ?';
-    const [result]: [any[], any[]] = await this.dbConnection.query(query, [
-      name,
-    ]);
-    if (!result.length) {
+    try {
+      const query = 'SELECT * FROM decorations WHERE name = ?';
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        name,
+      ]);
+      return new Decoration(new DecorationId(result[0].id), result[0].name);
+    } catch (err) {
       return null;
     }
-    return new Decoration(new DecorationId(result[0].id), result[0].name);
   }
   async create(decoration: Decoration): Promise<Decoration> {
     const query = 'INSERT INTO decorations (id, name) VALUES (?, ?)';
@@ -24,5 +25,17 @@ export class DecorationRepository implements IDecorationRepository {
       decoration.getName(),
     ]);
     return decoration;
+  }
+
+  async getDecorationById(id: DecorationId): Promise<Decoration | null> {
+    try {
+      const query = 'SELECT * FROM decorations WHERE id = ?';
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        id.toString(),
+      ]);
+      return new Decoration(new DecorationId(result[0].id), result[0].name);
+    } catch (err) {
+      return null;
+    }
   }
 }
