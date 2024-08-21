@@ -46,7 +46,7 @@ export class EmailService implements IEmailService {
         subject: subject,
         html: `
         <h1> Please verify your email account by click the link below </h1>
-        <a href="${process.env.API_BASE_URL}/user/verify?token=${payloadDataToSend}">Click here</a>
+        <a href="${process.env.API_BASE_URL}/users/verify?token=${payloadDataToSend}">Click here</a>
     `,
       });
     } catch (err) {

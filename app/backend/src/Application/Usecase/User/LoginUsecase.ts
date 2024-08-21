@@ -44,7 +44,7 @@ export class LoginUsecase {
     const payloadToken = {
       id: user.getId().toString(),
       email: user.getEmail(),
-      role: user.getRole().getId().toString(),
+      role: user.getRole().getName().getRole(),
     };
     const accessToken = this.jwtService.generateToken(
       payloadToken,

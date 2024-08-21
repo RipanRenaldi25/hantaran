@@ -6,8 +6,12 @@ import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { ConfigService } from '../../../../Service/ConfigService';
 import { v4 } from 'uuid';
 import { multerMiddleware } from '../Middleware/Multer';
+import { AuthMiddleware } from '../Middleware/Auth';
+import { JwtService } from '../../../../Service/JwtService';
+import jwt from 'jsonwebtoken';
 
 // MIDDLEWARE
+const jwtService = new JwtService(jwt, ConfigService.getInstance());
 
 // CONNECTION
 const mysqlConnectionInstance = MysqlConnection.getInstance(
@@ -23,13 +27,21 @@ const createBoxUsecase = new CreateBoxUsecase(boxRepository, v4);
 // CONTROLLER
 const boxController = new BoxController(createBoxUsecase);
 
+const authMiddleware = AuthMiddleware.getInstance(
+  jwtService,
+  ConfigService.getInstance()
+);
+
 const boxRouter = express.Router();
 
 // boxRouter.post('/', multerMiddleware.single('image'), (req, res) =>
 //   boxController.createBox(req, res)
 // );
-boxRouter.post('/', multerMiddleware.single('image'), (req, res) =>
-  boxController.createBox(req, res)
+boxRouter.post(
+  '/',
+  authMiddleware.applyWithRole(['admin']),
+  multerMiddleware.single('image'),
+  (req, res) => boxController.createBox(req, res)
 );
 
 export default boxRouter;
