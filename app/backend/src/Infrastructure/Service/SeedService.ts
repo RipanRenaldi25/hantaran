@@ -12,6 +12,16 @@ export class SeedService {
     console.log('Role table created successfully');
     await this.createUserTable();
     console.log('Users table created successfully');
+    await this.createBoxTable();
+    console.log('Table boxes created successfully');
+    await this.createDecorationTable();
+    console.log('Table decorations created successfully');
+    await this.createColorTable();
+    console.log('Table colors created successfully');
+    await this.createBoxDecorationTable();
+    console.log('Table box_decorations created successfully');
+    await this.createBoxColorTable();
+    console.log('Table box_colors created successfully');
   }
 
   async createRoleTable() {
@@ -40,5 +50,67 @@ export class SeedService {
             )
         `;
     await this.dbConnection.query(query);
+  }
+
+  async createBoxTable() {
+    const query = `
+            CREATE TABLE IF NOT EXISTS boxes(
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                image_url VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `;
+    await this.dbConnection.query(query);
+  }
+
+  async createDecorationTable() {
+    const query = `
+            CREATE TABLE IF NOT EXISTS decorations(
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `;
+    await this.dbConnection.query(query);
+  }
+
+  async createColorTable() {
+    const query = `
+            CREATE TABLE IF NOT EXISTS colors(
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `;
+    await this.dbConnection.query(query);
+  }
+
+  async createBoxDecorationTable() {
+    const query = `
+            CREATE TABLE IF NOT EXISTS box_decorations(
+                id VARCHAR(255) PRIMARY KEY,
+                box_id VARCHAR(255),
+                decoration_id VARCHAR(255),
+                CONSTRAINT box_decorations_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
+                CONSTRAINT box_decorations_decoration_id_fk FOREIGN KEY(decoration_id) REFERENCES decorations(id)
+            )
+      `;
+    await this.dbConnection.query(query);
+  }
+
+  async createBoxColorTable() {
+    const query = `
+      CREATE TABLE IF NOT EXISTS box_colors(
+        id VARCHAR(255) PRIMARY KEY,
+        box_id VARCHAR(255),
+        color_id VARCHAR(255),
+        CONSTRAINT box_colors_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
+        CONSTRAINT box_colors_color_id_fk FOREIGN KEY(color_id) REFERENCES colors(id)
+      )
+    `;
   }
 }

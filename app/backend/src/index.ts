@@ -1,13 +1,16 @@
 import swaggerUi from 'swagger-ui-express';
 import express from 'express';
 import dotenv from 'dotenv';
-import userRouter from './Infrastructure/Http/Express/v1/Router/UserRouter';
 dotenv.config();
+
+// ROUTER
+import userRouter from './Infrastructure/Http/Express/v1/Router/UserRouter';
+import boxRouter from './Infrastructure/Http/Express/v1/Router/BoxRouter';
 
 import { MysqlConnection } from './Infrastructure/DB/MysqlConnection';
 import { ConfigService } from './Infrastructure/Service/ConfigService';
 import { SeedService } from './Infrastructure/Service/SeedService';
-import { createPool } from 'mysql2/promise';
+import path from 'path';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -21,13 +24,14 @@ const init = async () => {
       : require('../swagger.json');
   const port =
     process.env.NODE_ENV === 'production' ? 5000 : +process.env.PORT!;
-  console.log({ port });
   await seedService.initDB();
 
   const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-  app.use('/user', userRouter);
+  app.use('/public', express.static('uploads'));
+  app.use('/users', userRouter);
+  app.use('/boxes', boxRouter);
 
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(port, () => console.log(`Server started on port ${port}`));

@@ -30,6 +30,28 @@ Address:
 4. street
 5. details
 
+Boxes:
+1. id
+2. name
+3. decorations: Decoration[]
+4. Colors: Color[]
+
+Color:
+1. id
+2. name
+
+Decoration:
+1. id
+2. name
+
+BoxDecoration:
+1. boxId
+2. decorationId
+
+BoxColor:
+1. boxId
+2. colorId
+
 Order:
 1. id
 2. userId
