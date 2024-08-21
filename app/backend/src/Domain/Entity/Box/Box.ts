@@ -1,24 +1,25 @@
 import { Color } from '../Color/Color';
+import { DecorationId } from '../Decoration';
 import { Decoration } from '../Decoration/Decoration';
 import { BoxId } from './BoxId';
 
 export class Box {
   private id: BoxId;
   private name: string;
-  private decorations: Decoration[] = [];
-  private colors: Color[] = [];
+  private decoration?: Decoration;
+  private color?: Color;
   private boxImageUrl: string;
 
   constructor(
     id: BoxId,
     name: string,
-    decorations: Decoration[],
-    colors: Color[],
-    boxImageUrl: string
+    boxImageUrl: string,
+    decoration?: Decoration,
+    color?: Color
   ) {
     this.id = id;
-    this.decorations = decorations;
-    this.colors = colors;
+    this.decoration = decoration;
+    this.color = color;
     this.name = name;
     this.boxImageUrl = boxImageUrl;
   }
@@ -31,20 +32,20 @@ export class Box {
     return this.name;
   }
 
-  getDecorations() {
-    return this.decorations;
+  getdecoration() {
+    return this.decoration;
   }
 
-  getColors() {
-    return this.colors;
+  getcolor() {
+    return this.color;
   }
 
-  addDecoration(decoration: Decoration) {
-    this.decorations.push(decoration);
+  setDecoration(decoration: Decoration) {
+    this.decoration = decoration;
   }
 
-  addColor(color: Color) {
-    this.colors.push(color);
+  setColor(color: Color) {
+    this.color = color;
   }
 
   setName(name: string) {

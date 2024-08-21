@@ -1,11 +1,29 @@
 import { Pool } from 'mysql2/promise';
-import { Box, BoxId } from '../../Domain/Entity';
+import {
+  Box,
+  BoxId,
+  Color,
+  ColorId,
+  Decoration,
+  DecorationId,
+} from '../../Domain/Entity';
 import { IBoxRepository } from '../../Domain/Repository/IBoxRepository';
+import { InvariantError } from '../../Domain/Exception/InvariantError';
+import { IColorRepository } from '../../Domain/Repository/IColorRepository';
+import { IDecorationRepository } from '../../Domain/Repository/IDecorationRepository';
 
 export class BoxRepository implements IBoxRepository {
   private readonly dbConnection: Pool;
-  constructor(dbConnection: Pool) {
+  private readonly colorRepository: IColorRepository;
+  private readonly decorationRepository: IDecorationRepository;
+  constructor(
+    dbConnection: Pool,
+    colorRepository: IColorRepository,
+    decorationRepository: IDecorationRepository
+  ) {
     this.dbConnection = dbConnection;
+    this.colorRepository = colorRepository;
+    this.decorationRepository = decorationRepository;
   }
   async createBox(box: Box): Promise<BoxId> {
     const query = 'INSERT INTO boxes (id, name, image_url) VALUES (?, ?, ?)';
@@ -21,16 +39,15 @@ export class BoxRepository implements IBoxRepository {
     await this.dbConnection.query(query, [id.toString()]);
   }
   async getBoxById(id: BoxId): Promise<Box | null> {
-    const query = 'SELECT * FROM boxes WHERE id = ?';
-    const [rows, fields]: [rows: any[], fields: any[]] =
-      await this.dbConnection.query(query, [id.toString()]);
-    return new Box(
-      new BoxId(rows[0].id),
-      rows[0].name,
-      [],
-      [],
-      rows[0].image_url
-    );
+    try {
+      const query = 'SELECT * FROM boxes WHERE id = ?';
+      const [rows, fields]: [rows: any[], fields: any[]] =
+        await this.dbConnection.query(query, [id.toString()]);
+      console.log({ rows });
+      return new Box(new BoxId(rows[0].id), rows[0].name, rows[0].image_url);
+    } catch (err) {
+      return null;
+    }
   }
   async updateBox(id: BoxId, box: Box): Promise<Box> {
     const query = 'UPDATE boxes SET name = ?, image_url = ? WHERE id = ?';
@@ -47,7 +64,7 @@ export class BoxRepository implements IBoxRepository {
     const [resultBox, fieldsBox]: [rows: any[], fields: any[]] =
       await this.dbConnection.query(query, [size, size * (page - 1)]);
     const boxes = resultBox.map(
-      (box) => new Box(new BoxId(box.id), box.name, [], [], box.image_url)
+      (box) => new Box(new BoxId(box.id), box.name, box.image_url)
     );
 
     return boxes;
@@ -72,5 +89,23 @@ export class BoxRepository implements IBoxRepository {
       total,
       page: page || 1,
     };
+  }
+
+  async getListDecorationByName(names: string[]): Promise<Decoration[]> {
+    const query = `SELECT * FROM decorations WHERE name IN (?)`;
+
+    const [decorations]: [rows: any[], fields: any[]] =
+      await this.dbConnection.query(query, [names]);
+    return decorations.map(
+      (decoration) =>
+        new Decoration(new DecorationId(decoration.id), decoration.name)
+    );
+  }
+
+  async getListColorByName(names: string[]): Promise<Color[]> {
+    const query = `SELECT * FROM colors WHERE name IN (?)`;
+    const [colors]: [rows: any[], fields: any[]] =
+      await this.dbConnection.query(query, [names]);
+    return colors.map((color) => new Color(new ColorId(color.id), color.name));
   }
 }

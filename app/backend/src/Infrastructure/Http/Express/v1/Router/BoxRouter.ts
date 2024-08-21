@@ -12,6 +12,8 @@ import jwt from 'jsonwebtoken';
 import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
 import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
 import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
+import { ColorRepository } from '../../../../Repository/ColorRepository';
+import { DecorationRepository } from '../../../../Repository/DecorationRepository';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -22,7 +24,15 @@ const mysqlConnectionInstance = MysqlConnection.getInstance(
 );
 
 // REPOSITORIES
-const boxRepository = new BoxRepository(mysqlConnectionInstance.getPool());
+const colorRepository = new ColorRepository(mysqlConnectionInstance.getPool());
+const decorationRepository = new DecorationRepository(
+  mysqlConnectionInstance.getPool()
+);
+const boxRepository = new BoxRepository(
+  mysqlConnectionInstance.getPool(),
+  colorRepository,
+  decorationRepository
+);
 
 // USECASES
 const createBoxUsecase = new CreateBoxUsecase(boxRepository, v4);

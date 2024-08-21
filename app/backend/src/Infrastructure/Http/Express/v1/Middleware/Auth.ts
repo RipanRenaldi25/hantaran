@@ -26,7 +26,6 @@ export class AuthMiddleware {
   applyWithRole(roles: ('admin' | 'user')[]) {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
-        console.log(req.headers.authorization);
         if (!req.headers.authorization) {
           throw new AuthorizationError('User is unauthorized');
         }

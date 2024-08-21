@@ -71,7 +71,8 @@ export class SeedService {
                 id VARCHAR(255) PRIMARY KEY,
                 name VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT decorations_name_unique UNIQUE(name)
             )
         `;
     await this.dbConnection.query(query);
@@ -83,7 +84,8 @@ export class SeedService {
                 id VARCHAR(255) PRIMARY KEY,
                 name VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT colors_name_unique UNIQUE(name)
             )
         `;
     await this.dbConnection.query(query);
@@ -92,11 +94,11 @@ export class SeedService {
   async createBoxDecorationTable() {
     const query = `
             CREATE TABLE IF NOT EXISTS box_decorations(
-                id VARCHAR(255) PRIMARY KEY,
-                box_id VARCHAR(255),
+                box_id VARCHAR(255) PRIMARY KEY,
                 decoration_id VARCHAR(255),
                 CONSTRAINT box_decorations_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
-                CONSTRAINT box_decorations_decoration_id_fk FOREIGN KEY(decoration_id) REFERENCES decorations(id)
+                CONSTRAINT box_decorations_decoration_id_fk FOREIGN KEY(decoration_id) REFERENCES decorations(id),
+                CONSTRAINT box_decorations_unique UNIQUE(box_id, decoration_id)
             )
       `;
     await this.dbConnection.query(query);
@@ -105,12 +107,13 @@ export class SeedService {
   async createBoxColorTable() {
     const query = `
       CREATE TABLE IF NOT EXISTS box_colors(
-        id VARCHAR(255) PRIMARY KEY,
-        box_id VARCHAR(255),
+        box_id VARCHAR(255) PRIMARY KEY,
         color_id VARCHAR(255),
         CONSTRAINT box_colors_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
-        CONSTRAINT box_colors_color_id_fk FOREIGN KEY(color_id) REFERENCES colors(id)
+        CONSTRAINT box_colors_color_id_fk FOREIGN KEY(color_id) REFERENCES colors(id),
+        CONSTRAINT box_colors_unique UNIQUE(box_id, color_id)
       )
     `;
+    await this.dbConnection.query(query);
   }
 }
