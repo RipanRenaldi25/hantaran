@@ -10,6 +10,8 @@ import { AuthMiddleware } from '../Middleware/Auth';
 import { JwtService } from '../../../../Service/JwtService';
 import jwt from 'jsonwebtoken';
 import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
+import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
+import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -25,9 +27,16 @@ const boxRepository = new BoxRepository(mysqlConnectionInstance.getPool());
 // USECASES
 const createBoxUsecase = new CreateBoxUsecase(boxRepository, v4);
 const deleteBoxUsecase = new DeleteBoxUsecase(boxRepository);
+const updateBoxUsecase = new UpdateBoxUsecase(boxRepository);
+const getBoxesUsecase = new GetBoxesUsecase(boxRepository);
 
 // CONTROLLER
-const boxController = new BoxController(createBoxUsecase, deleteBoxUsecase);
+const boxController = new BoxController(
+  createBoxUsecase,
+  deleteBoxUsecase,
+  updateBoxUsecase,
+  getBoxesUsecase
+);
 
 const authMiddleware = AuthMiddleware.getInstance(
   jwtService,
@@ -49,6 +58,13 @@ boxRouter.delete(
   '/:boxId',
   authMiddleware.applyWithRole(['admin']),
   (req, res) => boxController.deleteBox(req, res)
+);
+boxRouter.put('/:boxId', authMiddleware.applyWithRole(['admin']), (req, res) =>
+  boxController.updateBox(req, res)
+);
+
+boxRouter.get('/', authMiddleware.applyWithRole(['admin']), (req, res) =>
+  boxController.getBoxesWithTotal(req, res)
 );
 
 export default boxRouter;
