@@ -13,7 +13,7 @@ export class DeleteBoxUsecase {
     if (!box) {
       throw new NotFoundError('Box not found');
     }
-    await this.boxRepository.deleteBox(new BoxId(box.getId().toString()));
+    await this.boxRepository.deleteBox(new BoxId(boxId));
     return box.getId().toString();
   }
 }

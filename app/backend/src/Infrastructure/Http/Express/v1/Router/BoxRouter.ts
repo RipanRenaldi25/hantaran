@@ -9,6 +9,7 @@ import { multerMiddleware } from '../Middleware/Multer';
 import { AuthMiddleware } from '../Middleware/Auth';
 import { JwtService } from '../../../../Service/JwtService';
 import jwt from 'jsonwebtoken';
+import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -23,9 +24,10 @@ const boxRepository = new BoxRepository(mysqlConnectionInstance.getPool());
 
 // USECASES
 const createBoxUsecase = new CreateBoxUsecase(boxRepository, v4);
+const deleteBoxUsecase = new DeleteBoxUsecase(boxRepository);
 
 // CONTROLLER
-const boxController = new BoxController(createBoxUsecase);
+const boxController = new BoxController(createBoxUsecase, deleteBoxUsecase);
 
 const authMiddleware = AuthMiddleware.getInstance(
   jwtService,
@@ -42,6 +44,11 @@ boxRouter.post(
   authMiddleware.applyWithRole(['admin']),
   multerMiddleware.single('image'),
   (req, res) => boxController.createBox(req, res)
+);
+boxRouter.delete(
+  '/:boxId',
+  authMiddleware.applyWithRole(['admin']),
+  (req, res) => boxController.deleteBox(req, res)
 );
 
 export default boxRouter;

@@ -36,7 +36,6 @@ export class AuthMiddleware {
             token,
             this.configService.get('SECRET_ACCESS_TOKEN')
           );
-        console.log({ payload });
         if (!roles.includes(payload.role)) {
           throw new ForbiddenError('User is unauthorized');
         }
