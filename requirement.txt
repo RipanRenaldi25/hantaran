@@ -22,6 +22,7 @@ Profile:
 5. address      : Address
 6. createdAt
 7. updatedAt
+8. avatar
 
 Address:
 1. id

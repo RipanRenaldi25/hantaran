@@ -1,22 +1,24 @@
 import { InvariantError } from '../../Exception/InvariantError';
 import { Address } from '../Address/Address';
-import { User } from '../User/User';
+import { UserId } from '../User';
 import { ProfileId } from './ProfileId';
 
 export class Profile {
   private id: ProfileId;
-  private readonly user: User;
+  private readonly userId: UserId;
   private fullName: string;
   private phoneNumber: string;
   private address: Address;
   private readonly createdAt: string;
+  private avatar: string;
   private updatedAt: string;
   constructor(
     id: ProfileId,
-    user: User,
+    userId: UserId,
     fullName: string,
     phoneNumber: string,
     address: Address,
+    avatar?: string,
     createdAt?: string,
     updatedAt?: string
   ) {
@@ -34,25 +36,26 @@ export class Profile {
       throw new InvariantError('Profile id cannot be empty');
     }
 
-    if (!user) {
+    if (!userId) {
       throw new InvariantError('User cannot be empty');
     }
 
     this.id = id;
-    this.user = user;
+    this.userId = userId;
     this.fullName = fullName;
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.createdAt = createdAt || '';
     this.updatedAt = updatedAt || new Date().toISOString();
+    this.avatar = avatar || '';
   }
 
   getId() {
     return this.id;
   }
 
-  getUser() {
-    return this.user;
+  getUserId() {
+    return this.userId;
   }
 
   getFullName() {
@@ -77,5 +80,13 @@ export class Profile {
 
   setAddress(address: Address) {
     this.address = address;
+  }
+
+  getAvatar() {
+    return this.avatar;
+  }
+
+  setAvatar(avatar: string) {
+    this.avatar = avatar;
   }
 }

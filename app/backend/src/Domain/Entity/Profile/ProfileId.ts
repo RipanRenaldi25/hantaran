@@ -8,4 +8,8 @@ export class ProfileId {
     }
     this.id = id;
   }
+
+  toString() {
+    return this.id;
+  }
 }

@@ -22,6 +22,10 @@ export class SeedService {
     console.log('Table box_decorations created successfully');
     await this.createBoxColorTable();
     console.log('Table box_colors created successfully');
+    await this.createAddressTable();
+    console.log('Table address created successfully');
+    await this.createProfileTable();
+    console.log('Table profile created successfully');
   }
 
   async createRoleTable() {
@@ -114,6 +118,40 @@ export class SeedService {
         CONSTRAINT box_colors_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
         CONSTRAINT box_colors_color_id_fk FOREIGN KEY(color_id) REFERENCES colors(id),
         CONSTRAINT box_colors_unique UNIQUE(box_id, color_id)
+      )
+    `;
+    await this.dbConnection.query(query);
+  }
+
+  async createProfileTable() {
+    const query = `
+      CREATE TABLE IF NOT EXISTS profiles(
+        id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255),
+        full_name VARCHAR(255),
+        phone_number VARCHAR(255),
+        avatar VARCHAR(255),
+        address_id VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT profiles_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
+        CONSTRAINT profiles_address_id_fk FOREIGN KEY(address_id) REFERENCES addresses(id),
+        CONSTRAINT profiles_user_id_unique UNIQUE(user_id)
+      );
+    `;
+    await this.dbConnection.query(query);
+  }
+
+  async createAddressTable() {
+    const query = `
+      CREATE TABLE IF NOT EXISTS addresses(
+        id VARCHAR(255) PRIMARY KEY,
+        city VARCHAR(255),
+        postal_code VARCHAR(10),
+        street VARCHAR(255),
+        details VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
     await this.dbConnection.query(query);
