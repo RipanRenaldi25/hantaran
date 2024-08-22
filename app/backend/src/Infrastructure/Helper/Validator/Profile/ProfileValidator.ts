@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { string } from 'joi';
 import { InvariantError } from '../../../../Domain/Exception/InvariantError';
 
 const createProfileSchema = Joi.object({
@@ -10,10 +10,22 @@ const createProfileSchema = Joi.object({
   'address.details': Joi.string(),
 });
 
-export const validateCreateProfilePayload = (payload: any) => {
-  const result = createProfileSchema.validate(payload);
+const updateProfileSchema = Joi.object({
+  fullName: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
+});
+
+const validate = (payload: any, schema: Joi.Schema) => {
+  const result = schema.validate(payload);
   if (result.error) {
     throw new InvariantError(result.error.message);
   }
-  return result.value;
+};
+
+export const validateCreateProfilePayload = (payload: any) => {
+  validate(payload, createProfileSchema);
+};
+
+export const validateUpdateProfilePayload = (payload: any) => {
+  validate(payload, updateProfileSchema);
 };

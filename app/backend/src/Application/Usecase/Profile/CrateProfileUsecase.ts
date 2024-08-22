@@ -75,7 +75,7 @@ export class CreateProfileUsecase {
         userId: profile.getUserId().toString(),
         fullName: profile.getFullName(),
         phoneNumber: profile.getPhoneNumber(),
-        address: profile.getAddress().getCity(),
+        address: profile.getAddress()!.getCity(),
       };
     } catch (err: any) {
       await this.profileRepository.runQuery('ROLLBACK');

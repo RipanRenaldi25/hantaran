@@ -10,10 +10,14 @@ import { JwtService } from '../../../../Service/JwtService';
 import jwt from 'jsonwebtoken';
 import { ProfileController } from '../Controller/ProfileController';
 import { multerMiddleware } from '../Middleware/Multer';
+import { UpdateProfileUsecase } from '../../../../../Application/Usecase/Profile/UpdateProfileUsecase';
 
 const mysqlInstance = MysqlConnection.getInstance(ConfigService.getInstance());
-const profileRepository = new ProfileRepository(mysqlInstance.getPool());
 const addressRepository = new AddressRepository(mysqlInstance.getPool());
+const profileRepository = new ProfileRepository(
+  mysqlInstance.getPool(),
+  addressRepository
+);
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
 
 const authMiddleware = AuthMiddleware.getInstance(
@@ -27,7 +31,12 @@ const createProfileUsecase = new CreateProfileUsecase(
   addressRepository
 );
 
-const profileController = new ProfileController(createProfileUsecase);
+const updateProfileUsecase = new UpdateProfileUsecase(profileRepository);
+
+const profileController = new ProfileController(
+  createProfileUsecase,
+  updateProfileUsecase
+);
 
 const profileRouter = express.Router();
 profileRouter.post(
@@ -36,5 +45,10 @@ profileRouter.post(
   multerMiddleware.single('image'),
   (req, res) => profileController.createProfile(req, res)
 );
-
+profileRouter.put(
+  '/user/',
+  authMiddleware.applyWithRole(['user']),
+  multerMiddleware.single('image'),
+  (req, res) => profileController.updateProfile(req, res)
+);
 export default profileRouter;

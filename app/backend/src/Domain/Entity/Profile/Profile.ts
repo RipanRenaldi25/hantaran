@@ -8,7 +8,7 @@ export class Profile {
   private readonly userId: UserId;
   private fullName: string;
   private phoneNumber: string;
-  private address: Address;
+  private address?: Address;
   private readonly createdAt: string;
   private avatar: string;
   private updatedAt: string;

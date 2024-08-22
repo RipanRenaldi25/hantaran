@@ -17,7 +17,7 @@ export class AddressRepository implements IAddressRepository {
       address.getCity(),
       address.getPostalCode().toString(),
       address.getStreet(),
-      address.getDetail(),
+      address.getDetail() || null,
     ];
     await this.dbConnection.query(sql, values);
     return address.getId();
