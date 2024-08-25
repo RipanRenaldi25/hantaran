@@ -1,10 +1,9 @@
 import { Cart } from '../../../Domain/Cart/Cart';
 import { CartId } from '../../../Domain/Cart/CartId';
 import { CartItem } from '../../../Domain/Cart/CartItem';
-import { Box, BoxId, UserId } from '../../../Domain/Entity';
+import { BoxId, UserId } from '../../../Domain/Entity';
 import { InvariantError } from '../../../Domain/Exception/InvariantError';
 import { ICartRepository } from '../../../Domain/Repository/ICartRepository';
-import { Price } from '../../../Domain/ValueObject/Price';
 
 export class CreateCartUsecase {
   private cartRepository: ICartRepository;
@@ -37,7 +36,10 @@ export class CreateCartUsecase {
     return {
       id: cart.getId().toString(),
       userId: cart.getUserId().toString(),
-      items: cart.getItems(),
+      items: cart.getItems().map((item) => ({
+        boxId: item.getBoxId().toString(),
+        quantity: item.getQuantity(),
+      })),
     };
   }
 }

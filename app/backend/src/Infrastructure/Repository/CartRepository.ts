@@ -101,7 +101,20 @@ export class CartRepository implements ICartRepository {
   }
 
   async addItemToCart(cartId: CartId, cartItem: CartItem): Promise<void> {}
-  async updateItemFromCart(cartId: CartId, cartItem: CartItem): Promise<void> {}
+  async updateItemFromCart(cart: Cart): Promise<void> {
+    try {
+      const query = `UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND box_id = ?`;
+      for (const item of cart.getItems()) {
+        await this.dbConnection.query(query, [
+          item.getQuantity(),
+          cart.getId().toString(),
+          item.getBoxId().toString(),
+        ]);
+      }
+    } catch (err: any) {
+      throw new InvariantError(err.message);
+    }
+  }
 
   async getCartByUserId(userId: UserId): Promise<Cart | null> {
     try {
@@ -117,6 +130,30 @@ export class CartRepository implements ICartRepository {
       );
       return cartToReturn;
     } catch (err: any) {
+      return null;
+    }
+  }
+
+  async getCartItemByCartId(cartId: CartId): Promise<Cart | null> {
+    try {
+      const query = `SELECT carts.id, carts.user_id, boxes.id as box_id, boxes.name, cart_items.quantity FROM carts JOIN cart_items ON carts.id = cart_items.cart_id JOIN boxes ON cart_items.box_id = boxes.id WHERE carts.id = ?`;
+      const [rows]: [any[], any[]] = await this.dbConnection.query(query, [
+        cartId.toString(),
+      ]);
+      console.log({ rows });
+      const [cart] = rows;
+      const cartToReturn = new Cart(
+        new CartId(cart.id),
+        new UserId(cart.user_id)
+      );
+      for (const item of rows) {
+        cartToReturn.addItem(
+          new CartItem(new BoxId(item.box_id), item.quantity)
+        );
+      }
+
+      return cartToReturn;
+    } catch (err) {
       return null;
     }
   }
