@@ -47,28 +47,6 @@ export class CartRepository implements ICartRepository {
     boxId: BoxId,
     userId: UserId
   ): Promise<void> {
-    const isCartOwnedByUser = await this.checkIfCartIsOwnedByUser(
-      userId,
-      cartId
-    );
-    if (!isCartOwnedByUser) {
-      throw new ForbiddenError('Cart is not owned by user');
-    }
-    const isItemExistOnCart = await this.checkIfItemIsExistOnCart(
-      cartId,
-      boxId
-    );
-    if (!isItemExistOnCart) {
-      throw new NotFoundError('Item is not exist on cart');
-    }
-    if (isCartOwnedByUser > 1) {
-      const query = `DELETE FROM cart_items WHERE cart_id = ? AND box_id = ?`;
-      const [result] = await this.dbConnection.query(query, [
-        cartId.toString(),
-        boxId.toString(),
-      ]);
-      return;
-    }
     try {
       await this.dbConnection.query('START TRANSACTION');
       const query = `DELETE FROM cart_items WHERE cart_id = ? AND box_id = ?`;
@@ -85,7 +63,15 @@ export class CartRepository implements ICartRepository {
     }
   }
 
-  async checkIfCartIsOwnedByUser(userId: UserId, cartId: CartId) {
+  async query(query: string, params?: string[]) {
+    const [rows] = await this.dbConnection.query(query, params);
+    return rows;
+  }
+
+  async checkIfCartIsOwnedByUser(
+    userId: UserId,
+    cartId: CartId
+  ): Promise<number> {
     try {
       const query =
         'SELECT * FROM carts JOIN cart_items ON carts.id=cart_items.cart_id WHERE user_id=? AND cart_id=?';
@@ -99,7 +85,10 @@ export class CartRepository implements ICartRepository {
     }
   }
 
-  async checkIfItemIsExistOnCart(cartId: CartId, boxId: BoxId) {
+  async checkIfItemIsExistOnCart(
+    cartId: CartId,
+    boxId: BoxId
+  ): Promise<boolean> {
     const query = 'SELECT * FROM cart_items WHERE cart_id = ? AND box_id = ?';
     const [result]: [any[], any[]] = await this.dbConnection.query(query, [
       cartId.toString(),

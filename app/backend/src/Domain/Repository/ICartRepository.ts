@@ -14,4 +14,7 @@ export interface ICartRepository {
     boxId: BoxId,
     userId: UserId
   ): Promise<void>;
+  checkIfCartIsOwnedByUser(userId: UserId, cartId: CartId): Promise<number>;
+  checkIfItemIsExistOnCart(cartId: CartId, boxId: BoxId): Promise<boolean>;
+  query(query: string, params?: string[]): Promise<any>;
 }
