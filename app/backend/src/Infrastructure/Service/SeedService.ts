@@ -26,6 +26,10 @@ export class SeedService {
     console.log('Table address created successfully');
     await this.createProfileTable();
     console.log('Table profile created successfully');
+    await this.createCartTable();
+    console.log('Table cart created successfully');
+    await this.createCartItemsTable();
+    console.log('Table cart_items created successfully');
   }
 
   async createRoleTable() {
@@ -154,6 +158,34 @@ export class SeedService {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+    await this.dbConnection.query(query);
+  }
+
+  async createCartTable() {
+    const query = `CREATE TABLE IF NOT EXISTS carts(
+    id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT carts_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id)
+    )`;
+
+    await this.dbConnection.query(query);
+  }
+
+  async createCartItemsTable() {
+    const query = `CREATE TABLE IF NOT EXISTS cart_items(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cart_id VARCHAR(255),
+    box_id VARCHAR(255),
+    quantity INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT boxes_carts_cart_id_fk FOREIGN KEY(cart_id) REFERENCES carts(id),
+    CONSTRAINT boxes_carts_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
+    CONSTRAINT boxes_carts_quantity_check CHECK(quantity > 0)
+    )`;
+
     await this.dbConnection.query(query);
   }
 }

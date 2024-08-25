@@ -53,6 +53,14 @@ BoxColor:
 1. boxId
 2. colorId
 
+Cart:
+1. id
+2. userId
+3. boxId: BoxId
+4. created_at
+5. updated_at
+6. total
+
 Order:
 1. id
 2. userId
