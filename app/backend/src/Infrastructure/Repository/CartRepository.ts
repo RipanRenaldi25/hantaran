@@ -6,6 +6,8 @@ import { InvariantError } from '../../Domain/Exception/InvariantError';
 import { BoxId, UserId } from '../../Domain/Entity';
 import { Price } from '../../Domain/ValueObject/Price';
 import { CartItem } from '../../Domain/Cart/CartItem';
+import { ForbiddenError } from '../../Domain/Exception/ForbiddenError';
+import { NotFoundError } from '../../Domain/Exception/NotFoundError';
 
 export class CartRepository implements ICartRepository {
   private readonly dbConnection: Pool;
@@ -40,12 +42,73 @@ export class CartRepository implements ICartRepository {
     }
   }
 
-  async deleteCart(cartId: CartId, cartItem: CartItem): Promise<void> {
-    const query = `DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?;`;
-    await this.dbConnection.query(query, [
+  async deleteItemFromCart(
+    cartId: CartId,
+    boxId: BoxId,
+    userId: UserId
+  ): Promise<void> {
+    const isCartOwnedByUser = await this.checkIfCartIsOwnedByUser(
+      userId,
+      cartId
+    );
+    if (!isCartOwnedByUser) {
+      throw new ForbiddenError('Cart is not owned by user');
+    }
+    const isItemExistOnCart = await this.checkIfItemIsExistOnCart(
+      cartId,
+      boxId
+    );
+    if (!isItemExistOnCart) {
+      throw new NotFoundError('Item is not exist on cart');
+    }
+    if (isCartOwnedByUser > 1) {
+      const query = `DELETE FROM cart_items WHERE cart_id = ? AND box_id = ?`;
+      const [result] = await this.dbConnection.query(query, [
+        cartId.toString(),
+        boxId.toString(),
+      ]);
+      return;
+    }
+    try {
+      await this.dbConnection.query('START TRANSACTION');
+      const query = `DELETE FROM cart_items WHERE cart_id = ? AND box_id = ?`;
+      const [result] = await this.dbConnection.query(query, [
+        cartId.toString(),
+        boxId.toString(),
+      ]);
+      await this.dbConnection.query('DELETE FROM carts WHERE id=?', [
+        cartId.toString(),
+      ]);
+      await this.dbConnection.query('COMMIT');
+    } catch (err) {
+      await this.dbConnection.query('ROLLBACK');
+    }
+  }
+
+  async checkIfCartIsOwnedByUser(userId: UserId, cartId: CartId) {
+    try {
+      const query =
+        'SELECT * FROM carts JOIN cart_items ON carts.id=cart_items.cart_id WHERE user_id=? AND cart_id=?';
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        userId.toString(),
+        cartId.toString(),
+      ]);
+      return result.length;
+    } catch (err: any) {
+      return [].length;
+    }
+  }
+
+  async checkIfItemIsExistOnCart(cartId: CartId, boxId: BoxId) {
+    const query = 'SELECT * FROM cart_items WHERE cart_id = ? AND box_id = ?';
+    const [result]: [any[], any[]] = await this.dbConnection.query(query, [
       cartId.toString(),
-      cartItem.getBoxId().toString(),
+      boxId.toString(),
     ]);
+    if (!result.length) {
+      return false;
+    }
+    return true;
   }
 
   async addItemToCart(cartId: CartId, cartItem: CartItem): Promise<void> {}

@@ -8,6 +8,7 @@ import { CreateCartUsecase } from '../../../../../Application/Usecase/Cart/Creat
 import { CartRepository } from '../../../../Repository/CartRepository';
 import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { v4 } from 'uuid';
+import { DeleteItemFromCartUsecase } from '../../../../../Application/Usecase/Cart/DeleteItemFromCartUsecase';
 
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
 const authMiddleware = AuthMiddleware.getInstance(
@@ -20,12 +21,21 @@ const cartRepository = new CartRepository(
 );
 
 const createCartUsecase = new CreateCartUsecase(cartRepository, v4);
+const deleteItemFromCartUsecase = new DeleteItemFromCartUsecase(cartRepository);
 
-const cartController = new CartController(createCartUsecase);
+const cartController = new CartController(
+  createCartUsecase,
+  deleteItemFromCartUsecase
+);
 
 const cartRouter = express.Router();
 cartRouter.post('/', authMiddleware.applyWithRole(['user']), (req, res) =>
   cartController.createCart(req, res)
+);
+cartRouter.delete(
+  '/items/:cartId/:boxId',
+  authMiddleware.applyWithRole(['user']),
+  (req, res) => cartController.deleteItemFromCart(req, res)
 );
 
 export default cartRouter;
