@@ -38,7 +38,7 @@ export class CartRepository implements ICartRepository {
     } catch (err: any) {
       console.log('ROLLBACK');
       await this.dbConnection.query('ROLLBACK');
-      throw new InvariantError(err.message);
+      throw new Error(err.message);
     }
   }
 
@@ -58,8 +58,9 @@ export class CartRepository implements ICartRepository {
         cartId.toString(),
       ]);
       await this.dbConnection.query('COMMIT');
-    } catch (err) {
+    } catch (err: any) {
       await this.dbConnection.query('ROLLBACK');
+      throw new Error(err.message);
     }
   }
 

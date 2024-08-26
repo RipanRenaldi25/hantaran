@@ -79,7 +79,7 @@ export class CreateProfileUsecase {
       };
     } catch (err: any) {
       await this.profileRepository.runQuery('ROLLBACK');
-      throw new InvariantError(err.message);
+      throw new Error(err.message);
     }
   }
 }

@@ -70,9 +70,16 @@ Order:
 6. updated_at
 7. paymentMethod : Payment
 
+OrderItem:
+1. id
+2. userId
+3. boxId
+4. quantity
+5. price
+
  "enabled_payments": ["credit_card", "mandiri_clickpay", "cimb_clicks","bca_klikbca", "bca_klikpay", "bri_epay", "echannel","mandiri_ecash", "permata_va", "bca_va", "bni_va", "other_va", "gopay", "indomaret", "alfamart", "danamon_online", "akulaku", "other_qris],
 
-Payment << bank_transfer, echannel, qris (airpay shopee, gopay)
+Payment << bank_transfer (exclude permata, mandiri), echannel (mandiri), qris (acquirer: airpay shopee, gopay)
 1. id
 2. payment_type
 3. transaction_details: {
@@ -84,7 +91,7 @@ eChannel extends Payment
 2. bill_info2 Value for Label 1. Mandiri allows only 30 characters. Exceeding characters will be truncated.
 
 Qris extends Payment
-1. acquirer: << gopay / airpay shopee
+1. acquirer: << "gopay" / "airpay shopee"
 
 Bank
 1. name

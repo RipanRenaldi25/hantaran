@@ -127,7 +127,7 @@ export class BoxRepository implements IBoxRepository {
     } catch (err: any) {
       console.log(`ROLLBACK ${err.message}`);
       await this.dbConnection.query('ROLLBACK');
-      throw new InvariantError(err.message);
+      throw new Error(err.message);
     }
   }
 }

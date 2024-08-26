@@ -10,11 +10,11 @@ import boxRouter from './Infrastructure/Http/Express/v1/Router/BoxRouter';
 import { MysqlConnection } from './Infrastructure/DB/MysqlConnection';
 import { ConfigService } from './Infrastructure/Service/ConfigService';
 import { SeedService } from './Infrastructure/Service/SeedService';
-import path from 'path';
 import colorRouter from './Infrastructure/Http/Express/v1/Router/ColorRouter';
 import decorationRouter from './Infrastructure/Http/Express/v1/Router/DecorationRouter';
 import profileRouter from './Infrastructure/Http/Express/v1/Router/ProfileRouter';
 import cartRouter from './Infrastructure/Http/Express/v1/Router/CartRouter';
+import orderRouter from './Infrastructure/Http/Express/v1/Router/OrderRouter';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -40,6 +40,12 @@ const init = async () => {
   app.use('/decorations', decorationRouter);
   app.use('/profiles', profileRouter);
   app.use('/carts', cartRouter);
+  app.use('/orders', orderRouter);
+  app.post('/notification/handling', (req, res) => {
+    console.log({ body: req.body });
+    res.send(req.body);
+  });
+  app.get('/', (req, res) => res.send('ok'));
 
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(port, () => console.log(`Server started on port ${port}`));

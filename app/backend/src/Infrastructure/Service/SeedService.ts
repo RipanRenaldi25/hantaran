@@ -30,6 +30,10 @@ export class SeedService {
     console.log('Table cart created successfully');
     await this.createCartItemsTable();
     console.log('Table cart_items created successfully');
+    await this.createOrderTable();
+    console.log('Table orders created successfully');
+    await this.createOrderItemsTable();
+    console.log('Table order_items created successfully');
   }
 
   async createRoleTable() {
@@ -186,6 +190,34 @@ export class SeedService {
     CONSTRAINT boxes_carts_quantity_check CHECK(quantity > 0)
     )`;
 
+    await this.dbConnection.query(query);
+  }
+
+  async createOrderTable() {
+    const query = `CREATE TABLE IF NOT EXISTS orders(
+    id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255),
+    price BIGINT default 0,
+    status ENUM('pending', 'settlement', 'cancelled', 'expired', 'failed'),
+    payment_method ENUM('bank_transfer', 'qris', 'echannel', 'shopeepay'),
+    CONSTRAINT orders_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
+    CONSTRAINT orders_price_check CHECK(price > 0),
+    CONSTRAINT orders_status_check CHECK(status IN ('pending', 'settlement', 'cancelled', 'expired', 'failed')),
+    CONSTRAINT orders_payment_method_check CHECK(payment_method IN ('bank_transfer', 'qris', 'echannel', 'shopeepay'))
+  )`;
+    await this.dbConnection.query(query);
+  }
+
+  async createOrderItemsTable() {
+    const query = `CREATE TABLE IF NOT EXISTS order_items(
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      box_id VARCHAR(255),
+      order_id VARCHAR(255),
+      quantity INT DEFAULT 0,
+      CONSTRAINT order_items_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
+      CONSTRAINT order_items_order_id_fk FOREIGN KEY(order_id) REFERENCES orders(id),
+      CONSTRAINT order_items_quantity_check CHECK(quantity > 0)
+  )`;
     await this.dbConnection.query(query);
   }
 }

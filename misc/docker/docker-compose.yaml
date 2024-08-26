@@ -59,3 +59,17 @@ services:
       target: FE_PROD
     ports:
       - 8080:80
+
+  # ngrok:
+  #   image: ngrok/ngrok
+  #   container_name: ngrok
+  #   envrionment:
+  #     - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+  #   restart: unless-stopped
+  #   command:
+  #     - "start"
+  #     - "--all"
+  #     - "--config"
+  #     - "/etc/ngrok.yml"
+  #   volumes:
+  #     -

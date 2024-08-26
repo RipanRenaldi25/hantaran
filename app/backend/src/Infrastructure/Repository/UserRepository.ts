@@ -150,4 +150,37 @@ export class UserRepository implements IUserRepository {
       return null;
     }
   }
+
+  async getUserWithProfileAndAddress(id: UserId): Promise<{
+    userId: string;
+    username: string;
+    email: string;
+    fullName: string;
+    phoneNumber: string;
+    city: string;
+    postalCode: string;
+    street: string;
+    details: string;
+  } | null> {
+    try {
+      const sql = `SELECT users.id, users.username, users.email, profiles.full_name, profiles.phone_number, addresses.city, addresses.postal_code, addresses.street, addresses.details FROM users JOIN profiles ON users.id = profiles.user_id JOIN addresses ON profiles.address_id = addresses.id WHERE users.id = ?`;
+      const [results]: [any[], any[]] = await this.dbConnection.query(sql, [
+        id.toString(),
+      ]);
+      const [row] = results;
+      return {
+        userId: row.id,
+        username: row.username,
+        email: row.email,
+        fullName: row.full_name,
+        phoneNumber: row.phone_number,
+        city: row.city,
+        postalCode: row.postal_code,
+        street: row.street,
+        details: row.details,
+      };
+    } catch (err) {
+      return null;
+    }
+  }
 }
