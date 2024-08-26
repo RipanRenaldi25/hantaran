@@ -128,12 +128,11 @@ export class CreateOrderUsecase {
     }
     order.setAmount(new Price(totalPrice));
     // console.log(JSON.stringify(paymentMethod.mapToFetch()));
-    console.log(paymentMethod.mapToFetch());
 
     const { createdOrder, transaction } = await this.orderService.createOrder(
       order
     );
-    console.log({ createdOrder, transaction });
+    console.log({ createdOrder, orderId: orderId.toString() });
     const returnedPayload = {
       id: createdOrder.getId().toString(),
       fullName: customer.fullName,

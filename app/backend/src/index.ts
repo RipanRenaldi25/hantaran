@@ -41,10 +41,6 @@ const init = async () => {
   app.use('/profiles', profileRouter);
   app.use('/carts', cartRouter);
   app.use('/orders', orderRouter);
-  app.post('/notification/handling', (req, res) => {
-    console.log({ body: req.body });
-    res.send(req.body);
-  });
   app.get('/', (req, res) => res.send('ok'));
 
   app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

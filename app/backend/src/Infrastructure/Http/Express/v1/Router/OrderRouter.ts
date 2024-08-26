@@ -11,6 +11,7 @@ import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { v4 } from 'uuid';
 import axios from 'axios';
 import { UserRepository } from '../../../../Repository/UserRepository';
+import { UpdateOrderStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderStatus';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -36,8 +37,11 @@ const createOrderUsecase = new CreateOrderUsecase(
   v4,
   userRepository
 );
-
-const orderController = new OrderController(createOrderUsecase);
+const updateOrderStatusUsecase = new UpdateOrderStatusUsecase(orderService);
+const orderController = new OrderController(
+  createOrderUsecase,
+  updateOrderStatusUsecase
+);
 
 const orderRouter = express.Router();
 
@@ -46,7 +50,7 @@ orderRouter.post(
   authMiddleware.applyWithRole(['user']),
   (req: Request, res: Response) => orderController.createOrder(req, res)
 );
-orderRouter.post('/notification', (req, res) =>
+orderRouter.post('/notifications/', (req, res) =>
   orderController.handleChangeTransactionStatus(req, res)
 );
 

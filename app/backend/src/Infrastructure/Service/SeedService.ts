@@ -200,6 +200,8 @@ export class SeedService {
     price BIGINT default 0,
     status ENUM('pending', 'settlement', 'cancelled', 'expired', 'failed'),
     payment_method ENUM('bank_transfer', 'qris', 'echannel', 'shopeepay'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT orders_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
     CONSTRAINT orders_price_check CHECK(price > 0),
     CONSTRAINT orders_status_check CHECK(status IN ('pending', 'settlement', 'cancelled', 'expired', 'failed')),

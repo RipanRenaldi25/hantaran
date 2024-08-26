@@ -57,6 +57,8 @@ export class OrderRepository implements IOrderRepository {
         ]);
       }
 
+      await this.dbConnection.query('COMMIT');
+
       return order;
     } catch (err: any) {
       console.log('ROLLBACK');
@@ -72,5 +74,15 @@ export class OrderRepository implements IOrderRepository {
       return null;
     }
   }
-  async updateOrder(orderId: OrderId, order: Order): Promise<void> {}
+  async updateOrderStatus(orderId: OrderId, order: Order): Promise<Order> {
+    console.log({ order, status: order.getStatus() });
+    const query = `UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
+    const [results]: [any[], any[]] = await this.dbConnection.query(query, [
+      order.getStatus(),
+      orderId.toString(),
+    ]);
+    console.log('OK');
+    console.log(results);
+    return order;
+  }
 }
