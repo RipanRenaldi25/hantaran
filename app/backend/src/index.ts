@@ -41,7 +41,7 @@ const init = async () => {
   app.use('/profiles', profileRouter);
   app.use('/carts', cartRouter);
   app.use('/orders', orderRouter);
-  app.get('/', (req, res) => res.send('ok'));
+  app.get('/', (req, res) => res.send('ok2'));
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(port, () => console.log(`Server started on port ${port}`));
