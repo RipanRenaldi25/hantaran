@@ -4,12 +4,15 @@ import { ClientError } from '../../../../../Domain/Exception/ClientError';
 import { validateCreateOrderPayload } from '../../../../Helper/Validator/Order/OrderValidator';
 import { UpdateOrderStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderStatus';
 import { GetOrdersUsecase } from '../../../../../Application/Usecase/Order/GetOrdersUsecase';
+import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/Order/GetOrderOwnedByUserUsecase';
+import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 
 export class OrderController {
   constructor(
     private readonly createOrderUsecase: CreateOrderUsecase,
     private readonly updateOrderStatusUsecase: UpdateOrderStatusUsecase,
-    private readonly getOrderUsecase: GetOrdersUsecase
+    private readonly getOrderUsecase: GetOrdersUsecase,
+    private readonly getOrderOwnedByUserUsecase: GetOrderOwnedByUserUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -85,6 +88,33 @@ export class OrderController {
   async getOrders(req: Request, res: Response) {
     try {
       const orders = await this.getOrderUsecase.execute();
+      res.status(200).json({
+        status: 'Success',
+        message: `Orders fetched`,
+        data: orders,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async getOrderOwnedByUser(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      if (!userId) {
+        throw new InvariantError('User Id cannot be empty');
+      }
+      const orders = await this.getOrderOwnedByUserUsecase.execute(userId);
       res.status(200).json({
         status: 'Success',
         message: `Orders fetched`,

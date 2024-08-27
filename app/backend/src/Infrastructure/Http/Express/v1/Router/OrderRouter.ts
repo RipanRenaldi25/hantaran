@@ -13,6 +13,7 @@ import axios from 'axios';
 import { UserRepository } from '../../../../Repository/UserRepository';
 import { UpdateOrderStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderStatus';
 import { GetOrdersUsecase } from '../../../../../Application/Usecase/Order/GetOrdersUsecase';
+import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/Order/GetOrderOwnedByUserUsecase';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -41,11 +42,16 @@ const createOrderUsecase = new CreateOrderUsecase(
 
 const getOrderUsecase = new GetOrdersUsecase(orderRepository);
 
+const getOrderOwnedByUserUsecase = new GetOrderOwnedByUserUsecase(
+  orderRepository
+);
+
 const updateOrderStatusUsecase = new UpdateOrderStatusUsecase(orderService);
 const orderController = new OrderController(
   createOrderUsecase,
   updateOrderStatusUsecase,
-  getOrderUsecase
+  getOrderUsecase,
+  getOrderOwnedByUserUsecase
 );
 
 const orderRouter = express.Router();
@@ -60,6 +66,9 @@ orderRouter.post('/notifications/', (req, res) =>
 );
 orderRouter.get('/', authMiddleware.applyWithRole(['admin']), (req, res) =>
   orderController.getOrders(req, res)
+);
+orderRouter.get('/users/:userId', authMiddleware.applyWithRole(['admin', 'user']), (req, res) =>
+  orderController.getOrderOwnedByUser(req, res)
 );
 
 export default orderRouter;
