@@ -16,6 +16,8 @@ import { VerifyUsecase } from '../../../../../Application/Usecase/User/VerifyUse
 import { LoginUsecase } from '../../../../../Application/Usecase/User/LoginUsecase';
 import { UpdatePasswordUsecase } from '../../../../../Application/Usecase/User/UpdatePasswordUsecase';
 import { AuthMiddleware } from '../Middleware/Auth';
+import { GetUserByIdUsecase } from '../../../../../Application/Usecase/User/GetUserUsecase';
+import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/GetUserLoginUsecase';
 
 // REPOSITORY
 const userRepository = new UserRepository(
@@ -56,12 +58,17 @@ const updatePasswordUsecase = new UpdatePasswordUsecase(
   passwordHashService
 );
 
+const getUserByIdUsecase = new GetUserByIdUsecase(userRepository);
+const getUserLoginUsecase = new GetUserLoginUsecase(userRepository);
+
 // CONTROLLER
 const userController = new UserController(
   registerUsecase,
   verifyUsecase,
   loginUsecase,
-  updatePasswordUsecase
+  updatePasswordUsecase,
+  getUserByIdUsecase,
+  getUserLoginUsecase
 );
 
 // MIDLEWARE
@@ -79,5 +86,15 @@ userRouter.post(
   '/password/',
   authMiddleware.applyWithRole(['admin', 'user']),
   (req, res) => userController.changeUserPassword(req, res)
+);
+userRouter.get(
+  '/:userId',
+  (req, res) => console.log('called'),
+  (req, res) => userController.getUserById(req, res)
+);
+userRouter.get(
+  '/self/profile',
+  authMiddleware.applyWithRole(['user', 'admin']),
+  (req, res) => userController.getUserLogin(req, res)
 );
 export default userRouter;

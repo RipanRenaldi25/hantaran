@@ -1,6 +1,7 @@
 import swaggerUi from 'swagger-ui-express';
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 // ROUTER
@@ -33,6 +34,7 @@ const init = async () => {
   const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(cors());
   app.use('/public', express.static('uploads'));
   app.use('/users', userRouter);
   app.use('/boxes', boxRouter);
