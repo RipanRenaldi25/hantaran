@@ -3,11 +3,13 @@ import { CreateOrderUsecase } from '../../../../../Application/Usecase/Order/Cre
 import { ClientError } from '../../../../../Domain/Exception/ClientError';
 import { validateCreateOrderPayload } from '../../../../Helper/Validator/Order/OrderValidator';
 import { UpdateOrderStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderStatus';
+import { GetOrdersUsecase } from '../../../../../Application/Usecase/Order/GetOrdersUsecase';
 
 export class OrderController {
   constructor(
     private readonly createOrderUsecase: CreateOrderUsecase,
-    private readonly updateOrderStatusUsecase: UpdateOrderStatusUsecase
+    private readonly updateOrderStatusUsecase: UpdateOrderStatusUsecase,
+    private readonly getOrderUsecase: GetOrdersUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -78,5 +80,28 @@ export class OrderController {
       });
     }
     res.status(200).send('ok');
+  }
+
+  async getOrders(req: Request, res: Response) {
+    try {
+      const orders = await this.getOrderUsecase.execute();
+      res.status(200).json({
+        status: 'Success',
+        message: `Orders fetched`,
+        data: orders,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
   }
 }

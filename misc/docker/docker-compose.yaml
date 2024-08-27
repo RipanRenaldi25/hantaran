@@ -63,13 +63,9 @@ services:
   # ngrok:
   #   image: ngrok/ngrok
   #   container_name: ngrok
-  #   envrionment:
+  #   environment:
   #     - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
   #   restart: unless-stopped
-  #   command:
-  #     - "start"
-  #     - "--all"
-  #     - "--config"
-  #     - "/etc/ngrok.yml"
+  #   command: ngrok start --all --config /etc/ngrok.yml
   #   volumes:
-  #     -
+  #     - ./ngrok.yml:/etc/ngrok.yml

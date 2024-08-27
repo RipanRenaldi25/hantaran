@@ -1,12 +1,13 @@
 import { Pool } from 'mysql2/promise';
 import { IOrderRepository } from '../../Domain/Repository/IOrderRepository';
-import { Order } from '../../Domain/Entity/Order/Order';
+import { Order, StatusType } from '../../Domain/Entity/Order/Order';
 import { OrderId } from '../../Domain/Entity/Order/OrderId';
 import { UserId } from '../../Domain/Entity';
 import { Price } from '../../Domain/ValueObject/Price';
 import { BankTransfer } from '../../Domain/Entity/Payment/BankTransfer/BankTransfer';
 import { QrisPayment } from '../../Domain/Entity/Payment/Qris/Qris';
 import { EchannelPayment } from '../../Domain/Entity/Payment/Echannel/EchannelPayment';
+import { PaymentMethodType } from '../../Domain/Entity/Payment/AbstractPayment';
 
 export class OrderRepository implements IOrderRepository {
   constructor(private readonly dbConnection: Pool) {}
@@ -84,5 +85,48 @@ export class OrderRepository implements IOrderRepository {
     console.log('OK');
     console.log(results);
     return order;
+  }
+  async getOrders(): Promise<
+    {
+      id: string;
+      user_id: string;
+      price: number;
+      status: StatusType;
+      payment_method: PaymentMethodType;
+      full_name: string;
+      phone_number: string;
+      created_at: string;
+      updated_at: string;
+    }[]
+  > {
+    const query =
+      'SELECT orders.id, orders.user_id, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders JOIN profiles ON orders.user_id = profiles.user_id';
+
+    const [results]: [any[], any[]] = await this.dbConnection.query(query);
+
+    return results;
+  }
+
+  async getOrderListOwnedByUser(userId: UserId): Promise<
+    {
+      id: string;
+      user_id: string;
+      price: number;
+      status: StatusType;
+      payment_method: PaymentMethodType;
+      full_name: string;
+      phone_number: string;
+      created_at: string;
+      updated_at: string;
+    }[]
+  > {
+    const query =
+      'SELECT orders.id, orders.user_id, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders JOIN profiles ON orders.user_id = profiles.user_id WHERE orders.user_id = ?';
+
+    const [results]: [any[], any[]] = await this.dbConnection.query(query, [
+      userId.toString(),
+    ]);
+
+    return results;
   }
 }

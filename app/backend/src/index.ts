@@ -43,7 +43,7 @@ const init = async () => {
   app.use('/orders', orderRouter);
   app.get('/', (req, res) => res.send('ok'));
 
-  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.listen(port, () => console.log(`Server started on port ${port}`));
 };
 init();

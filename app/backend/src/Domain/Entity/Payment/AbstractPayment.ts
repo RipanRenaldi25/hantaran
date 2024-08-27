@@ -54,8 +54,10 @@ export interface ITransactionConfigurations {
   [key: string]: any;
 }
 
+export type PaymentMethodType = 'bank_transfer' | 'echannel' | 'qris';
+
 export abstract class AbstractPayment {
-  protected paymentType: 'bank_transfer' | 'echannel' | 'qris';
+  protected paymentType: PaymentMethodType;
   protected transactionConfiguration: ITransactionConfigurations;
   constructor(amount: Price, orderId: OrderId, paymentType: PaymentType) {
     this.paymentType = paymentType;

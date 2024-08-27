@@ -36,7 +36,7 @@ export class AuthMiddleware {
             this.configService.get('SECRET_ACCESS_TOKEN')
           );
         if (!roles.includes(payload.role)) {
-          throw new ForbiddenError('User is unauthorized');
+          throw new ForbiddenError('User cannot access this resource');
         }
         (req as any)['user'] = payload;
         next();

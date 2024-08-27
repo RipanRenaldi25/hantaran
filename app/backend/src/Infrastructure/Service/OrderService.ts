@@ -6,6 +6,11 @@ import { ConfigService } from './ConfigService';
 import { ITransactionResponse } from '../../Domain/Types/types';
 import { OrderId } from '../../Domain/Entity/Order/OrderId';
 import { NotFoundError } from '../../Domain/Exception/NotFoundError';
+import { UserId } from '../../Domain/Entity';
+import { Price } from '../../Domain/ValueObject/Price';
+import { BankTransfer } from '../../Domain/Entity/Payment/BankTransfer/BankTransfer';
+import { EchannelPayment } from '../../Domain/Entity/Payment/Echannel/EchannelPayment';
+import { QrisPayment } from '../../Domain/Entity/Payment/Qris/Qris';
 
 export class OrderService implements IOrderService {
   constructor(
@@ -76,5 +81,44 @@ export class OrderService implements IOrderService {
       order
     );
     return updatedOrder;
+  }
+
+  async getOrders(): Promise<Order[]> {
+    const orders = await this.orderRepository.getOrders();
+    return orders.map((order) => {
+      const paymentMethod =
+        order.payment_method === 'bank_transfer'
+          ? new BankTransfer(new Price(order.price), new OrderId(order.id))
+          : order.payment_method === 'echannel'
+          ? new EchannelPayment(new Price(order.price), new OrderId(order.id))
+          : new QrisPayment(new Price(order.price), new OrderId(order.id));
+
+      return new Order(
+        new OrderId(order.id),
+        new UserId(order.user_id),
+        new Price(order.price),
+        order.status,
+        paymentMethod
+      );
+    });
+  }
+
+  async getOrderListOwnedByUser(userId: UserId): Promise<Order[]> {
+    const orders = await this.orderRepository.getOrderListOwnedByUser(userId);
+    return orders.map((order) => {
+      const paymentMethod =
+        order.payment_method === 'bank_transfer'
+          ? new BankTransfer(new Price(order.price), new OrderId(order.id))
+          : order.payment_method === 'echannel'
+          ? new EchannelPayment(new Price(order.price), new OrderId(order.id))
+          : new QrisPayment(new Price(order.price), new OrderId(order.id));
+      return new Order(
+        new OrderId(order.id),
+        new UserId(order.user_id),
+        new Price(order.price),
+        order.status,
+        paymentMethod
+      );
+    });
   }
 }
