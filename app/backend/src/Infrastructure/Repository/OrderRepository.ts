@@ -76,14 +76,12 @@ export class OrderRepository implements IOrderRepository {
     }
   }
   async updateOrderStatus(orderId: OrderId, order: Order): Promise<Order> {
-    console.log({ order, status: order.getStatus() });
     const query = `UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`;
     const [results]: [any[], any[]] = await this.dbConnection.query(query, [
       order.getStatus(),
       orderId.toString(),
     ]);
     console.log('OK');
-    console.log(results);
     return order;
   }
   async getOrders(): Promise<
@@ -127,6 +125,32 @@ export class OrderRepository implements IOrderRepository {
       userId.toString(),
     ]);
 
+    return results;
+  }
+
+  async getOrderItems(orderId: OrderId): Promise<
+    {
+      id: string;
+      user_id: string;
+      price: number;
+      status: StatusType;
+      payment_method: PaymentMethodType;
+      full_name: string;
+      phone_number: string;
+      created_at: string;
+      updated_at: string;
+      box_id: string;
+      box_name: string;
+      box_quantity: number;
+      box_image_url: string;
+      box_price: number;
+    }[]
+  > {
+    const query =
+      'SELECT orders.id, orders.user_id, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, boxes.id as box_id, boxes.name as box_name, boxes.image_url as box_image_url, order_items.quantity as box_quantity, boxes.price as box_price FROM orders JOIN profiles ON orders.user_id = profiles.user_id JOIN order_items ON orders.id = order_items.order_id JOIN boxes ON order_items.box_id = boxes.id WHERE orders.id = ?';
+    const [results]: [any[], any[]] = await this.dbConnection.query(query, [
+      orderId.toString(),
+    ]);
     return results;
   }
 }

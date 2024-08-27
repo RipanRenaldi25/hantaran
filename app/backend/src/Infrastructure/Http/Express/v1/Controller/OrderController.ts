@@ -6,13 +6,15 @@ import { UpdateOrderStatusUsecase } from '../../../../../Application/Usecase/Ord
 import { GetOrdersUsecase } from '../../../../../Application/Usecase/Order/GetOrdersUsecase';
 import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/Order/GetOrderOwnedByUserUsecase';
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
+import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/GetOrderItemUsecase';
 
 export class OrderController {
   constructor(
     private readonly createOrderUsecase: CreateOrderUsecase,
     private readonly updateOrderStatusUsecase: UpdateOrderStatusUsecase,
     private readonly getOrderUsecase: GetOrdersUsecase,
-    private readonly getOrderOwnedByUserUsecase: GetOrderOwnedByUserUsecase
+    private readonly getOrderOwnedByUserUsecase: GetOrderOwnedByUserUsecase,
+    private readonly getOrderItemUsecase: GetOrderItemUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -119,6 +121,37 @@ export class OrderController {
         status: 'Success',
         message: `Orders fetched`,
         data: orders,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async getOrderItems(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const { id: userId } = (req as any)['user'];
+      if (!orderId) {
+        throw new InvariantError('Order Id cannot be empty');
+      }
+      const orderItems = await this.getOrderItemUsecase.execute({
+        orderId,
+        userId,
+      });
+      res.status(200).json({
+        status: 'Success',
+        message: `Order Items fetched`,
+        data: orderItems,
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

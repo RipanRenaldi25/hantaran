@@ -33,4 +33,23 @@ export interface IOrderRepository {
       updated_at: string;
     }[]
   >;
+
+  getOrderItems(orderId: OrderId): Promise<
+    {
+      id: string;
+      user_id: string;
+      price: number;
+      status: StatusType;
+      payment_method: PaymentMethodType;
+      full_name: string;
+      phone_number: string;
+      created_at: string;
+      updated_at: string;
+      box_id: string;
+      box_name: string;
+      box_quantity: number;
+      box_image_url: string;
+      box_price: number;
+    }[]
+  >;
 }

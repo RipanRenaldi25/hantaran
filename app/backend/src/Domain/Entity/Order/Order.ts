@@ -62,12 +62,14 @@ export class Order {
 
   addOrderItem(item: OrderItem) {
     const index = this.items?.findIndex(
-      (item) => item.getBoxId().toString === item.getBoxId().toString
+      (orderItem) =>
+        orderItem.getBoxId().toString() === item.getBoxId().toString()
     );
     if (index === -1) {
       this.items.push(item);
       return;
+    } else {
+      this.items[index] = item;
     }
-    this.items[index] = item;
   }
 }

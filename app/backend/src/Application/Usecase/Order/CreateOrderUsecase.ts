@@ -116,6 +116,8 @@ export class CreateOrderUsecase {
       order.addOrderItem(orderItem);
       order.getPaymentMethod().addTransactionConfiguration({
         itemDetails: [
+          ...(order.getPaymentMethod().getTransactionConfiguration()
+            .itemDetails || []),
           {
             id: item.boxId,
             quantity: item.quantity,
@@ -127,12 +129,10 @@ export class CreateOrderUsecase {
       totalPrice += item.price * item.quantity;
     }
     order.setAmount(new Price(totalPrice));
-    // console.log(JSON.stringify(paymentMethod.mapToFetch()));
 
     const { createdOrder, transaction } = await this.orderService.createOrder(
       order
     );
-    console.log({ createdOrder, orderId: orderId.toString() });
     const returnedPayload = {
       id: createdOrder.getId().toString(),
       fullName: customer.fullName,
