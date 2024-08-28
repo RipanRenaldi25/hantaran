@@ -14,4 +14,6 @@ export interface IBoxRepository {
     page: number;
   }>;
   connectBoxWithDecorationAndColor(box: Box): Promise<Box | undefined>;
+  connectBoxWithDecoration(box: Box): Promise<Box>;
+  connectBoxWithColorQuery(box: Box): Promise<Box>;
 }

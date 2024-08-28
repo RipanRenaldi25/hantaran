@@ -1,11 +1,4 @@
-import {
-  Box,
-  BoxId,
-  Color,
-  ColorId,
-  Decoration,
-  DecorationId,
-} from '../../../Domain/Entity';
+import { Box, BoxId, ColorId, DecorationId } from '../../../Domain/Entity';
 import { InvariantError } from '../../../Domain/Exception/InvariantError';
 import { NotFoundError } from '../../../Domain/Exception/NotFoundError';
 import { IBoxRepository } from '../../../Domain/Repository/IBoxRepository';

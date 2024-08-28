@@ -13,6 +13,8 @@ import {
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
 import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
+import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
+import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -21,6 +23,8 @@ export class BoxController {
   private readonly getBoxesUsecase: GetBoxesUsecase;
   private readonly getBoxByIdUsecase: GetBoxByIdUsecase;
   private readonly connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase;
+  private readonly connectBoxWithColorUsecase: ConnectBoxWithColorUsecase;
+  private readonly connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase;
 
   constructor(
     createBoxUsecase: CreateBoxUsecase,
@@ -28,7 +32,9 @@ export class BoxController {
     updateBoxUsecase: UpdateBoxUsecase,
     getBoxesUsecase: GetBoxesUsecase,
     getBoxByIdUsecase: GetBoxByIdUsecase,
-    connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase
+    connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase,
+    connectBoxWithColorUsecase: ConnectBoxWithColorUsecase,
+    connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
@@ -36,6 +42,8 @@ export class BoxController {
     this.getBoxesUsecase = getBoxesUsecase;
     this.getBoxByIdUsecase = getBoxByIdUsecase;
     this.connectBoxUsecase = connectBoxUsecase;
+    this.connectBoxWithColorUsecase = connectBoxWithColorUsecase;
+    this.connectBoxWithDecorationUsecase = connectBoxWithDecorationUsecase;
   }
 
   async createBox(req: Request, res: Response) {
@@ -209,6 +217,71 @@ export class BoxController {
         data: box,
       });
     } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async connectBoxWithColor(req: Request, res: Response) {
+    try {
+      const { boxId, colorId } = req.body;
+      if (!boxId || !colorId) {
+        throw new InvariantError(
+          'Box id and color id are required in parameter'
+        );
+      }
+      const box = await this.connectBoxWithColorUsecase.execute({
+        boxId,
+        colorId,
+      });
+      res.status(201).json({
+        status: 'Success',
+        message: 'Boxes connected',
+        data: box,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async connectBoxWithDecoration(req: Request, res: Response) {
+    try {
+      const { boxId, decorationId } = req.body;
+      if (!boxId || !decorationId) {
+        throw new InvariantError(
+          'Box id and color id are required in parameter'
+        );
+      }
+      const box = await this.connectBoxWithDecorationUsecase.execute({
+        boxId,
+        decorationId,
+      });
+      res.status(201).json({
+        status: 'Success',
+        message: 'Boxes connected',
+        data: box,
+      });
+    } catch (err: any) {
+      console.log({ err });
       if (err instanceof ClientError) {
         res.status(err.statusCode).json({
           status: 'Fail',

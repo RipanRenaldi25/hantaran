@@ -1,5 +1,5 @@
 import { INavItems, Navigation } from '@/components/Navigation';
-import { useAppSelector } from '@/components/states';
+import { useAppSelector } from '@/states';
 import { Toaster } from '@/components/ui/toaster';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';

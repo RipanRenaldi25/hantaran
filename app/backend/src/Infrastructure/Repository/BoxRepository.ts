@@ -130,4 +130,39 @@ export class BoxRepository implements IBoxRepository {
       throw new Error(err.message);
     }
   }
+  async connectBoxWithDecoration(box: Box): Promise<Box> {
+    try {
+      await this.dbConnection.query('START TRANSACTION');
+      const connectBoxWithDecorationQuery =
+        'INSERT INTO box_decorations (box_id, decoration_id) VALUES (?, ?)';
+      await this.dbConnection.query(connectBoxWithDecorationQuery, [
+        box.getId().toString(),
+        box.getdecoration()?.getId().toString(),
+      ]);
+      await this.dbConnection.query('COMMIT');
+      return box;
+    } catch (err: any) {
+      console.log(`ROLLBACK ${err.message}`);
+      await this.dbConnection.query('ROLLBACK');
+      throw new Error(err.message);
+    }
+  }
+
+  async connectBoxWithColorQuery(box: Box): Promise<Box> {
+    try {
+      await this.dbConnection.query('START TRANSACTION');
+      const connectBoxWithColorQuery =
+        'INSERT INTO box_colors (box_id, color_id) VALUES (?, ?)';
+      await this.dbConnection.query(connectBoxWithColorQuery, [
+        box.getId().toString(),
+        box.getcolor()?.getId().toString(),
+      ]);
+      await this.dbConnection.query('COMMIT');
+      return box;
+    } catch (err: any) {
+      console.log(`ROLLBACK ${err.message}`);
+      await this.dbConnection.query('ROLLBACK');
+      throw new Error(err.message);
+    }
+  }
 }

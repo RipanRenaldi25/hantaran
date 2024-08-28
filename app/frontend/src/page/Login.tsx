@@ -6,8 +6,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import InputField from '@/components/InputField';
 import { getUserLogedin, login } from '@/feature/user';
 import { useToast } from '@/components/ui/use-toast';
-import { useAppDispatch } from '@/components/states';
-import { setUserLogedIn } from '@/components/states/UserLogedInState';
+import { useAppDispatch } from '@/states';
+import { setUserLogedIn } from '@/states/UserLogedInState';
 
 const Login = () => {
   const navigate = useNavigate();

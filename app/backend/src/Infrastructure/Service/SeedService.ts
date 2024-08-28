@@ -108,7 +108,8 @@ export class SeedService {
   async createBoxDecorationTable() {
     const query = `
             CREATE TABLE IF NOT EXISTS box_decorations(
-                box_id VARCHAR(255) PRIMARY KEY,
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                box_id VARCHAR(255),
                 decoration_id VARCHAR(255),
                 CONSTRAINT box_decorations_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
                 CONSTRAINT box_decorations_decoration_id_fk FOREIGN KEY(decoration_id) REFERENCES decorations(id),
@@ -121,7 +122,8 @@ export class SeedService {
   async createBoxColorTable() {
     const query = `
       CREATE TABLE IF NOT EXISTS box_colors(
-        box_id VARCHAR(255) PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        box_id VARCHAR(255),
         color_id VARCHAR(255),
         CONSTRAINT box_colors_box_id_fk FOREIGN KEY(box_id) REFERENCES boxes(id),
         CONSTRAINT box_colors_color_id_fk FOREIGN KEY(color_id) REFERENCES colors(id),
