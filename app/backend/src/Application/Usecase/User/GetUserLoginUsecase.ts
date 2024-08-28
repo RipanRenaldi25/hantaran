@@ -13,19 +13,19 @@ export class GetUserLoginUsecase {
       new UserId(userId)
     );
     console.log({ user, userWithRole });
-    if (!user || !userWithRole) {
+    if (!userWithRole) {
       throw new NotFoundError('$User not found');
     }
     return {
-      id: user.userId,
-      fullName: user.fullName,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      city: user.city,
-      postalCode: user.postalCode,
-      street: user.street,
-      details: user.details,
-      username: user.username,
+      id: user?.userId,
+      fullName: user?.fullName,
+      email: user?.email,
+      phoneNumber: user?.phoneNumber,
+      city: user?.city,
+      postalCode: user?.postalCode,
+      street: user?.street,
+      details: user?.details,
+      username: user?.username,
       role: userWithRole.getRole().getName().getRole(),
     };
   }

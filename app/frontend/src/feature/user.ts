@@ -42,3 +42,25 @@ export const getUserLogedin = async () => {
     );
   }
 };
+
+export const register = async (payload: {
+  username: string;
+  email: string;
+  password: string;
+}): Promise<{ registeredUserId: { id: string } }> => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/users/register`,
+      { ...payload, role: 'user' }
+    );
+    const {
+      data: { data },
+    } = response;
+    return data as { registeredUserId: { id: string } };
+  } catch (err) {
+    console.log({ err });
+    throw new Error(
+      (err as { response: { data: { message: string } } }).response.data.message
+    );
+  }
+};

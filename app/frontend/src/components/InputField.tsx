@@ -11,6 +11,7 @@ export interface IInputField {
   placeholder: string;
   name: string;
   children?: React.ReactNode;
+  value: string;
 }
 
 const InputField = ({
@@ -20,6 +21,7 @@ const InputField = ({
   placeholder,
   name,
   children,
+  value = '',
 }: IInputField) => {
   return (
     <div className="flex flex-col gap-2 ">
@@ -29,6 +31,7 @@ const InputField = ({
         placeholder={placeholder}
         name={name}
         onChange={(e) => onInputChangeHandler(e.target.name, e)}
+        value={value}
       />
       {children}
     </div>

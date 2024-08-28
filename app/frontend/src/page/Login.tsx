@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Eye } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import InputField from '@/components/InputField';
-import { getUserLogedin, login } from '@/feature/login';
+import { getUserLogedin, login } from '@/feature/user';
 import { useToast } from '@/components/ui/use-toast';
 import { useAppDispatch } from '@/components/states';
 import { setUserLogedIn } from '@/components/states/UserLogedInState';
@@ -32,6 +32,7 @@ const Login = () => {
         return;
       }
       const data = await login(loginField.uniqueIdentity, loginField.password);
+      console.log({ isLoginSucceed: data });
       if (!data) {
         throw new Error('User is not login');
       }
@@ -69,6 +70,7 @@ const Login = () => {
               title="Username or Email"
               placeholder="Enter your username or email"
               onInputChangeHandler={onInputChangeHandler}
+              value={loginField.uniqueIdentity}
             />
             <div className="flex flex-col gap-2">
               <label>Password</label>
