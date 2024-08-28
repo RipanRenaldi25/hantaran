@@ -158,4 +158,28 @@ export class CartRepository implements ICartRepository {
       return null;
     }
   }
+  async getCartOwnedByUser(userId: UserId): Promise<
+    | {
+        cart_id: string;
+        user_id: string;
+        box_id: string;
+        box_name: string;
+        decoration_name: string;
+        decoration_id: string;
+        quantity: number;
+        color_id: string;
+        color_name: string;
+      }[]
+    | null
+  > {
+    try {
+      const query = `SELECT carts.id as cart_id, carts.user_id as user_id, boxes.id as box_id, boxes.name as box_name, decorations.name as decoration_name, decorations.id as decoration_id, cart_items.quantity as quantity, colors.id as color_id, colors.name as color_name FROM carts JOIN cart_items ON carts.id = cart_items.cart_id JOIN boxes ON cart_items.box_id = boxes.id  JOIN box_colors ON boxes.id = box_colors.box_id JOIN colors ON box_colors.color_id = colors.id JOIN box_decorations ON boxes.id = box_decorations.box_id JOIN decorations ON box_decorations.decoration_id = decorations.id WHERE user_id = ?`;
+      const [results]: [any[], any[]] = await this.dbConnection.query(query, [
+        userId.toString(),
+      ]);
+      return results;
+    } catch (err) {
+      return null;
+    }
+  }
 }

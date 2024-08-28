@@ -18,6 +18,7 @@ import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBox
 import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
 import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
 import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
+import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -58,6 +59,10 @@ const connectBoxWithDecorationUsecase = new ConnectBoxWithDecorationUsecase(
   boxRepository,
   decorationRepository
 );
+
+const getBoxesWithColorAndDecoration =
+  new getBoxesWithColorAndDecorationUsecase(boxRepository);
+
 // CONTROLLER
 const boxController = new BoxController(
   createBoxUsecase,
@@ -67,7 +72,8 @@ const boxController = new BoxController(
   getBoxByIdUsecase,
   connectBoxUsecase,
   connectBoxWithColorUsecase,
-  connectBoxWithDecorationUsecase
+  connectBoxWithDecorationUsecase,
+  getBoxesWithColorAndDecoration
 );
 
 const authMiddleware = AuthMiddleware.getInstance(
@@ -122,6 +128,12 @@ boxRouter.post(
   '/connect/decorations/',
   authMiddleware.applyWithRole(['admin']),
   (req, res) => boxController.connectBoxWithDecoration(req, res)
+);
+
+boxRouter.get(
+  '/colors/decorations/',
+  authMiddleware.applyWithRole(['admin', 'user']),
+  (req, res) => boxController.getBoxesWithColorAndDecoration(req, res)
 );
 
 export default boxRouter;

@@ -10,6 +10,7 @@ import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { v4 } from 'uuid';
 import { DeleteItemFromCartUsecase } from '../../../../../Application/Usecase/Cart/DeleteItemFromCartUsecase';
 import { UpdateCartItemUsecase } from '../../../../../Application/Usecase/Cart/UpdateCartItemUsecase';
+import { GetUserCartUsecase } from '../../../../../Application/Usecase/Cart/GetUserCartUsecase';
 
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
 const authMiddleware = AuthMiddleware.getInstance(
@@ -24,11 +25,13 @@ const cartRepository = new CartRepository(
 const createCartUsecase = new CreateCartUsecase(cartRepository, v4);
 const deleteItemFromCartUsecase = new DeleteItemFromCartUsecase(cartRepository);
 const updateItemUsecase = new UpdateCartItemUsecase(cartRepository);
+const getUserCartUsecase = new GetUserCartUsecase(cartRepository);
 
 const cartController = new CartController(
   createCartUsecase,
   deleteItemFromCartUsecase,
-  updateItemUsecase
+  updateItemUsecase,
+  getUserCartUsecase
 );
 
 const cartRouter = express.Router();
@@ -44,5 +47,8 @@ cartRouter.put(
   '/items/:cartId/:boxId',
   authMiddleware.applyWithRole(['user']),
   (req, res) => cartController.updateCart(req, res)
+);
+cartRouter.get('/self/', authMiddleware.applyWithRole(['user']), (req, res) =>
+  cartController.getCartOwnedByUser(req, res)
 );
 export default cartRouter;

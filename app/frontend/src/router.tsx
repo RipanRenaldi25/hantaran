@@ -6,6 +6,8 @@ import BoxPage from './page/BoxPage';
 import OrderListPage from './page/OrderListPage';
 import AdminDashboard from './page/AdminDashboard';
 import UserDashboard from './page/UserDashboard';
+import { MainPage } from './page/MainPage';
+import OrderPage from './page/OrderPage';
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +16,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '', // Path kosong untuk menandakan route default di bawah LandingPage
-        element: <h1>Test</h1>, // Halaman utama untuk LandingPage
+        element: <MainPage />, // Halaman utama untuk LandingPage
       },
       {
         path: 'about',
@@ -76,5 +78,9 @@ export const router = createBrowserRouter([
     path: '/user',
     element: <UserDashboard />,
     children: [],
+  },
+  {
+    path: '/user/checkout/:id',
+    element: <OrderPage />,
   },
 ]);

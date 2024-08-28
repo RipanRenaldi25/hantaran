@@ -1,10 +1,19 @@
-import { IBoxesResponse } from '@/states/interface';
 import axios from 'axios';
 
-export const getBoxes = async (): Promise<IBoxesResponse> => {
+export interface ICreateCart {
+  items: Item[];
+}
+
+export interface Item {
+  boxId: string;
+  quantity: number;
+}
+
+export const createCart = async (cart: ICreateCart) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/boxes`,
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/carts`,
+      cart,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
@@ -14,14 +23,14 @@ export const getBoxes = async (): Promise<IBoxesResponse> => {
     const { data } = response.data;
     return data;
   } catch (err) {
-    return { boxes: [], page: 0, total: 0 } as IBoxesResponse;
+    return null;
   }
 };
 
-export const getBoxesWithColorAndDecoration = async () => {
+export const getCartOwnedByUser = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/boxes/colors/decorations/`,
+      `${import.meta.env.VITE_API_BASE_URL}/carts/self/`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
@@ -29,9 +38,8 @@ export const getBoxesWithColorAndDecoration = async () => {
       }
     );
     const { data } = response.data;
-    console.log(data);
     return data;
   } catch (err) {
-    return { boxes: [], page: 0, total: 0 } as IBoxesResponse;
+    return null;
   }
 };

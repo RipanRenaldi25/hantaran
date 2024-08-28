@@ -165,4 +165,23 @@ export class BoxRepository implements IBoxRepository {
       throw new Error(err.message);
     }
   }
+
+  async getBoxesWithColorAndDecoration(): Promise<
+    {
+      id: string;
+      box_name: string;
+      box_image_url: string;
+      color_name: string;
+      color_id: string;
+      decoration_name: string;
+      decoration_id: string;
+      price: number;
+    }[]
+  > {
+    const query = `SELECT boxes.id as id, boxes.name as box_name, boxes.price, boxes.image_url as box_image_url, decorations.name as decoration_name, colors.name as color_name, colors.id as color_id, decorations.id as decoration_id FROM boxes JOIN box_colors ON boxes.id=box_colors.box_id JOIN colors ON box_colors.color_id = colors.id JOIN box_decorations ON boxes.id = box_decorations.box_id JOIN decorations ON box_decorations.decoration_id = decorations.id`;
+    const [resultBox]: [rows: any[], fields: any[]] =
+      await this.dbConnection.query(query);
+
+    return resultBox;
+  }
 }

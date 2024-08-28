@@ -16,4 +16,16 @@ export interface IBoxRepository {
   connectBoxWithDecorationAndColor(box: Box): Promise<Box | undefined>;
   connectBoxWithDecoration(box: Box): Promise<Box>;
   connectBoxWithColorQuery(box: Box): Promise<Box>;
+  getBoxesWithColorAndDecoration(): Promise<
+    {
+      id: string;
+      box_name: string;
+      box_image_url: string;
+      color_name: string;
+      color_id: string;
+      decoration_name: string;
+      decoration_id: string;
+      price: number;
+    }[]
+  >;
 }

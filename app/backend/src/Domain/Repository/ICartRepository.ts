@@ -18,4 +18,18 @@ export interface ICartRepository {
   checkIfItemIsExistOnCart(cartId: CartId, boxId: BoxId): Promise<boolean>;
   query(query: string, params?: string[]): Promise<any>;
   getCartItemByCartId(cartId: CartId): Promise<Cart | null>;
+  getCartOwnedByUser(userId: UserId): Promise<
+    | {
+        cart_id: string;
+        user_id: string;
+        box_id: string;
+        box_name: string;
+        decoration_name: string;
+        decoration_id: string;
+        quantity: number;
+        color_id: string;
+        color_name: string;
+      }[]
+    | null
+  >;
 }

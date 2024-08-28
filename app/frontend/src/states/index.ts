@@ -3,12 +3,14 @@ import { userLoginReducer } from './UserLogedInState';
 import { useDispatch, useSelector } from 'react-redux';
 import { boxReducer } from './BoxState';
 import { orderReducer } from './OrderState';
+import { cartReducer } from './Cart';
 
 const store = configureStore({
   reducer: {
     userLogedIn: userLoginReducer,
     box: boxReducer,
     order: orderReducer,
+    cart: cartReducer,
   },
 });
 

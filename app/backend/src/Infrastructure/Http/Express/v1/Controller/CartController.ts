@@ -5,12 +5,14 @@ import { validateCreateCartPayload } from '../../../../Helper/Validator/Cart/Car
 import { DeleteItemFromCartUsecase } from '../../../../../Application/Usecase/Cart/DeleteItemFromCartUsecase';
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { UpdateCartItemUsecase } from '../../../../../Application/Usecase/Cart/UpdateCartItemUsecase';
+import { GetUserCartUsecase } from '../../../../../Application/Usecase/Cart/GetUserCartUsecase';
 
 export class CartController {
   constructor(
     private readonly createCartUsecase: CreateCartUsecase,
     private readonly deleteItemFromCartUsecase: DeleteItemFromCartUsecase,
-    private readonly updateItemFromCartUsecase: UpdateCartItemUsecase
+    private readonly updateItemFromCartUsecase: UpdateCartItemUsecase,
+    private readonly getCartOwnedByUserUsecase: GetUserCartUsecase
   ) {}
 
   async createCart(req: Request, res: Response) {
@@ -95,6 +97,30 @@ export class CartController {
         status: 'Success',
         message: 'item updated from cart',
         data: updatedItem,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async getCartOwnedByUser(req: Request, res: Response) {
+    try {
+      const { id: userId } = (req as any)['user'];
+      const cart = await this.getCartOwnedByUserUsecase.execute(userId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Cart found',
+        data: cart,
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

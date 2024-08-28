@@ -15,6 +15,7 @@ import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBox
 import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
 import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
 import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
+import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -34,7 +35,8 @@ export class BoxController {
     getBoxByIdUsecase: GetBoxByIdUsecase,
     connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase,
     connectBoxWithColorUsecase: ConnectBoxWithColorUsecase,
-    connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase
+    connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase,
+    private readonly getBoxesWithColorAndDecorationUsecase: getBoxesWithColorAndDecorationUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
@@ -282,6 +284,29 @@ export class BoxController {
       });
     } catch (err: any) {
       console.log({ err });
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async getBoxesWithColorAndDecoration(req: Request, res: Response) {
+    try {
+      const boxes = await this.getBoxesWithColorAndDecorationUsecase.execute();
+      res.status(200).json({
+        status: 'Success',
+        message: 'Boxes retrieved',
+        data: boxes,
+      });
+    } catch (err: any) {
       if (err instanceof ClientError) {
         res.status(err.statusCode).json({
           status: 'Fail',
