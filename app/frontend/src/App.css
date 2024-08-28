@@ -1,0 +1,177 @@
+header {
+    background: linear-gradient(135deg, #f8f1e4, #d1b79e); /* Gradasi dari putih ke coklat muda */
+    padding: 60px 20px;
+    text-align: center;
+    color: #4a3c2f; /* Warna coklat tua untuk teks */
+    border-bottom: 5px solid #d1b79e; /* Garis bawah untuk pemisah */
+    font-family: Arial, sans-serif;
+}
+
+header h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #4a3c2f; /* Warna coklat tua untuk judul */
+}
+
+header p {
+    font-size: 18px;
+    margin: 0;
+    color: #7a6a55; /* Warna coklat yang lebih muda untuk paragraf */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 36px;
+    }
+
+    header p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 28px;
+    }
+
+    header p {
+        font-size: 14px;
+    }
+}
+
+#jelajahi {
+    padding: 50px 0;
+    background: linear-gradient(135deg, #f8f1e4, #d1b79e); /* Gradasi dari putih ke coklat muda */
+}
+
+#jelajahi .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#jelajahi h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: #4a3c2f; /* Warna coklat tua untuk judul */
+}
+
+.jelajahi-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.jelajahi-item {
+    background: linear-gradient(135deg, #ffffff, #e5d4c3); /* Gradasi dari putih ke coklat muda */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    flex-basis: calc(33.333% - 20px);
+    box-sizing: border-box;
+    transition: transform 0.3s ease; /* Animasi pada hover */
+}
+
+.jelajahi-item:hover {
+    transform: translateY(-5px); /* Efek hover */
+}
+
+.jelajahi-item img {
+    width: 100%;
+    height: auto;
+    border-bottom: 3px solid #d1b79e; /* Garis coklat muda di bawah gambar */
+}
+
+.jelajahi-item h3 {
+    font-size: 24px;
+    margin: 20px 0 10px;
+    color: #4a3c2f;
+}
+
+.jelajahi-item p {
+    padding: 0 20px;
+    color: #7a6a55;
+}
+
+.jelajahi-link {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #4a3c2f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease; /* Animasi pada hover */
+}
+
+.jelajahi-link:hover {
+    background-color: #6e5a43;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .jelajahi-item {
+        flex-basis: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .jelajahi-item {
+        flex-basis: 100%;
+    }
+}
+
+footer {
+    background: linear-gradient(135deg, #4a3c2f, #d1b79e); /* Gradasi coklat tua ke coklat muda */
+    color: #ffffff; /* Warna teks putih */
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.footer-info address, 
+.footer-contact {
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #f8f1e4; /* Warna teks lebih cerah */
+}
+
+.footer-info p {
+    margin: 5px 0;
+}
+
+.footer-bottom {
+    border-top: 1px solid #f8f1e4;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #f8f1e4; /* Warna teks lebih cerah */
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-info address,
+    .footer-contact {
+        margin-bottom: 20px;
+    }
+}

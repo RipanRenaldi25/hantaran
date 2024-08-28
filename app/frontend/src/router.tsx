@@ -3,6 +3,7 @@ import LandingPage from '@/page/LandingPage';
 import Register from './page/Register';
 import Login from './page/Login';
 import UserDashboard from './page/UserDashboard';
+import { MainPage } from './page/MainPage'
 
 export const router = createBrowserRouter([
   {
@@ -11,7 +12,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '', // Path kosong untuk menandakan route default di bawah LandingPage
-        element: <h1>Test</h1>, // Halaman utama untuk LandingPage
+        element: <MainPage />, // Halaman utama untuk LandingPage
       },
       {
         path: 'about',

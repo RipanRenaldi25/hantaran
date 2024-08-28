@@ -29,13 +29,30 @@ function LandingPage() {
       href: '/contact',
     },
   ]);
+
   return (
     <>
       <Toaster />
       <div className="flex flex-col">
         <Navigation navItems={navItems} />
         <Outlet />
-        <h1>Footer</h1>
+
+      
+
+        <footer>
+            <div className="footer-info">
+                <address>
+                    <p>Alamat: Jl. Margahayu Permai No. 123, Kota Bandung, Negara Indonesia</p>
+                </address>
+                <div className="footer-contact">
+                    <p>Telepon: 082121087879 </p>
+                    <p>Email: salmanabdussalam@gmail.com</p>
+                </div>
+            </div>
+        <div className="footer-bottom">
+            <p>&copy; 2024 HantaranByJoo. All rights reserved.</p>
+        </div>
+        </footer>
       </div>
     </>
   );
