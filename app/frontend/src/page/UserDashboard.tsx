@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 // import Sidebar from '@/components/Sidebar';
 import { ShoppingCart } from 'lucide-react';
 import hero from '@/assets/hero.jpg';
@@ -198,6 +198,7 @@ function Sidebar() {
 const UserDashboard = () => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { boxes, boxesWithColorAndDecoration, page, total } = useAppSelector(
     (state) => state.box
   );
@@ -206,8 +207,13 @@ const UserDashboard = () => {
   // const [sidebarItems, setSidebarItems] = useState([
   //   { icon: LayoutDashboard, title: 'Dashboard', path: '', isActive: true },
   // ]);
+  const userLogin = useAppSelector((state) => state.userLogedIn);
 
   const { carts } = useAppSelector((state) => state.cart);
+
+  if (!userLogin || !localStorage.getItem('ROLE')) {
+    navigate('/');
+  }
 
   const handleTempList = (box: any, color: string, decoration: string) => {
     setIsTempListMoved(false);
@@ -303,6 +309,11 @@ const UserDashboard = () => {
 
   useEffect(() => {
     Promise.all([getBoxWithDecorationAndColor(), getSelfCart()]);
+    if (
+      localStorage.getItem('ROLE') === 'admin' ||
+      userLogin.role === 'admin'
+    ) {
+    }
   }, []);
   return (
     <article>

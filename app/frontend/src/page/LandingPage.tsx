@@ -5,7 +5,16 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 function LandingPage() {
+  const { role } = useAppSelector((state) => state.userLogedIn);
+  console.log({ role });
   const navigate = useNavigate();
+  useEffect(() => {
+    if (role === 'admin') {
+      navigate('/dashboard');
+    } else if (role == 'user') {
+      navigate('/user');
+    }
+  }, [role]);
   const { userLogedIn } = useAppSelector((state) => state);
   const accessToken = localStorage.getItem('ACCESS_TOKEN');
 

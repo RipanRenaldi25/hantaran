@@ -43,7 +43,11 @@ const AdminDashboard = () => {
     navigate('/');
   }
   useEffect(() => {
-    if (userLogin?.role === 'user' || state?.role === 'user') {
+    if (
+      userLogin?.role === 'user' ||
+      state?.role === 'user' ||
+      localStorage.getItem('ROLE') === 'user'
+    ) {
       navigate('/user');
     }
   }, [state, userLogin]);

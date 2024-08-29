@@ -2,8 +2,8 @@ import React from 'react';
 
 export const MainPage = () => {
   return (
-    <div>
-      <header className="mainpage">
+    <div className="mainpage">
+      <header>
         <h1> Selamat Datang di HantaranByJoo</h1>
         <p>
           {' '}

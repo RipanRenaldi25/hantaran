@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import { NavLink, useNavigate } from 'react-router-dom';
+import logo from '@/assets/Logo.png';
 
 export interface INavItems {
   title: string;
@@ -20,7 +21,7 @@ export interface INavigationProps {
 export const Navigation = ({ navItems }: INavigationProps) => {
   const navigate = useNavigate();
   return (
-    <header className="bg-[#0648B3] font-semibold">
+    <header className=" py-6 shadow-lg bg-gradient-to-tr from-white to-gray-200">
       {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path
           fill="#0099ff"
@@ -33,8 +34,9 @@ export const Navigation = ({ navItems }: INavigationProps) => {
           className="flex items-center justify-start gap-2"
           onClick={() => navigate('/')}
         >
-          <span>Icon</span>
-          <span>Hantaran</span>
+          <div className="overflow-hidden rounded-full">
+            <img src={logo} alt="Logo hantaran" width={60} />
+          </div>
         </div>
         <NavigationMenu>
           <NavigationMenuList>

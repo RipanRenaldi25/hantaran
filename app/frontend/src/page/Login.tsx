@@ -38,6 +38,7 @@ const Login = () => {
       }
       const user = await getUserLogedin();
       dispatch(setUserLogedIn(user));
+      localStorage.setItem('ROLE', user.role);
       navigate('/dashboard', { state: user });
     } catch (err) {
       toast({
