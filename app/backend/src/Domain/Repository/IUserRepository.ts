@@ -22,6 +22,7 @@ export interface IUserRepository {
     postalCode: string;
     street: string;
     details: string;
+    avatar: string;
   } | null>;
   getUserWithProfile(id: UserId): Promise<{
     userId: string;

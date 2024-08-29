@@ -161,9 +161,10 @@ export class UserRepository implements IUserRepository {
     postalCode: string;
     street: string;
     details: string;
+    avatar: string;
   } | null> {
     try {
-      const sql = `SELECT users.id, users.username, users.email, profiles.full_name, profiles.phone_number, addresses.city, addresses.postal_code, addresses.street, addresses.details FROM users JOIN profiles ON users.id = profiles.user_id JOIN addresses ON profiles.address_id = addresses.id WHERE users.id = ?`;
+      const sql = `SELECT users.id, users.username, users.email, profiles.avatar, profiles.full_name, profiles.phone_number, addresses.city, addresses.postal_code, addresses.street, addresses.details FROM users LEFT JOIN profiles ON users.id = profiles.user_id LEFT JOIN addresses ON profiles.address_id = addresses.id WHERE users.id = ?`;
       const [results]: [any[], any[]] = await this.dbConnection.query(sql, [
         id.toString(),
       ]);
@@ -178,6 +179,7 @@ export class UserRepository implements IUserRepository {
         postalCode: row.postal_code,
         street: row.street,
         details: row.details,
+        avatar: row.avatar,
       };
     } catch (err) {
       return null;

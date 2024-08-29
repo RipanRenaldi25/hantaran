@@ -41,9 +41,11 @@ import {
 function Header({
   username = '',
   avatar,
+  userId,
 }: {
   username: string;
   avatar: string;
+  userId: string;
 }) {
   console.log({ avatar });
   return (
@@ -52,7 +54,12 @@ function Header({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="hover:cursor-pointer">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={
+                  `${import.meta.env.VITE_API_BASE_URL}/public/${avatar}` ||
+                  'https://github.com/shadcn.png'
+                }
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
@@ -60,7 +67,7 @@ function Header({
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <NavLink to="/profile">Profile</NavLink>
+              <NavLink to={`/user/profile/${userId}`}>Profile</NavLink>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <NavLink
@@ -367,6 +374,15 @@ const UserDashboard = () => {
     ) {
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      !localStorage.getItem('ROLE') ||
+      !localStorage.getItem('ACCESS_TOKEN')
+    ) {
+      navigate('/');
+    }
+  }, [localStorage.getItem('ROLE'), localStorage.getItem('ACCESS_TOKEN')]);
   return (
     <article>
       <Toaster />
@@ -433,6 +449,7 @@ const UserDashboard = () => {
       <Header
         username={userLoginWithProfile.username}
         avatar={userLoginWithProfile.avatar}
+        userId={userLoginWithProfile.id}
       />
       <HeroSection />
       <div className="flex p-8 gap-10">

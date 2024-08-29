@@ -1,18 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IUserWithProfile } from './interface';
+import { IUserWithProfileAndAddress } from './interface';
 
 type initStateType = {
-  userLoginWithProfile: IUserWithProfile;
+  userLoginWithProfile: IUserWithProfileAndAddress;
 };
 
 const initState: initStateType = {
   userLoginWithProfile: {
     avatar: '',
     email: '',
-    full_name: ' ',
+    full_name: '',
     id: '',
     phone_number: '',
     username: '',
+    city: '',
+    details: '',
+    postal_code: '',
+    street: '',
   },
 };
 
@@ -22,14 +26,21 @@ export const userSlice = createSlice({
   reducers: {
     setUserLoginWithProfile: (
       state,
-      action: PayloadAction<IUserWithProfile>
+      action: PayloadAction<IUserWithProfileAndAddress>
     ) => {
       state.userLoginWithProfile = action.payload;
+    },
+    setUserLoginProps: (
+      state,
+      action: PayloadAction<{ key: string; value: string }>
+    ) => {
+      (state.userLoginWithProfile as any)[action.payload.key] =
+        action.payload.value;
     },
   },
 });
 
 export const {
-  actions: { setUserLoginWithProfile },
+  actions: { setUserLoginWithProfile, setUserLoginProps },
   reducer: userReducer,
 } = userSlice;

@@ -61,11 +61,15 @@ export interface ICart {
   items: ICartItem[];
 }
 
-export interface IUserWithProfile {
+export interface IUserWithProfileAndAddress {
   id: string;
   email: string;
   username: string;
   full_name: string;
   phone_number: string;
   avatar: string;
+  city: string;
+  postal_code: string;
+  street: string;
+  details: string;
 }
