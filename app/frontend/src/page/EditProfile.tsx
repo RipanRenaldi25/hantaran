@@ -38,6 +38,7 @@ const EditProfile = () => {
     };
 
     dispatch(setUserLoginWithProfile(payload));
+    setUserProfileInputField(payload);
   };
   console.log({ userProfileInputField, userLoginWithProfile });
 
