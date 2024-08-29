@@ -18,7 +18,6 @@ const Login = () => {
     password: string;
   }>({ uniqueIdentity: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
-  console.log({ loginField });
 
   const handleLogin = async (e: React.FormEvent) => {
     try {
@@ -39,7 +38,12 @@ const Login = () => {
       const user = await getUserLogedin();
       dispatch(setUserLogedIn(user));
       localStorage.setItem('ROLE', user.role);
-      navigate('/dashboard', { state: user });
+      if (user.role === 'admin') {
+        navigate('/dashboard', { state: user });
+        return;
+      } else {
+        navigate('/user', { state: user });
+      }
     } catch (err) {
       toast({
         title: 'Login error',

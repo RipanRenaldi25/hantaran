@@ -60,3 +60,12 @@ export interface ICart {
   id: string;
   items: ICartItem[];
 }
+
+export interface IUserWithProfile {
+  id: string;
+  email: string;
+  username: string;
+  full_name: string;
+  phone_number: string;
+  avatar: string;
+}

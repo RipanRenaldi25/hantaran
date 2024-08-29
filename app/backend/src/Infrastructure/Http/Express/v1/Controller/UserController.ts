@@ -9,6 +9,7 @@ import { UpdatePasswordUsecase } from '../../../../../Application/Usecase/User/U
 import { GetUserByIdUsecase } from '../../../../../Application/Usecase/User/GetUserUsecase';
 import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/GetUserLoginUsecase';
 import { IConfigService } from '../../../../../Application/Service';
+import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetUserWithProfileUsecase';
 
 export class UserController {
   private readonly registerUsecase: CreateUserUsecase;
@@ -24,7 +25,8 @@ export class UserController {
     updateUserUsecase: UpdatePasswordUsecase,
     getUserByIdUsecase: GetUserByIdUsecase,
     getUserLoginUsecase: GetUserLoginUsecase,
-    private readonly configService: IConfigService
+    private readonly configService: IConfigService,
+    private readonly getUserWithProfileUsecase: getUserWithProfile
   ) {
     this.registerUsecase = registerUsecase;
     this.verifyUsecase = verifyUsecase;
@@ -188,6 +190,35 @@ export class UserController {
     try {
       const { id: userId } = (req as any)['user'];
       const user = await this.getUserLoginUsecase.execute(userId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'User fetched successfully',
+        data: user,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async getUserWithProfile(req: Request, res: Response) {
+    try {
+      const { id: userId } = (req as any)['user'];
+      console.log({ userId });
+      if (!userId) {
+        throw new InvariantError('User Id cannot be empty');
+      }
+      const user = await this.getUserWithProfileUsecase.execute(userId);
+      console.log({ user });
       res.status(200).json({
         status: 'Success',
         message: 'User fetched successfully',

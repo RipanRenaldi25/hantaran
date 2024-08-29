@@ -183,4 +183,27 @@ export class UserRepository implements IUserRepository {
       return null;
     }
   }
+
+  async getUserWithProfile(id: UserId): Promise<{
+    userId: string;
+    email: string;
+    username: string;
+    fullName?: string;
+    phoneNumber?: string;
+    avatar: string;
+  } | null> {
+    try {
+      const query =
+        'SELECT users.id, users.email, users.username, profiles.full_name, profiles.phone_number, profiles.avatar FROM users LEFT JOIN profiles ON users.id = profiles.user_id WHERE users.id = ?';
+
+      const [results]: [any[], any[]] = await this.dbConnection.query(query, [
+        id.toString(),
+      ]);
+      const [row] = results;
+
+      return row;
+    } catch (err) {
+      return null;
+    }
+  }
 }

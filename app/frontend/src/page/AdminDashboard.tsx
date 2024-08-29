@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '@/states';
+import { useAppDispatch, useAppSelector } from '@/states';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import { LayoutDashboard } from 'lucide-react';
+import { getUserWithProfile } from '@/feature/user';
+import { setUserLoginWithProfile } from '@/states/userState';
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const userLogin = useAppSelector((state) => state.userLogedIn);
   const { state } = useLocation();
   const [sidebarItems, setSidebarItems] = useState([
@@ -42,6 +45,10 @@ const AdminDashboard = () => {
   if (!localStorage.getItem('ACCESS_TOKEN')) {
     navigate('/');
   }
+  const getUserLoginWithProfile = async () => {
+    const user = await getUserWithProfile();
+    dispatch(setUserLoginWithProfile(user));
+  };
   useEffect(() => {
     if (
       userLogin?.role === 'user' ||
@@ -50,11 +57,18 @@ const AdminDashboard = () => {
     ) {
       navigate('/user');
     }
+    getUserLoginWithProfile();
   }, [state, userLogin]);
+
+  const { userLoginWithProfile } = useAppSelector((state) => state.user);
 
   return (
     <article className="flex gap-4">
-      <Sidebar sidebarItems={sidebarItems} setSidebarItems={setSidebarItems} />
+      <Sidebar
+        sidebarItems={sidebarItems}
+        setSidebarItems={setSidebarItems}
+        user={userLoginWithProfile}
+      />
       <main className="py-4">
         <Outlet />
       </main>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { boxReducer } from './BoxState';
 import { orderReducer } from './OrderState';
 import { cartReducer } from './Cart';
+import { userReducer } from './userState';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     box: boxReducer,
     order: orderReducer,
     cart: cartReducer,
+    user: userReducer,
   },
 });
 

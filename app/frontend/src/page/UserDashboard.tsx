@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 // import Sidebar from '@/components/Sidebar';
 import { ShoppingCart } from 'lucide-react';
 import hero from '@/assets/hero.jpg';
@@ -7,12 +7,7 @@ import { getBoxes, getBoxesWithColorAndDecoration } from '@/feature/box';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { setBoxes, setBoxWithColorAndDecoration } from '@/states/BoxState';
 import { Button } from '@/components/ui/button';
-import {
-  setCart,
-  setCartId,
-  setOwnedCart,
-  updateSpecificCart,
-} from '@/states/Cart';
+import { setCartId, setOwnedCart, updateSpecificCart } from '@/states/Cart';
 import { ICartItem } from '@/states/interface';
 import {
   Select,
@@ -26,18 +21,62 @@ import { toast, useToast } from '@/components/ui/use-toast';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { createCart, getCartOwnedByUser } from '@/feature/cart';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getUserWithProfile } from '@/feature/user';
+import { setUserLoginWithProfile } from '@/states/userState';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-function Header({ username = '' }: { username: string }) {
+function Header({
+  username = '',
+  avatar,
+}: {
+  username: string;
+  avatar: string;
+}) {
+  console.log({ avatar });
   return (
     <header className="bg-white py-4 px-8 flex justify-between items-center">
-      <div className="flex items-center">
-        <div className="text-lg font-bold">{username || 'Ripan Renaldi'}</div>
+      <div className="flex items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="hover:cursor-pointer">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <NavLink to="/profile">Profile</NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <NavLink
+                to=""
+                onClick={() => {
+                  localStorage.removeItem('ACCESS_TOKEN');
+                  localStorage.removeItem('ROLE');
+                }}
+              >
+                Logout
+              </NavLink>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <div className="text-lg font-bold">{username || ''}</div>
       </div>
       <nav className="flex space-x-6">
         <a href="#" className="text-gray-800 font-medium">
@@ -68,7 +107,7 @@ function HeroSection() {
     >
       <div className="absolute inset-0 bg-black opacity-30"></div>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-        <h1 className="text-4xl font-bold">Our New Collection</h1>
+        <h1 className="text-4xl font-bold text-white">Our New Collection</h1>
         <div className="mt-4">
           <input type="text" className="p-2 rounded-l" placeholder="Search" />
           <button className="p-2 bg-yellow-500 text-white rounded-r">
@@ -79,7 +118,6 @@ function HeroSection() {
     </div>
   );
 }
-
 function BoxCard({
   image,
   name,
@@ -196,6 +234,9 @@ function Sidebar() {
 }
 
 const UserDashboard = () => {
+  const [userWithProfile, setUserWithProfile] = useState<{
+    [key: string]: any;
+  }>({});
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -307,8 +348,19 @@ const UserDashboard = () => {
     dispatch(setOwnedCart(carts));
   };
 
+  const getUserProfileById = async () => {
+    const user = await getUserWithProfile();
+    dispatch(setUserLoginWithProfile(user));
+  };
+  const { userLoginWithProfile } = useAppSelector((state) => state.user);
+  console.log({ userLoginWithProfile });
+
   useEffect(() => {
-    Promise.all([getBoxWithDecorationAndColor(), getSelfCart()]);
+    Promise.all([
+      getBoxWithDecorationAndColor(),
+      getSelfCart(),
+      getUserProfileById(),
+    ]);
     if (
       localStorage.getItem('ROLE') === 'admin' ||
       userLogin.role === 'admin'
@@ -378,7 +430,10 @@ const UserDashboard = () => {
           </Sheet>
         </div>
       </div>
-      <Header username="Ripan Renaldi" />
+      <Header
+        username={userLoginWithProfile.username}
+        avatar={userLoginWithProfile.avatar}
+      />
       <HeroSection />
       <div className="flex p-8 gap-10">
         <div className="w-1/4">

@@ -6,7 +6,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 function LandingPage() {
   const { role } = useAppSelector((state) => state.userLogedIn);
-  console.log({ role });
   const navigate = useNavigate();
   useEffect(() => {
     if (role === 'admin') {

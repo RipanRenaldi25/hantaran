@@ -64,3 +64,20 @@ export const register = async (payload: {
     );
   }
 };
+
+export const getUserWithProfile = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/users/self/profiles/`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (e) {
+    return null;
+  }
+};
