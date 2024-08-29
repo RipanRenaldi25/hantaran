@@ -100,7 +100,7 @@ export const createProfileWithAddress = async (payload: {
   formData.append('address.street', payload.street);
   formData.append('address.details', payload.details);
 
-  console.log({ formData });
+  console.log({ formData, payload });
 
   try {
     const response = await axios.post(
@@ -112,9 +112,10 @@ export const createProfileWithAddress = async (payload: {
         },
       }
     );
-    const { data } = response.data;
-    return data;
+    const { createdProfile } = response.data;
+    return createdProfile;
   } catch (err: any) {
+    console.log({ err });
     return null;
   }
 };

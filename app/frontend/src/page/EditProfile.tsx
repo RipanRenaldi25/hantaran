@@ -54,6 +54,7 @@ const EditProfile = () => {
 
   const handleCreateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    let err = '';
     const payload = {
       avatar: newFileImage,
       fullName: userProfileInputField.full_name,
@@ -63,29 +64,37 @@ const EditProfile = () => {
       street: userProfileInputField.street,
       details: userProfileInputField.details,
     };
-    Object.values(userProfileInputField).forEach((value) => {
+    for (const input of Object.entries(payload)) {
+      const [key, value] = input;
       if (!value) {
-        console.log({ value });
-        toast({ title: 'Error', description: 'Please fill all fields' });
-        return;
+        err = key;
+        break;
       }
-    });
-    // const data = await createProfileWithAddress(payload);
-    // dispatch(
-    //   setUserLoginWithProfile({
-    //     avatar: newFileImage,
-    //     city: userProfileInputField.city,
-    //     details: userProfileInputField.details,
-    //     full_name: userProfileInputField.full_name,
-    //     phone_number: userProfileInputField.phone_number,
-    //     postal_code: userProfileInputField.postal_code,
-    //     street: userProfileInputField.street,
-    //     email: userProfileInputField.email,
-    //     id: userId as string,
-    //     username: userProfileInputField.username,
-    //   })
-    // );
-    console.log({ payload });
+    }
+    if (err.length) {
+      toast({
+        title: 'Error',
+        description: `Please fill ${err} input field`,
+        variant: 'destructive',
+      });
+      return;
+    }
+    const data = await createProfileWithAddress(payload);
+    dispatch(
+      setUserLoginWithProfile({
+        avatar: newFileImage,
+        city: userProfileInputField.city,
+        details: userProfileInputField.details,
+        full_name: userProfileInputField.full_name,
+        phone_number: userProfileInputField.phone_number,
+        postal_code: userProfileInputField.postal_code,
+        street: userProfileInputField.street,
+        email: userProfileInputField.email,
+        id: userId as string,
+        username: userProfileInputField.username,
+      })
+    );
+    console.log({ data });
     toast({ title: 'Success', description: 'Update profile success' });
   };
 
@@ -109,8 +118,10 @@ const EditProfile = () => {
               //       userLoginWithProfile.avatar
               //     }`
               //   : newFileImage
-              userLoginWithProfile.avatar ||
-              newFileImage ||
+              `${import.meta.env.VITE_API_BASE_URL}/public/${
+                userLoginWithProfile.avatar
+              }` ||
+              userProfileInputField.avatar ||
               'https://github.com/shadcn.png'
             }
             alt="Foto Profil"
@@ -163,7 +174,11 @@ const EditProfile = () => {
             ref={fileRef}
             onChange={(e: any) => {
               const imageUrl = URL.createObjectURL(e.target.files[0]);
-              setNewFileImage(imageUrl);
+              setNewFileImage(e.target.files[0]);
+              setUserProfileInputField((prevState) => ({
+                ...prevState,
+                avatar: imageUrl,
+              }));
             }}
             hidden
           />
