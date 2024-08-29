@@ -8,6 +8,7 @@ import AdminDashboard from './page/AdminDashboard';
 import UserDashboard from './page/UserDashboard';
 import { MainPage } from './page/MainPage';
 import OrderPage from './page/OrderPage';
+import PaymentConfirmation from './page/PaymentConfirmation';
 
 export const router = createBrowserRouter([
   {
@@ -82,5 +83,9 @@ export const router = createBrowserRouter([
   {
     path: '/user/checkout/:id',
     element: <OrderPage />,
+  },
+  {
+    path: '/user/payment/:id',
+    element: <PaymentConfirmation />,
   },
 ]);

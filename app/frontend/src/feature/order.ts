@@ -71,16 +71,22 @@ export const createOrder = async ({
   vaNumber?: string;
 }) => {
   try {
+    let methodPayment =
+      paymentMethod === 'qris'
+        ? 'qris'
+        : paymentMethod === 'mandiri'
+        ? 'echannel'
+        : 'bank_transfer';
     const payload = {
       orderItems,
-      paymentMethod,
+      paymentMethod: methodPayment,
     };
-    if (paymentMethod === 'qris') {
+    if (payload.paymentMethod === 'qris') {
       (payload as any)['acquirer'] = acquirer;
-    } else if (paymentMethod === 'bank_transfer') {
+    } else if (payload.paymentMethod === 'bank_transfer') {
       (payload as any)['bankName'] = bankName;
       (payload as any)['vaNumber'] = vaNumber;
-    } else if (paymentMethod === 'echannel') {
+    } else if (payload.paymentMethod === 'echannel') {
       (payload as any)['billInfo1'] = billInfo1;
       (payload as any)['billInfo2'] = billInfo2;
     }
@@ -97,6 +103,23 @@ export const createOrder = async ({
     return data;
   } catch (err) {
     console.log({ err });
+    return null;
+  }
+};
+
+export const getOrderById = async (orderId: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err) {
     return null;
   }
 };

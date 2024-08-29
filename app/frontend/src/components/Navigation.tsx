@@ -20,7 +20,7 @@ export interface INavigationProps {
 export const Navigation = ({ navItems }: INavigationProps) => {
   const navigate = useNavigate();
   return (
-    <header className="bg-[#0648B3] text-white">
+    <header className="bg-[#0648B3] font-semibold">
       {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path
           fill="#0099ff"
@@ -29,7 +29,10 @@ export const Navigation = ({ navItems }: INavigationProps) => {
         ></path>
       </svg> */}
       <nav className="flex items-center justify-between px-10 py-2">
-        <div className="flex items-center justify-start gap-2">
+        <div
+          className="flex items-center justify-start gap-2"
+          onClick={() => navigate('/')}
+        >
           <span>Icon</span>
           <span>Hantaran</span>
         </div>

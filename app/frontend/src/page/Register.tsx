@@ -87,7 +87,7 @@ const Register = () => {
               isEmailsend ? 'scale-100' : 'scale-0'
             } transition-transform transform duration-300`}
           >
-            <header className="text-center ">
+            <header className="text-center">
               <div>
                 <MailCheck size={48} />
               </div>
