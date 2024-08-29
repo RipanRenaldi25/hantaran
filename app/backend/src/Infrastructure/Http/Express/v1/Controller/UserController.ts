@@ -8,6 +8,7 @@ import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { UpdatePasswordUsecase } from '../../../../../Application/Usecase/User/UpdatePasswordUsecase';
 import { GetUserByIdUsecase } from '../../../../../Application/Usecase/User/GetUserUsecase';
 import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/GetUserLoginUsecase';
+import { IConfigService } from '../../../../../Application/Service';
 
 export class UserController {
   private readonly registerUsecase: CreateUserUsecase;
@@ -22,7 +23,8 @@ export class UserController {
     loginUsecase: LoginUsecase,
     updateUserUsecase: UpdatePasswordUsecase,
     getUserByIdUsecase: GetUserByIdUsecase,
-    getUserLoginUsecase: GetUserLoginUsecase
+    getUserLoginUsecase: GetUserLoginUsecase,
+    private readonly configService: IConfigService
   ) {
     this.registerUsecase = registerUsecase;
     this.verifyUsecase = verifyUsecase;
@@ -76,6 +78,12 @@ export class UserController {
       });
     } catch (err: any) {
       if (err instanceof ClientError) {
+        if (err.message.toLowerCase().includes('verified')) {
+          res.redirect(
+            `${this.configService.get('FRONTEND_URL')}/activated/email`
+          );
+          return;
+        }
         res.status(err.statusCode).json({
           status: 'Fail',
           message: `Client Error: ${err.message}`,

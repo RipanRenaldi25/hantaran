@@ -68,7 +68,8 @@ const userController = new UserController(
   loginUsecase,
   updatePasswordUsecase,
   getUserByIdUsecase,
-  getUserLoginUsecase
+  getUserLoginUsecase,
+  ConfigService.getInstance()
 );
 
 // MIDLEWARE

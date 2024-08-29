@@ -9,6 +9,8 @@ import UserDashboard from './page/UserDashboard';
 import { MainPage } from './page/MainPage';
 import OrderPage from './page/OrderPage';
 import PaymentConfirmation from './page/PaymentConfirmation';
+import ActivatedEmail from './components/ActivatedEmail';
+import ActivateEmail from './components/ActivatedEmail';
 
 export const router = createBrowserRouter([
   {
@@ -87,5 +89,13 @@ export const router = createBrowserRouter([
   {
     path: '/user/payment/:id',
     element: <PaymentConfirmation />,
+  },
+  {
+    path: '/activate/email',
+    element: <ActivateEmail />,
+  },
+  {
+    path: '/activated/email',
+    element: <ActivatedEmail />,
   },
 ]);

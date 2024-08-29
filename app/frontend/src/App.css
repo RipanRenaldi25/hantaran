@@ -1,4 +1,4 @@
-header {
+.mainpage header {
   background: linear-gradient(
     135deg,
     #f8f1e4,
@@ -11,39 +11,20 @@ header {
   font-family: Arial, sans-serif;
 }
 
-header h1 {
+.mainpage header h1 {
   font-size: 48px;
   margin-bottom: 20px;
   font-weight: bold;
   color: #4a3c2f; /* Warna coklat tua untuk judul */
 }
 
-header p {
+.mainpage header p {
   font-size: 18px;
   margin: 0;
   color: #7a6a55; /* Warna coklat yang lebih muda untuk paragraf */
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  header h1 {
-    font-size: 36px;
-  }
-
-  header p {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  header h1 {
-    font-size: 28px;
-  }
-
-  header p {
-    font-size: 14px;
-  }
-}
 
 #jelajahi {
   padding: 50px 0;
@@ -136,7 +117,7 @@ header p {
   }
 }
 
-footer {
+.landinpage-footer {
   background: linear-gradient(
     135deg,
     #4a3c2f,
@@ -190,13 +171,6 @@ footer {
   .footer-contact {
     margin-bottom: 20px;
   }
-}
-
-<style > body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
 }
 
 .container {
@@ -316,5 +290,105 @@ h1 {
 }
 
 .checkout-btn:hover {
+  background-color: #6e5a43;
+}
+
+.email-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 90%;
+  margin: 40px auto;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.email-header {
+  text-align: center;
+  background: linear-gradient(135deg, #4a3c2f, #d1b79e);
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  color: #ffffff;
+}
+
+.email-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.email-body {
+  padding: 20px;
+  text-align: center;
+  color: #4a3c2f;
+}
+
+.email-body p {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+
+.email-body a {
+  text-decoration: none;
+  background-color: #4a3c2f;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.email-body a:hover {
+  background-color: #6e5a43;
+}
+
+.email-footer {
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #7a6a55;
+  margin-top: 20px;
+  border-top: 1px solid #f1e4d1;
+}
+
+.email-footer p {
+  margin: 0;
+}
+
+.activate-container {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 40px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.activate-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.activate-container p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.activate-container a {
+  text-decoration: none;
+  background-color: #4a3c2f;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.activate-container a:hover {
   background-color: #6e5a43;
 }

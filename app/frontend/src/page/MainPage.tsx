@@ -3,7 +3,7 @@ import React from 'react';
 export const MainPage = () => {
   return (
     <div>
-      <header>
+      <header className="mainpage">
         <h1> Selamat Datang di HantaranByJoo</h1>
         <p>
           {' '}

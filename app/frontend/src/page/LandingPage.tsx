@@ -37,7 +37,7 @@ function LandingPage() {
         <Navigation navItems={navItems} />
         <Outlet />
 
-        <footer>
+        <footer className="landinpage-footer">
           <div className="footer-info">
             <address>
               <p>

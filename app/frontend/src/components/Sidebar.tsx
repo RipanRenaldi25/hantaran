@@ -40,7 +40,12 @@ const Sidebar = ({ setSidebarItems, sidebarItems = [] }: ISidebar) => {
                 <NavLink to="/profile">Profile</NavLink>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <NavLink to="/logout">Logout</NavLink>
+                <NavLink
+                  to=""
+                  onClick={() => localStorage.removeItem('ACCESS_TOKEN')}
+                >
+                  Logout
+                </NavLink>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
