@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   mysql:
@@ -6,9 +6,14 @@ services:
     container_name: mysql
     volumes:
       - ./volumes:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DB}
+    env_file:
+      - .env.development
+
+  mysql_prod:
+    image: mysql:8.0
+    container_name: mysql_production
+    env_file:
+      - .env.production
 
   be_dev:
     build:
@@ -16,16 +21,16 @@ services:
       dockerfile: ./misc/docker/Dockerfile
       target: BE_DEV
     container_name: be_dev
-    environment:
-      - NODE_ENV=development
-    env_file:
-      - ./.env
+    depends_on:
+      - mysql
     volumes:
       - ../../app/backend:/app
       - ../../app/backend/node_modules:/app/node_modules
     ports:
-      - ${PORT}:${PORT}
+      - 5001:5001
     command: npm run start:dev
+    env_file:
+      - .env.development
 
   be_prod:
     build:
@@ -37,7 +42,11 @@ services:
       - NODE_ENV=production
     ports:
       - 5000:5000
+    env_file:
+      - .env.production
     command: npm run start
+    depends_on:
+      - mysql_prod
 
   fe_dev:
     build:
@@ -48,16 +57,20 @@ services:
       - ../../app/frontend:/app
       - ../../app/frontend/node_modules:/app/node_modules
     command: npm run dev
+    env_file:
+      - .env.development
     ports:
-      - 3000:3000
+      - 5173:5173
 
-  # fe_prod:
-  #   build:
-  #     context: ../../
-  #     dockerfile: ./misc/docker/Dockerfile
-  #     target: FE_PROD
-  #   ports:
-  #     - 8080:80
+  fe_prod:
+    build:
+      context: ../../
+      dockerfile: ./misc/docker/Dockerfile
+      target: FE_PROD
+    ports:
+      - 8080:80
+    env_file:
+      - .env.production
 
   # ngrok:
   #   image: ngrok/ngrok

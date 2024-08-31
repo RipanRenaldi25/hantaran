@@ -13,26 +13,43 @@ Before you start this application, there's requirement to run this project:
 
 With Docker
 
-1. move to docker directory
+#### Development Environment
+
+For development purpose, you need to install dependencies in both front end and backend
+
+1. Install Dependencies
+
+```
+cd app/frontend &&
+npm install &&
+cd ../../ &&
+cd app/backend &&
+npm install
+```
+
+2. Fill out .env.example.development variable with correct values
+
+3. Rename .env.example.development file to .env.development
+
+4. move to docker directory
 
 ```
 cd misc/docker
 ```
 
-2. Build image of the application and run it on the container using docker compose
+5. Build image of the application and run it on the container using docker compose
 
 ```
 docker compose up -d --build
-
 ```
 
-3. See the application container port
+6. See the application container port
 
 ```
 docker compose ps
 ```
 
-4. Move your directory to parent directory (Optional)
+7. Move your directory to parent directory (Optional)
 
 ```
 cd ../../
@@ -47,9 +64,9 @@ Here's the full description on what port the application is running:
 
 For api (backend) documentation route, you can access it on `/` endpoint
 
-### Without Docker
+#### Production Environment
 
-You can run application locally by following this instruction
+For production environment, you just need to build docker images for each front end and back end application.
 
 1. Move to docker directory
 
@@ -57,27 +74,59 @@ You can run application locally by following this instruction
 cd misc/docker
 ```
 
-2. Copy the environment variable for each application
+2. Rename .env.example.production file to .env.production
+
+3. Up and build your docker images
 
 ```
-cp .env ../../app/frontend/.env &&
-cp .env ../../app/backend/.env &&
+docker compose up -d --build be_prod fe_prod
+```
+
+### Without Docker
+
+You can run application locally by following this instruction
+
+1. Install Dependencies
+
+```
+cd app/frontend &&
+npm install &&
+cd ../../ &&
+cd app/backend &&
+npm install &&
 cd ../../
 ```
 
-3. (Backend) Install dependencies and run the application
+2. Fill out .env.example.development variable with correct values
+
+3. move to docker directory
 
 ```
-cd app/backend && npm install &&
-npm run start:dev &&
+cd misc/docker
+```
+
+4. Rename .env.example.development file to .env.development and copy it to each backend and front end directory, or you just can run this command
+
+```
+cp .env.example.development ../../app/frontend/.env &&
+cp .env.example.development ../../app/backend/.env &&
 cd ../../
 ```
 
-4. (Frontend) Install dependencies and run the application
+5. Run your back end application by following this command
 
 ```
-cd app/frontend && npm instal && npm run start
+cd app/backend &&
+npm run start:dev
 ```
+
+6. Open your another terminal and run your front end application by following this command
+
+```
+cd app/frontend && npm run dev
+```
+
+7. You can open your application on http://localhost:5001 for backend and http://localhost:5173 for frontend
 
 ## Used technology
 

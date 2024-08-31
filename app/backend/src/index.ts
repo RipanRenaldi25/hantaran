@@ -28,7 +28,7 @@ const init = async () => {
       ? require('./swagger.json')
       : require('../swagger.json');
   const port =
-    process.env.NODE_ENV === 'production' ? 5000 : +process.env.PORT!;
+    process.env.NODE_ENV === 'production' ? 5000 : +process.env.BE_PORT!;
   await seedService.initDB();
 
   const app = express();

@@ -68,4 +68,42 @@ export class ProfileRepository implements IProfileRepository {
     ]);
     return profile;
   }
+
+  async editProfileByUserId(
+    userId: UserId,
+    profile: Partial<{
+      id: string;
+      user_id: string;
+      full_name: string;
+      phone_number: string;
+      avatar: string;
+    }>
+  ): Promise<{
+    id: string;
+    user_id: string;
+    full_name: string;
+    phone_number: string;
+    avatar: string;
+    created_at: string;
+    updated_at: string;
+  }> {
+    try {
+      await this.dbConnection.query('START TRANSACTION');
+      const sql = `SELECT * FROM profiles WHERE user_id = ? FOR UPDATE`;
+      const [results]: [any[], any[]] = await this.dbConnection.query(sql, [
+        userId.toString(),
+      ]);
+      const [row] = results;
+      const updateQuery = `UPDATE profiles SET ? WHERE user_id = ?`;
+      await this.dbConnection.query(updateQuery, [profile, userId.toString()]);
+      await this.dbConnection.query('COMMIT');
+      return {
+        ...row,
+        ...profile,
+      };
+    } catch (err: any) {
+      await this.dbConnection.query('ROLLBACK');
+      throw new Error(err.message);
+    }
+  }
 }

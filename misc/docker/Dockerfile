@@ -32,4 +32,4 @@ RUN npm run build
 FROM nginx:latest AS FE_PROD
 WORKDIR /app
 RUN rm -rf /usr/share/nginx/html
-COPY --from=FE_BUILD /app/build /usr/share/nginx/html
+COPY --from=FE_BUILD /app/dist /usr/share/nginx/html

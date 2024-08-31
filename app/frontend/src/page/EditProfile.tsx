@@ -52,8 +52,7 @@ const EditProfile = () => {
     getUser();
   }, [userId]);
 
-  const handleCreateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateUser = async () => {
     let err = '';
     const payload = {
       avatar: newFileImage,
@@ -82,7 +81,7 @@ const EditProfile = () => {
     const data = await createProfileWithAddress(payload);
     dispatch(
       setUserLoginWithProfile({
-        avatar: newFileImage,
+        avatar: userProfileInputField.avatar,
         city: userProfileInputField.city,
         details: userProfileInputField.details,
         full_name: userProfileInputField.full_name,
@@ -94,7 +93,18 @@ const EditProfile = () => {
         username: userProfileInputField.username,
       })
     );
-    console.log({ data });
+  };
+
+  const handleEditProfile = () => {};
+
+  const handleSubmitForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!userLoginWithProfile.city || !userLoginWithProfile.full_name) {
+      handleCreateUser();
+      return;
+    }
+
     toast({ title: 'Success', description: 'Update profile success' });
   };
 
@@ -128,7 +138,7 @@ const EditProfile = () => {
           />
           <Pencil />
         </div>
-        <form encType="multipart/form-data" onSubmit={handleCreateProfile}>
+        <form encType="multipart/form-data" onSubmit={handleSubmitForm}>
           <label>Username:</label>
           <input
             type="text"
