@@ -6,6 +6,7 @@ import {
 } from '../../../../Helper/Validator/Profile/ProfileValidator';
 import { ClientError } from '../../../../../Domain/Exception/ClientError';
 import { UpdateProfileUsecase } from '../../../../../Application/Usecase/Profile/UpdateProfileUsecase';
+import { EditProfileUsecase } from '../../../../../Application/Usecase/Profile/EditProfileUsecase';
 
 export class ProfileController {
   private readonly createProfileUsecase: CreateProfileUsecase;
@@ -13,7 +14,8 @@ export class ProfileController {
 
   constructor(
     createProfileUsecase: CreateProfileUsecase,
-    updateProfileUsecase: UpdateProfileUsecase
+    updateProfileUsecase: UpdateProfileUsecase,
+    private readonly editProfileUsecase: EditProfileUsecase
   ) {
     this.createProfileUsecase = createProfileUsecase;
     this.updateProfileUsecase = updateProfileUsecase;
@@ -75,6 +77,46 @@ export class ProfileController {
         avatar,
         userId,
       });
+      res.status(200).json({
+        status: 'Success',
+        message: 'Profile updated',
+        data: updatedProfile,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: `Client Error: ${err.message}`,
+          message: err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Server fail',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async editProfile(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const {
+        full_name,
+        phone_number,
+        created_at,
+        updated_at,
+        city,
+        postal_code,
+        street,
+        details,
+      } = req.body;
+
+      const avatar = req.file?.filename;
+      const updatedProfile = await this.editProfileUsecase.execute(userId, {
+        ...req.body,
+        avatar,
+      });
+
       res.status(200).json({
         status: 'Success',
         message: 'Profile updated',

@@ -8,21 +8,29 @@ export interface IProfileRepository {
   editProfileByUserId(
     userId: UserId,
     profile: Partial<{
-      id: string;
+      user_id: string;
+      full_name: string;
+      phone_number: string;
+      avatar: string;
+    }>,
+    address: Partial<{
+      city: string;
+      postal_code: string;
+      street: string;
+      details: string;
+    }>
+  ): Promise<
+    Partial<{
       user_id: string;
       full_name: string;
       phone_number: string;
       avatar: string;
       created_at: string;
       updated_at: string;
+      city: string;
+      postal_code: string;
+      street: string;
+      details: string;
     }>
-  ): Promise<{
-    id: string;
-    user_id: string;
-    full_name: string;
-    phone_number: string;
-    avatar: string;
-    created_at: string;
-    updated_at: string;
-  }>;
+  >;
 }

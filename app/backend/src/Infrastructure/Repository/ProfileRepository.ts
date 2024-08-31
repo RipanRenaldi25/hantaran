@@ -72,37 +72,97 @@ export class ProfileRepository implements IProfileRepository {
   async editProfileByUserId(
     userId: UserId,
     profile: Partial<{
-      id: string;
       user_id: string;
       full_name: string;
       phone_number: string;
       avatar: string;
+      created_at: string;
+      updated_at: string;
+    }>,
+    address: Partial<{
+      city: string;
+      address: string;
+      postal_code: string;
+      street: string;
+      details: string;
     }>
-  ): Promise<{
-    id: string;
-    user_id: string;
-    full_name: string;
-    phone_number: string;
-    avatar: string;
-    created_at: string;
-    updated_at: string;
-  }> {
+  ): Promise<
+    Partial<{
+      user_id: string;
+      full_name: string;
+      phone_number: string;
+      avatar: string;
+      created_at: string;
+      updated_at: string;
+      city: string;
+      postal_code: string;
+      street: string;
+      details: string;
+    }>
+  > {
     try {
+      const profileFieldToUpdate: string[] = [];
+      const profileValueToUpdate: any[] = [];
+      const addressFieldToUpdate: string[] = [];
+      const addressValueToUpdate: any[] = [];
+
+      Object.keys(profile).forEach((key) => {
+        if ((profile as any)[key] !== undefined) {
+          profileFieldToUpdate.push(`${key} = ?`);
+          profileValueToUpdate.push((profile as any)[key]);
+        }
+      });
+      Object.keys(address).forEach((key) => {
+        if ((address as any)[key] !== undefined) {
+          addressFieldToUpdate.push(`${key} = ?`);
+          addressValueToUpdate.push((address as any)[key]);
+        }
+      });
+
+      console.log({
+        profileFieldToUpdate,
+        profileValueToUpdate,
+        addressFieldToUpdate,
+        addressValueToUpdate,
+      });
+
       await this.dbConnection.query('START TRANSACTION');
-      const sql = `SELECT * FROM profiles WHERE user_id = ? FOR UPDATE`;
-      const [results]: [any[], any[]] = await this.dbConnection.query(sql, [
-        userId.toString(),
-      ]);
-      const [row] = results;
-      const updateQuery = `UPDATE profiles SET ? WHERE user_id = ?`;
-      await this.dbConnection.query(updateQuery, [profile, userId.toString()]);
+
+      if (profileValueToUpdate.length) {
+        const updateProfileQuery = `UPDATE profiles SET ${profileFieldToUpdate.join(
+          ','
+        )} WHERE user_id = ?`;
+        await this.dbConnection.query(updateProfileQuery, [
+          ...profileValueToUpdate,
+          userId.toString(),
+        ]);
+      }
+      if (addressValueToUpdate.length) {
+        const [[row]]: [any[], any[]] = await this.dbConnection.query(
+          `SELECT * FROM profiles WHERE user_id = ?`,
+          [userId.toString()]
+        );
+        const updateAddressQuery = `UPDATE addresses SET ${addressFieldToUpdate.join(
+          ','
+        )} WHERE id = ?`;
+        await this.dbConnection.query(updateAddressQuery, [
+          ...addressValueToUpdate,
+          row.address_id,
+        ]);
+      }
+
+      const selectProfileAndAddressQuery = `SELECT profiles.id as profile_id, profiles.user_id, profiles.full_name, profiles.phone_number, profiles.avatar, profiles.address_id as address_id, addresses.city, addresses.postal_code, addresses.street, addresses.details, profiles.created_at, profiles.updated_at FROM profiles LEFT JOIN addresses ON profiles.address_id = addresses.id WHERE profiles.user_id = ?`;
+      const [resultsValue]: [any[], any[]] = await this.dbConnection.query(
+        selectProfileAndAddressQuery,
+        [userId.toString()]
+      );
+
+      const [rowValue] = resultsValue;
       await this.dbConnection.query('COMMIT');
-      return {
-        ...row,
-        ...profile,
-      };
+      return rowValue;
     } catch (err: any) {
       await this.dbConnection.query('ROLLBACK');
+      console.log({ err });
       throw new Error(err.message);
     }
   }
