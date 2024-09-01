@@ -5,7 +5,9 @@ import { ITransactionResponse } from '../../Domain/Types/types';
 
 export interface IOrderService {
   createOrder(
-    order: Order
+    order: Order,
+    weddingDate: string,
+    address: string
   ): Promise<{ createdOrder: Order; transaction: ITransactionResponse }>;
   updateOrderStatus(orderId: OrderId, order: Order): Promise<Order>;
   getOrderById(id: OrderId): Promise<Order | null>;

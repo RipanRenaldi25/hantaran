@@ -5,7 +5,11 @@ import { PaymentMethodType } from '../Entity/Payment/AbstractPayment';
 
 export interface IOrderRepository {
   getOrderById(id: OrderId): Promise<Order | null>;
-  createOrder(order: Order): Promise<Order>;
+  createOrder(
+    order: Order,
+    weddingDate: string,
+    address: string
+  ): Promise<Order>;
   updateOrderStatus(orderId: OrderId, order: Order): Promise<Order>;
   getOrderListOwnedByUser(userId: UserId): Promise<
     {

@@ -2,16 +2,18 @@ import { Toaster } from '@/components/ui/toaster';
 import { toast } from '@/components/ui/use-toast';
 import {
   createProfileWithAddress,
+  editProfile,
   getUserWithProfile,
   getUserWithProfileAndAddress,
 } from '@/feature/user';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { setUserLoginProps, setUserLoginWithProfile } from '@/states/userState';
-import { Pencil } from 'lucide-react';
+import { CircleChevronLeft, Pencil } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 const EditProfile = () => {
+  const navigate = useNavigate();
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
   const [newFileImage, setNewFileImage] = useState<string>('');
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -38,7 +40,7 @@ const EditProfile = () => {
     };
 
     dispatch(setUserLoginWithProfile(payload));
-    setUserProfileInputField(payload);
+    setUserProfileInputField({ ...payload, avatar: '' });
   };
   console.log({ userProfileInputField, userLoginWithProfile });
 
@@ -95,25 +97,44 @@ const EditProfile = () => {
     );
   };
 
-  const handleEditProfile = () => {};
+  const handleEditProfile = async () => {
+    const payload = {
+      avatar: newFileImage,
+      full_name: userProfileInputField.full_name,
+      phone_number: userProfileInputField.phone_number,
+      city: userProfileInputField.city,
+      postal_code: userProfileInputField.postal_code,
+      street: userProfileInputField.street,
+      details: userProfileInputField.details,
+      userId,
+    };
+    const data = await editProfile(payload);
+    console.log({ data });
+    dispatch(setUserLoginWithProfile(data));
+  };
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userLoginWithProfile.city || !userLoginWithProfile.full_name) {
+    if (!userLoginWithProfile.city && !userLoginWithProfile.full_name) {
       handleCreateUser();
-      return;
+    } else {
+      handleEditProfile();
     }
 
     toast({ title: 'Success', description: 'Update profile success' });
   };
-
-  const handleUpdateProfile = () => {};
+  console.log({ userProfileInputField, userLoginWithProfile });
 
   return (
     <>
       <Toaster />
-      <div className="form-container flex flex-col gap-5 border shadow-2xl">
+      <div className="form-container flex flex-col gap-5 border shadow-2xl relative">
+        <div className="absolute cursor-pointer">
+          <NavLink to={''} onClick={() => navigate(-1)}>
+            <CircleChevronLeft className="size-6" />
+          </NavLink>
+        </div>
         <h1 className="font-bold text-xl">Tambah/Ubah Profil</h1>
         <div
           className="profile-img flex justify-center hover:cursor-pointer relative"
@@ -123,16 +144,13 @@ const EditProfile = () => {
         >
           <img
             src={
-              // userLoginWithProfile.avatar
-              //   ? `${import.meta.env.VITE_API_BASE_URL}/public/${
-              //       userLoginWithProfile.avatar
-              //     }`
-              //   : newFileImage
-              `${import.meta.env.VITE_API_BASE_URL}/public/${
-                userLoginWithProfile.avatar
-              }` ||
-              userProfileInputField.avatar ||
-              'https://github.com/shadcn.png'
+              userProfileInputField.avatar.length
+                ? userProfileInputField.avatar
+                : userLoginWithProfile.avatar
+                ? `${import.meta.env.VITE_API_BASE_URL}/public/${
+                    userLoginWithProfile.avatar
+                  }`
+                : 'https://github.com/shadcn.png' // Gambar default jika tidak ada avatar
             }
             alt="Foto Profil"
           />
@@ -234,7 +252,9 @@ const EditProfile = () => {
           />
 
           <button type="submit" className="btn-submit">
-            Simpan Data
+            {!userLoginWithProfile.city || userLoginWithProfile.full_name
+              ? 'Ubah Data'
+              : 'Simpan Data'}
           </button>
         </form>
       </div>

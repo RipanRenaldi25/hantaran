@@ -31,6 +31,8 @@ export class OrderController {
         billInfo2,
         bankName,
         vaNumber,
+        weddingDate,
+        address,
       } = req.body;
       const { id: userId } = (req as any)['user'];
       const order = await this.createOrderUsecase.execute({
@@ -43,6 +45,8 @@ export class OrderController {
         billInfo1,
         billInfo2,
         vaNumber,
+        weddingDate,
+        address,
       });
       res.status(201).json({
         status: 'Success',
@@ -65,28 +69,32 @@ export class OrderController {
   }
 
   async handleChangeTransactionStatus(req: Request, res: Response) {
-    console.log({ body: req.body });
-    let updatedOrder = {};
-    const { transaction_status: status, order_id: orderId } = req.body;
-    if (status === 'settlement') {
-      updatedOrder = await this.updateOrderStatusUsecase.execute({
-        orderId,
-        status,
-      });
-      console.log({ updatedOrder });
-      console.log('settlement');
-    } else if (status === 'expired') {
-      updatedOrder = await this.updateOrderStatusUsecase.execute({
-        orderId,
-        status,
-      });
-    } else if (status === 'failed') {
-      updatedOrder = await this.updateOrderStatusUsecase.execute({
-        orderId,
-        status,
-      });
+    try {
+      console.log({ body: req.body });
+      let updatedOrder = {};
+      const { transaction_status: status, order_id: orderId } = req.body;
+      if (status === 'settlement') {
+        updatedOrder = await this.updateOrderStatusUsecase.execute({
+          orderId,
+          status,
+        });
+        console.log({ updatedOrder });
+        console.log('settlement');
+      } else if (status === 'expired') {
+        updatedOrder = await this.updateOrderStatusUsecase.execute({
+          orderId,
+          status,
+        });
+      } else if (status === 'failed') {
+        updatedOrder = await this.updateOrderStatusUsecase.execute({
+          orderId,
+          status,
+        });
+      }
+      res.status(200).send('ok');
+    } catch (err: any) {
+      res.status(500).send(err.message);
     }
-    res.status(200).send('ok');
   }
 
   async getOrders(req: Request, res: Response) {

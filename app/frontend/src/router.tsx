@@ -12,6 +12,7 @@ import PaymentConfirmation from './page/PaymentConfirmation';
 import ActivatedEmail from './components/ActivateEmail';
 import ActivateEmail from './components/ActivateEmail';
 import EditProfile from './page/EditProfile';
+import MainUser from './components/MainUser';
 
 export const router = createBrowserRouter([
   {
@@ -81,15 +82,24 @@ export const router = createBrowserRouter([
   {
     path: '/user',
     element: <UserDashboard />,
-    children: [],
-  },
-  {
-    path: '/user/checkout/:id',
-    element: <OrderPage />,
-  },
-  {
-    path: '/user/payment/:id',
-    element: <PaymentConfirmation />,
+    children: [
+      {
+        path: '',
+        element: <MainUser />,
+      },
+      {
+        path: 'checkout/:id',
+        element: <OrderPage />,
+      },
+      {
+        path: 'payment/:id',
+        element: <PaymentConfirmation />,
+      },
+      {
+        path: 'profile/:userId',
+        element: <EditProfile />,
+      },
+    ],
   },
   {
     path: '/activate/email',
@@ -98,9 +108,5 @@ export const router = createBrowserRouter([
   {
     path: '/activated/email',
     element: <ActivatedEmail />,
-  },
-  {
-    path: '/user/profile/:userId',
-    element: <EditProfile />,
   },
 ]);

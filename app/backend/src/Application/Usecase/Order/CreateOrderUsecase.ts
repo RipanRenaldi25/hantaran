@@ -32,6 +32,8 @@ export class CreateOrderUsecase {
     billInfo2?: string;
     bankName?: string;
     vaNumber?: string;
+    weddingDate: string;
+    address?: string;
   }) {
     const orderId = new OrderId(this.idGenerator());
     const paymentMethod =
@@ -131,7 +133,9 @@ export class CreateOrderUsecase {
     order.setAmount(new Price(totalPrice));
 
     const { createdOrder, transaction } = await this.orderService.createOrder(
-      order
+      order,
+      payload.weddingDate,
+      payload.address || customer.details
     );
     const returnedPayload = {
       id: createdOrder.getId().toString(),
@@ -147,6 +151,8 @@ export class CreateOrderUsecase {
       })),
       paymentType: transaction.payment_type,
       status: transaction.transaction_status,
+      address: payload.address || customer.details,
+      weddingDate: payload.weddingDate,
     };
 
     if (createdOrder.getPaymentMethod().getPaymentType() === 'qris') {

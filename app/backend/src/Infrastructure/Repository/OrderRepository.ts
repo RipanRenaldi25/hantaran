@@ -36,16 +36,22 @@ export class OrderRepository implements IOrderRepository {
       return null;
     }
   }
-  async createOrder(order: Order): Promise<Order> {
+  async createOrder(
+    order: Order,
+    weddingDate: string,
+    address: string
+  ): Promise<Order> {
     try {
       await this.dbConnection.query('START TRANSACTION');
-      const createOrderQuery = `INSERT INTO orders (id, user_id, price, status, payment_method) VALUES (?, ?, ?, ?, ?)`;
+      const createOrderQuery = `INSERT INTO orders (id, user_id, price, status, payment_method, date, address) VALUES (?, ?, ?, ?, ?, ?, ?)`;
       await this.dbConnection.query(createOrderQuery, [
         order.getId().toString(),
         order.getUserId().toString(),
         order.getAmount().getValue(),
         order.getStatus(),
         order.getPaymentMethod().getPaymentType(),
+        weddingDate,
+        address,
       ]);
       const createOrderItemQuery =
         'INSERT INTO order_items (order_id, box_id, quantity) VALUES (?, ?, ?)';

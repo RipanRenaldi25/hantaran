@@ -136,3 +136,32 @@ export const getUserWithProfileAndAddress = async (userId: string) => {
     return null;
   }
 };
+
+export const editProfile = async (
+  payload: Partial<{
+    userId: string;
+    full_name: string;
+    phone_number: string;
+    city: string;
+    postal_code: string;
+    street: string;
+    details: string;
+    avatar: string;
+  }>
+) => {
+  try {
+    const response = await axios.patch(
+      `${import.meta.env.VITE_API_BASE_URL}/profiles/user/${payload.userId}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err) {
+    return null;
+  }
+};

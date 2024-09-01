@@ -20,10 +20,16 @@ export class OrderService implements IOrderService {
   ) {}
 
   async createOrder(
-    order: Order
+    order: Order,
+    weddingDate: string,
+    address: string
   ): Promise<{ createdOrder: Order; transaction: ITransactionResponse }> {
     try {
-      const createdOrder = await this.orderRepository.createOrder(order);
+      const createdOrder = await this.orderRepository.createOrder(
+        order,
+        weddingDate,
+        address
+      );
       const response = await this.axiosClient.post(
         `${this.configService.get('MIDTRANS_BASE_URL')}/charge`,
         order.getPaymentMethod().mapToFetch(),

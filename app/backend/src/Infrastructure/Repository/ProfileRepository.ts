@@ -107,13 +107,13 @@ export class ProfileRepository implements IProfileRepository {
       const addressValueToUpdate: any[] = [];
 
       Object.keys(profile).forEach((key) => {
-        if ((profile as any)[key] !== undefined) {
+        if (!!(profile as any)[key]) {
           profileFieldToUpdate.push(`${key} = ?`);
           profileValueToUpdate.push((profile as any)[key]);
         }
       });
       Object.keys(address).forEach((key) => {
-        if ((address as any)[key] !== undefined) {
+        if (!!(address as any)[key]) {
           addressFieldToUpdate.push(`${key} = ?`);
           addressValueToUpdate.push((address as any)[key]);
         }

@@ -31,7 +31,7 @@ export const Navigation = ({ navItems }: INavigationProps) => {
       </svg> */}
       <nav className="flex items-center justify-between px-10 py-2">
         <div
-          className="flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2 cursor-pointer"
           onClick={() => navigate('/')}
         >
           <div className="overflow-hidden rounded-full">

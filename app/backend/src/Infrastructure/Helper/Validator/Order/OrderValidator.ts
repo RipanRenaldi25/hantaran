@@ -42,6 +42,8 @@ const createOrderSchema = Joi.object({
     then: Joi.required(),
     otherwise: Joi.forbidden(),
   }),
+  weddingDate: Joi.date().required(),
+  address: Joi.string(),
 });
 
 const validatePayload = (payload: any, schema: Joi.Schema) => {
