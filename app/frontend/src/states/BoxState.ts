@@ -41,7 +41,6 @@ export const boxSlice = createSlice({
         const existingBox = acc.find((b) => b.id === box.id);
         if (existingBox) {
           existingBox.colors = existingBox.colors.map((color) => {
-            console.log({ color, box });
             if (color.id !== box.color_id) {
               return {
                 ...color,

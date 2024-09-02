@@ -29,7 +29,6 @@ export const getBoxesWithColorAndDecoration = async () => {
       }
     );
     const { data } = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     return { boxes: [], page: 0, total: 0 } as IBoxesResponse;

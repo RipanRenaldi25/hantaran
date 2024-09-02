@@ -37,6 +37,8 @@ export const getUserLogedin = async () => {
     } = response;
     return data;
   } catch (err) {
+    localStorage.removeItem('ROLE');
+    localStorage.removeItem('ACCESS_TOKEN');
     throw new Error(
       (err as { response: { data: { message: string } } }).response.data.message
     );

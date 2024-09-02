@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ICart, IOwnedCart } from './interface';
+import { ICart, ICartItem, IOwnedCart } from './interface';
 
 type initStateType = {
-  carts: ICart[];
+  carts: ICartItem[];
   ownedCarts: IOwnedCart[];
 };
 
 const initState: initStateType = {
-  carts: [],
+  carts: JSON.parse(localStorage.getItem('CARTS')!) || [],
   ownedCarts: [],
 };
 
@@ -15,12 +15,15 @@ export const cartSlice = createSlice({
   name: 'cartSlice',
   initialState: initState,
   reducers: {
-    setCart(state, action: PayloadAction<ICart[]>) {
+    setCart(state, action: PayloadAction<ICartItem[]>) {
       state.carts = action.payload;
     },
-    updateSpecificCart(state, action: PayloadAction<ICart>) {
+    updateSpecificCart(state, action: PayloadAction<ICartItem>) {
       const index = state.carts.findIndex(
-        (cart) => cart.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.decoration === action.payload.decoration
       );
       if (index !== -1) {
         state.carts[index] = action.payload;
@@ -28,43 +31,49 @@ export const cartSlice = createSlice({
       }
       state.carts.push(action.payload);
     },
-    removeSpecificCart(state, action: PayloadAction<{ id: string }>) {
-      state.carts = state.carts.filter((cart) => cart.id !== action.payload.id);
-    },
-    setCartId(
+
+    incrementQuantity(
       state,
-      action: PayloadAction<{ idToChange: string; id: string }>
+      action: PayloadAction<{ id: string; color: string; decoration: string }>
     ) {
       const index = state.carts.findIndex(
-        (cart) => cart.id === action.payload.idToChange
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.decoration === action.payload.decoration
       );
-      state.carts[index] = { ...state.carts[index], id: action.payload.id };
+      console.log({ index });
+      if (index !== -1) {
+        state.carts[index].quantity += 1;
+        localStorage.setItem('CARTS', JSON.stringify(state.carts));
+      }
     },
-    setOwnedCart(state, action: PayloadAction<IOwnedCart[]>) {
-      state.ownedCarts = action.payload;
-    },
-    addOwnedCart(state, action: PayloadAction<IOwnedCart>) {
-      state.ownedCarts.push(action.payload);
+    decrementQuantity(
+      state,
+      action: PayloadAction<{ id: string; color: string; decoration: string }>
+    ) {
+      const index = state.carts.findIndex(
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.decoration === action.payload.decoration
+      );
+      if (index !== -1) {
+        state.carts[index].quantity -= 1;
+        localStorage.setItem('CARTS', JSON.stringify(state.carts));
+      }
     },
   },
 });
 
-const {
+export const {
   actions: {
-    removeSpecificCart,
     setCart,
     updateSpecificCart,
-    setCartId,
-    setOwnedCart,
+    incrementQuantity,
+    decrementQuantity,
   },
   reducer,
 } = cartSlice;
 
-export {
-  removeSpecificCart,
-  setCart,
-  updateSpecificCart,
-  setCartId,
-  setOwnedCart,
-  reducer as cartReducer,
-};
+export { reducer as cartReducer };

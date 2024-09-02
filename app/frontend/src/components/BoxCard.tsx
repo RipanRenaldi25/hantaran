@@ -15,21 +15,26 @@ export function BoxCard({
   price,
   id,
   onAddToCart,
-  isTemplistMoved = false,
+  selectedColor,
+  selectedDecoration,
+  setSelectedColor,
+  setSelectedDecoration,
 }: {
   image: string;
   name: string;
   price: number;
   id: string;
   onAddToCart: any;
-  isTemplistMoved: boolean;
+  selectedColor: string;
+  selectedDecoration: string;
+  setSelectedColor: any;
+  setSelectedDecoration: any;
 }) {
   const { toast } = useToast();
-  const [selectedColor, setSelectedColor] = useState('');
-  const [selectedDecoration, setSelectedDecoration] = useState('');
   const [addedToCart, setAddedToCart] = useState(false);
   const { boxesWithColorAndDecoration } = useAppSelector((state) => state.box);
   const handleAddToCart = () => {
+    console.log({ selectedColor, selectedDecoration });
     if (!selectedColor || !selectedDecoration) {
       toast({
         title: 'Error',
@@ -39,7 +44,6 @@ export function BoxCard({
       return;
     }
     setAddedToCart(true);
-    // Logika untuk menambahkan item ke keranjang bisa ditambahkan di sini
     onAddToCart(selectedColor, selectedDecoration);
   };
 
@@ -53,11 +57,10 @@ export function BoxCard({
       <h3 className="mt-2 text-gray-700 font-bold">{name}</h3>
       <p className="mt-1 text-gray-500">Rp{price}</p>
 
-      {/* Pilihan warna */}
       <div className="mt-2">
         <Select
           onValueChange={(e) => setSelectedColor(e)}
-          defaultValue={selectedColor}
+          value={selectedColor}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Color" />
@@ -72,11 +75,10 @@ export function BoxCard({
         </Select>
       </div>
 
-      {/* Pilihan dekorasi */}
       <div className="mt-2">
         <Select
           onValueChange={(e) => setSelectedDecoration(e)}
-          defaultValue={selectedDecoration}
+          value={selectedDecoration}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Decoration" />
@@ -96,11 +98,9 @@ export function BoxCard({
       {/* Tombol untuk menambahkan ke keranjang */}
       <button
         onClick={handleAddToCart}
-        className={`mt-4 py-2 px-4 rounded ${
-          addedToCart && !isTemplistMoved ? 'bg-green-500' : 'bg-yellow-700'
-        } text-white`}
+        className={`mt-4 py-2 px-4 rounded ${'bg-yellow-700'} text-white`}
       >
-        {addedToCart && !isTemplistMoved ? 'Added' : 'Add'}
+        Add
       </button>
     </div>
   );

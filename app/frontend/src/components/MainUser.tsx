@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from './ui/button';
-import { ShoppingCart } from 'lucide-react';
+import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import HeroSection from './HeroSection';
 import { BoxCard } from './BoxCard';
 import { Sidebar } from './UserSidebar';
@@ -16,34 +16,44 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { useToast } from './ui/use-toast';
 import { ICartItem } from '@/states/interface';
-import { setCartId, setOwnedCart, updateSpecificCart } from '@/states/Cart';
+import {
+  decrementQuantity,
+  incrementQuantity,
+  setCart,
+  updateSpecificCart,
+} from '@/states/Cart';
 import { createCart, getCartOwnedByUser } from '@/feature/cart';
 import { getBoxesWithColorAndDecoration } from '@/feature/box';
 import { setBoxWithColorAndDecoration } from '@/states/BoxState';
 import { getUserWithProfile } from '@/feature/user';
 import { setUserLoginWithProfile } from '@/states/userState';
+import hero from '@/assets/hero.jpg';
+import { Item } from '@radix-ui/react-navigation-menu';
+import { Toaster } from './ui/toaster';
 const MainUser = () => {
   const [userWithProfile, setUserWithProfile] = useState<{
     [key: string]: any;
   }>({});
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedDecoration, setSelectedDecoration] = useState('');
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { boxes, boxesWithColorAndDecoration, page, total } = useAppSelector(
     (state) => state.box
   );
-  const [tempList, setTempList] = useState<ICartItem[]>([]);
-  const [isTempListMoved, setIsTempListMoved] = useState(false);
-  // const [sidebarItems, setSidebarItems] = useState([
-  //   { icon: LayoutDashboard, title: 'Dashboard', path: '', isActive: true },
-  // ]);
+  const [tempList, setTempList] = useState<ICartItem[]>(
+    JSON.parse(localStorage.getItem('CARTS')!) || []
+  );
   const userLogin = useAppSelector((state) => state.userLogedIn);
 
   const { carts } = useAppSelector((state) => state.cart);
+  if (carts.length) {
+    localStorage.setItem('CARTS', JSON.stringify(carts));
+  }
 
   const handleTempList = (box: any, color: string, decoration: string) => {
-    setIsTempListMoved(false);
-    const getTotalQuantity = tempList.reduce(
+    const getTotalQuantity = carts.reduce(
       (acc, current) => acc + current.quantity,
       0
     );
@@ -51,7 +61,7 @@ const MainUser = () => {
       toast({
         title: 'Cart is full',
         description:
-          'Please move it to cart by clicking "masukkan keranjang" button before adding new items',
+          'Please remove or checkout all items first before add new item',
         variant: 'destructive',
       });
       return;
@@ -66,21 +76,24 @@ const MainUser = () => {
       setTempList((prevValue) => {
         return prevValue.map((item, i) => {
           if (i === index) {
+            dispatch(
+              updateSpecificCart({ ...item, quantity: item.quantity + 1 })
+            );
+
             return { ...item, quantity: item.quantity + 1 };
           }
           return item;
         });
       });
     } else {
-      setTempList((prevValue) => [
-        ...prevValue,
-        {
-          ...box,
-          color,
-          decoration,
-          quantity: 1,
-        },
-      ]);
+      const payload = {
+        ...box,
+        color,
+        decoration,
+        quantity: 1,
+      };
+      setTempList((prevValue) => [...prevValue, { ...payload }]);
+      dispatch(updateSpecificCart(payload));
     }
     toast({
       title: 'Item is marked to be moved to cart',
@@ -88,31 +101,8 @@ const MainUser = () => {
         'Please move it to cart by clicking "masukkan keranjang" button',
       variant: 'default',
     });
-  };
-  const handleMoveTempListToCart = async () => {
-    if (!tempList.length) {
-      toast({
-        title: 'Cannot add to cart because its empty',
-        description: 'Please add some items to cart',
-        variant: 'destructive',
-      });
-    }
-    const id = `${+new Date()}`;
-    dispatch(updateSpecificCart({ id, items: tempList }));
-    setIsTempListMoved(true);
-    const cartCreated = await createCart({
-      items: tempList.map((item) => ({
-        boxId: item.id,
-        quantity: item.quantity,
-      })),
-    });
-    dispatch(setCartId({ idToChange: id, id: cartCreated.id }));
-    setTempList([]);
-    toast({
-      title: 'Added to cart',
-      description: 'Your item is added to cart',
-      variant: 'default',
-    });
+    setSelectedColor('');
+    setSelectedDecoration('');
   };
 
   const getBoxWithDecorationAndColor = async () => {
@@ -122,8 +112,6 @@ const MainUser = () => {
 
   const getSelfCart = async () => {
     const carts = await getCartOwnedByUser();
-    console.log({ ownedCart: carts });
-    dispatch(setOwnedCart(carts));
   };
 
   const getUserProfileById = async () => {
@@ -131,7 +119,6 @@ const MainUser = () => {
     dispatch(setUserLoginWithProfile(user));
   };
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
-  console.log({ userLoginWithProfile });
 
   useEffect(() => {
     Promise.all([
@@ -141,70 +128,181 @@ const MainUser = () => {
     ]);
   }, []);
 
+  const handleCheckout = () => {
+    if (!carts.length) {
+      toast({
+        title: 'Failed',
+        description: 'Please choose one or more item to checkout',
+        variant: 'destructive',
+      });
+      return;
+    }
+  };
+  console.log({ total });
+
+  const getTotalCart = () => {
+    const total = carts.reduce((acc, current) => acc + current.quantity, 0);
+    return total;
+  };
+  const handleIncrementQuantity = (
+    id: string,
+    color: string,
+    decoration: string
+  ) => {
+    const totalCart = getTotalCart();
+    if (totalCart === 10) {
+      toast({
+        title: 'Cart is full',
+        description:
+          'Please remove or checkout all items first before add new item',
+        variant: 'destructive',
+      });
+      return;
+    }
+    carts.map((item) => {
+      if (
+        item.id === id &&
+        item.color === color &&
+        item.decoration === decoration
+      ) {
+        console.log({
+          id: item.id,
+          color: item.color,
+          decoration: item.decoration,
+          quantity: item.quantity,
+        });
+
+        dispatch(incrementQuantity({ id, color, decoration }));
+      }
+    });
+  };
+
+  const handleDecrementQuantity = (
+    id: string,
+    color: string,
+    decoration: string,
+    quantity: number
+  ) => {
+    if (quantity === 0) {
+      toast({
+        title: 'Cant be less than 0',
+        description:
+          'Please remove or checkout all items first before add new item',
+        variant: 'destructive',
+      });
+      return;
+    }
+    carts.map((item) => {
+      if (
+        item.id === id &&
+        item.color === color &&
+        item.decoration === decoration
+      ) {
+        console.log({
+          id: item.id,
+          color: item.color,
+          decoration: item.decoration,
+          quantity: item.quantity,
+        });
+        dispatch(decrementQuantity({ id, color, decoration }));
+      }
+    });
+  };
+
   return (
     <div>
       <div className="fixed bottom-10 right-10 text-center">
-        <div className="flex items-center gap-5">
-          <Button onClick={handleMoveTempListToCart}>
-            Masukkan ke keranjang
-          </Button>
+        <div>
           <Sheet>
             <SheetTrigger asChild>
               <Button>
                 <ShoppingCart />
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="w-[800px]">
               <SheetHeader>
                 <SheetTitle className="after:block after:w-full after:h-0.5 after:bg-black after:contents-['']">
                   Carts
                 </SheetTitle>
               </SheetHeader>
-              <div className="p-4 bg-white rounded shadow mt-4 max-h-[70vh] overflow-y-scroll ">
+              <div className="p-4 bg-white rounded shadow mt-4 max-h-[70vh] overflow-y-scroll">
                 {carts.length > 0 ? (
                   <ul>
-                    {carts?.map((cart) => (
-                      <NavLink
-                        key={cart.id}
-                        className="mt-2 flex items-center hover:cursor-pointer"
-                        to={`checkout/${cart.id}`}
-                        state={cart}
+                    {carts?.map((item) => (
+                      <div
+                        key={item.id}
+                        className="mt-2 flex items-center justify-between px-2 py-2 rounded-lg bg-gray-50"
                       >
-                        {cart.items.map((item) => (
-                          <>
-                            <img
-                              src={`${
-                                import.meta.env.VITE_API_BASE_URL
-                              }/public/${item.image_url}`}
-                              alt={item.name}
-                              className="w-16 h-16 object-cover rounded mr-4"
-                            />
-                            <div>
-                              <span className="font-medium">
-                                {(item as any).box_name}
-                              </span>
-                              {' - '}
-                              {item.decoration} - {item.color} - Rp
-                              {item.price} - {item.quantity}
-                            </div>
-                          </>
-                        ))}
-                      </NavLink>
+                        <div className="flex items-center justify-start">
+                          <img
+                            src={`${import.meta.env.VITE_API_BASE_URL}/public/${
+                              (item as any).box_image_url
+                            }`}
+                            alt={item.name}
+                            className="w-16 h-16 object-cover rounded mr-4"
+                          />
+                          <div className="flex flex-col">
+                            <span className="font-medium">
+                              {(item as any).box_name}
+                            </span>
+                            <span>Rp {item.price}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            className="bg-red-500 p-0.5 text-white"
+                            onClick={() =>
+                              handleDecrementQuantity(
+                                item.id,
+                                item?.color as string,
+                                item?.decoration as string,
+                                item.quantity
+                              )
+                            }
+                          >
+                            <Minus />
+                          </button>
+                          <p>{item.quantity}</p>
+                          <button
+                            type="button"
+                            className="bg-green-400 text-white p-0.5"
+                            onClick={() =>
+                              handleIncrementQuantity(
+                                item.id,
+                                item?.color as string,
+                                item?.decoration as string
+                              )
+                            }
+                          >
+                            <Plus />
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </ul>
                 ) : (
                   <p>Your cart is empty.</p>
                 )}
               </div>
-              <div>
-                <h1>test</h1>
+              <div className="mt-7">
+                <p className="text-lg font-bold">
+                  Total: Rp{' '}
+                  {carts.reduce(
+                    (acc, current) => acc + current.price * current.quantity,
+                    0
+                  )}
+                </p>
+                <Button className="w-full" onClick={handleCheckout}>
+                  Checkout
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
 
-      <HeroSection hero="asd" />
+      <HeroSection hero={hero} />
       <div className="flex p-8 gap-10">
         <div className="w-1/4">
           <Sidebar />
@@ -220,7 +318,10 @@ const MainUser = () => {
               onAddToCart={(color: any, decoration: any) =>
                 handleTempList(box, color, decoration)
               }
-              isTemplistMoved={isTempListMoved}
+              selectedColor={selectedColor}
+              selectedDecoration={selectedDecoration}
+              setSelectedColor={setSelectedColor}
+              setSelectedDecoration={setSelectedDecoration}
             />
           ))}
         </div>

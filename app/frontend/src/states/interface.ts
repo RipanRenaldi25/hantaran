@@ -57,7 +57,6 @@ export interface IOwnedCart {
 export type ICartItem = IBoxes & { quantity: number };
 
 export interface ICart {
-  id: string;
   items: ICartItem[];
 }
 
