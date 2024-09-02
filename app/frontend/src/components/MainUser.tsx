@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import {
   Sheet,
@@ -8,7 +8,15 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from './ui/button';
-import { Minus, Plus, ShoppingCart } from 'lucide-react';
+import {
+  CircleX,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Trash2,
+  TrashIcon,
+  X,
+} from 'lucide-react';
 import HeroSection from './HeroSection';
 import { BoxCard } from './BoxCard';
 import { Sidebar } from './UserSidebar';
@@ -19,6 +27,7 @@ import { ICartItem } from '@/states/interface';
 import {
   decrementQuantity,
   incrementQuantity,
+  removeSpecificCart,
   setCart,
   updateSpecificCart,
 } from '@/states/Cart';
@@ -35,6 +44,7 @@ const MainUser = () => {
   const [userWithProfile, setUserWithProfile] = useState<{
     [key: string]: any;
   }>({});
+
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedDecoration, setSelectedDecoration] = useState('');
   const dispatch = useAppDispatch();
@@ -49,9 +59,6 @@ const MainUser = () => {
   const userLogin = useAppSelector((state) => state.userLogedIn);
 
   const { carts } = useAppSelector((state) => state.cart);
-  if (carts.length) {
-    localStorage.setItem('CARTS', JSON.stringify(carts));
-  }
 
   const handleTempList = (box: any, color: string, decoration: string) => {
     const getTotalQuantity = carts.reduce(
@@ -139,18 +146,18 @@ const MainUser = () => {
       return;
     }
   };
-  console.log({ total });
 
   const getTotalCart = () => {
     const total = carts.reduce((acc, current) => acc + current.quantity, 0);
     return total;
   };
+  const totalCart = useMemo(() => getTotalCart(), [carts]);
+
   const handleIncrementQuantity = (
     id: string,
     color: string,
     decoration: string
   ) => {
-    const totalCart = getTotalCart();
     if (totalCart === 10) {
       toast({
         title: 'Cart is full',
@@ -184,12 +191,11 @@ const MainUser = () => {
     decoration: string,
     quantity: number
   ) => {
-    if (quantity === 0) {
+    if (quantity <= 1) {
+      dispatch(removeSpecificCart({ id, color, decoration }));
       toast({
-        title: 'Cant be less than 0',
-        description:
-          'Please remove or checkout all items first before add new item',
-        variant: 'destructive',
+        title: 'Item Removed',
+        description: 'Item removed from cart',
       });
       return;
     }
@@ -221,19 +227,19 @@ const MainUser = () => {
               </Button>
             </SheetTrigger>
           </div>
-          <SheetContent className="lg:min-w-[550px]">
+          <SheetContent className="md:min-w-[480px] lg:min-w-[550px]">
             <SheetHeader>
               <SheetTitle className="after:block after:w-full after:h-0.5 after:bg-black after:contents-['']">
                 Carts
               </SheetTitle>
             </SheetHeader>
-            <div className="p-4 bg-white rounded shadow mt-4 max-h-[70vh] overflow-y-scroll">
+            <div className="p-4 bg-white rounded-md shadow-md mt-4 overflow-y-scroll min-h-[70vh]">
               {carts.length > 0 ? (
                 <ul>
                   {carts?.map((item) => (
                     <div
-                      key={item.id}
-                      className="mt-2 flex items-center justify-between px-2 py-2 rounded-lg bg-gray-50"
+                      key={`${item.id}-${item.color}-${item.decoration}`}
+                      className="mt-2 flex items-center justify-between px-2 py-2 rounded-xg bg-gray-50 relative"
                     >
                       <div className="flex items-center justify-start">
                         <img
@@ -254,7 +260,9 @@ const MainUser = () => {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          className="bg-red-500 p-0.5 text-white"
+                          className={`bg-red-500 p-0.5 text-white ${
+                            item.quantity === 0 && 'bg-slate-300'
+                          }`}
                           onClick={() =>
                             handleDecrementQuantity(
                               item.id,
@@ -263,13 +271,17 @@ const MainUser = () => {
                               item.quantity
                             )
                           }
+                          disabled={item.quantity === 0}
                         >
                           <Minus />
                         </button>
                         <p>{item.quantity}</p>
                         <button
                           type="button"
-                          className="bg-green-400 text-white p-0.5"
+                          className={`bg-green-400 text-white p-0.5 ${
+                            item.quantity >= 10 ||
+                            (totalCart >= 10 && 'bg-slate-300')
+                          }`}
                           onClick={() =>
                             handleIncrementQuantity(
                               item.id,
@@ -277,15 +289,33 @@ const MainUser = () => {
                               item?.decoration as string
                             )
                           }
+                          disabled={item.quantity >= 10 || totalCart >= 10}
                         >
                           <Plus />
+                        </button>
+                        <button
+                          type="button"
+                          className="text-red-500 p-1 rounded hover:bg-red-500 hover:text-white transition-colors duration-200"
+                          onClick={() =>
+                            dispatch(
+                              removeSpecificCart({
+                                color: item.color as string,
+                                decoration: item.decoration as string,
+                                id: item.id,
+                              })
+                            )
+                          }
+                        >
+                          <TrashIcon />
                         </button>
                       </div>
                     </div>
                   ))}
                 </ul>
               ) : (
-                <p>Your cart is empty.</p>
+                <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  Your cart is empty.
+                </p>
               )}
             </div>
             <div className="mt-7">

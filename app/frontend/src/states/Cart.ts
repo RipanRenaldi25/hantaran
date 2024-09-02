@@ -63,6 +63,31 @@ export const cartSlice = createSlice({
         localStorage.setItem('CARTS', JSON.stringify(state.carts));
       }
     },
+    removeSpecificCart(
+      state,
+      action: PayloadAction<{ id: string; color: string; decoration: string }>
+    ) {
+      // console.log({ payload: action.payload, cart: state.carts });
+      // const index = state.carts.findIndex(
+      //   (item) =>
+      //     item.id === action.payload.id &&
+      //     item.color === action.payload.color &&
+      //     item.decoration === action.payload.decoration
+      // );
+
+      // if (index !== -1) {
+      //   state.carts.splice(index, 1);
+      // }
+
+      state.carts = state.carts.filter(
+        (item) =>
+          item.id !== action.payload.id ||
+          item.color !== action.payload.color ||
+          item.decoration !== action.payload.decoration
+      );
+
+      localStorage.setItem('CARTS', JSON.stringify(state.carts));
+    },
   },
 });
 
@@ -72,6 +97,7 @@ export const {
     updateSpecificCart,
     incrementQuantity,
     decrementQuantity,
+    removeSpecificCart,
   },
   reducer,
 } = cartSlice;
