@@ -1,12 +1,12 @@
 export interface IBoxes {
   id: string;
-  name: string;
-  image_url: string;
+  box_name: string;
+  box_image_url: string;
   price: number;
-  created_at: string;
-  updated_at: string;
-  color?: string;
-  decoration?: string;
+  created_at?: string;
+  updated_at?: string;
+  color_name?: string;
+  decoration_name?: string;
 }
 export type IMapBoxResponse = IBoxResponseWithColorAndDecoration & {
   decorations: { id: string; name: string }[];

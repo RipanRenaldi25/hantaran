@@ -22,14 +22,15 @@ export const cartSlice = createSlice({
       const index = state.carts.findIndex(
         (item) =>
           item.id === action.payload.id &&
-          item.color === action.payload.color &&
-          item.decoration === action.payload.decoration
+          item.color_name === action.payload.color_name &&
+          item.decoration_name === action.payload.decoration_name
       );
       if (index !== -1) {
         state.carts[index] = action.payload;
         return;
       }
       state.carts.push(action.payload);
+      localStorage.setItem('CARTS', JSON.stringify(state.carts));
     },
 
     incrementQuantity(
@@ -39,8 +40,8 @@ export const cartSlice = createSlice({
       const index = state.carts.findIndex(
         (item) =>
           item.id === action.payload.id &&
-          item.color === action.payload.color &&
-          item.decoration === action.payload.decoration
+          item.color_name === action.payload.color &&
+          item.decoration_name === action.payload.decoration
       );
       console.log({ index });
       if (index !== -1) {
@@ -55,8 +56,8 @@ export const cartSlice = createSlice({
       const index = state.carts.findIndex(
         (item) =>
           item.id === action.payload.id &&
-          item.color === action.payload.color &&
-          item.decoration === action.payload.decoration
+          item.color_name === action.payload.color &&
+          item.decoration_name === action.payload.decoration
       );
       if (index !== -1) {
         state.carts[index].quantity -= 1;
@@ -67,26 +68,13 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<{ id: string; color: string; decoration: string }>
     ) {
-      // console.log({ payload: action.payload, cart: state.carts });
-      // const index = state.carts.findIndex(
-      //   (item) =>
-      //     item.id === action.payload.id &&
-      //     item.color === action.payload.color &&
-      //     item.decoration === action.payload.decoration
-      // );
-
-      // if (index !== -1) {
-      //   state.carts.splice(index, 1);
-      // }
-
+      console.log({ payload: action.payload });
       state.carts = state.carts.filter(
         (item) =>
           item.id !== action.payload.id ||
-          item.color !== action.payload.color ||
-          item.decoration !== action.payload.decoration
+          item.color_name !== action.payload.color ||
+          item.decoration_name !== action.payload.decoration
       );
-
-      localStorage.setItem('CARTS', JSON.stringify(state.carts));
     },
   },
 });

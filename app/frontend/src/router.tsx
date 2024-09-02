@@ -88,7 +88,7 @@ export const router = createBrowserRouter([
         element: <MainUser />,
       },
       {
-        path: 'checkout/:id',
+        path: 'checkout',
         element: <OrderPage />,
       },
       {

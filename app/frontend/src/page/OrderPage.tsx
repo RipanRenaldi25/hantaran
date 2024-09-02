@@ -11,11 +11,11 @@ import bri from '@/assets/bri.jpeg';
 import mandiri from '@/assets/mandiri.jpeg';
 import permata from '@/assets/permata.jpeg';
 import qris from '@/assets/qris.jpg';
+import { ICartItem } from '@/states/interface';
 
 const OrderPage = () => {
   const { id } = useParams();
   const { state } = useLocation();
-  console.log({ state, id });
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [selectedPaymentMethod, setSelectedpaymentMethod] = useState<
     'bca' | 'mandiri' | 'bri' | 'bni' | 'permata' | 'qris' | ''
@@ -70,25 +70,10 @@ const OrderPage = () => {
       (payloadToSend as any)['bankName'] = order.vaNumbers[0].bank;
       (payloadToSend as any)['vaNumber'] = order.vaNumbers[0].va_number;
     }
-    console.log({
-      order,
-      payloadToSend,
-      qrCodeUrl,
-      billerCode,
-      billerKey,
-      vaNumber,
-      selectedPaymentMethod,
-    });
     navigate(`/user/payment/${order.id}`, { state: payloadToSend });
   };
+  console.log({ state });
 
-  console.log({
-    selectedPaymentMethod,
-    vaNumber,
-    billerCode,
-    billerKey,
-    qrCodeUrl,
-  });
   return (
     <div>
       {qrCodeUrl.length > 0 && (
@@ -259,14 +244,16 @@ const OrderPage = () => {
           <div className="section">
             <h2>Ringkasan Pesanan</h2>
             <div className="order-summary">
-              <div className="order-item">
-                <img src="https://via.placeholder.com/100" alt="Hantaran 1" />
-                <div className="item-details">
-                  <h3>Paket Hantaran Eksklusif</h3>
-                  <p>10 Kotak Hantaran - Sesuai Permintaan</p>
+              {state.carts.map((item: ICartItem) => (
+                <div className="order-item">
+                  <img src="https://via.placeholder.com/100" alt="Hantaran 1" />
+                  <div className="item-details">
+                    <h3>{item.box_name}</h3>
+                    <p>10 Kotak Hantaran - Sesuai Permintaan</p>
+                  </div>
+                  <div className="item-price">Rp 500,000</div>
                 </div>
-                <div className="item-price">Rp 500,000</div>
-              </div>
+              ))}
               <div className="total-price">Total: Rp 500,000</div>
             </div>
           </div>

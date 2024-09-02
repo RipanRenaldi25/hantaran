@@ -23,7 +23,7 @@ import { Sidebar } from './UserSidebar';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { useToast } from './ui/use-toast';
-import { ICartItem } from '@/states/interface';
+import { IBoxes, ICartItem } from '@/states/interface';
 import {
   decrementQuantity,
   incrementQuantity,
@@ -74,15 +74,17 @@ const MainUser = () => {
       });
       return;
     }
+    console.log({ tempList });
     const index = tempList.findIndex(
       (item) =>
         item.id === box.id &&
-        item.color === color &&
-        item.decoration === decoration
+        item.color_name === color &&
+        item.decoration_name === decoration
     );
     if (index !== -1) {
       setTempList((prevValue) => {
         return prevValue.map((item, i) => {
+          console.log({ item });
           if (i === index) {
             dispatch(
               updateSpecificCart({ ...item, quantity: item.quantity + 1 })
@@ -96,8 +98,8 @@ const MainUser = () => {
     } else {
       const payload = {
         ...box,
-        color,
-        decoration,
+        color_name: color,
+        decoration_name: decoration,
         quantity: 1,
       };
       setTempList((prevValue) => [...prevValue, { ...payload }]);
@@ -118,10 +120,6 @@ const MainUser = () => {
     dispatch(setBoxWithColorAndDecoration(boxesReturned));
   };
 
-  const getSelfCart = async () => {
-    const carts = await getCartOwnedByUser();
-  };
-
   const getUserProfileById = async () => {
     const user = await getUserWithProfile();
     dispatch(setUserLoginWithProfile(user));
@@ -129,11 +127,7 @@ const MainUser = () => {
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    Promise.all([
-      getBoxWithDecorationAndColor(),
-      getSelfCart(),
-      getUserProfileById(),
-    ]);
+    Promise.all([getBoxWithDecorationAndColor(), getUserProfileById()]);
   }, []);
 
   const handleCheckout = () => {
@@ -145,6 +139,7 @@ const MainUser = () => {
       });
       return;
     }
+    navigate('/user/checkout', { state: { carts } });
   };
 
   const getTotalCart = () => {
@@ -170,13 +165,13 @@ const MainUser = () => {
     carts.map((item) => {
       if (
         item.id === id &&
-        item.color === color &&
-        item.decoration === decoration
+        item.color_name === color &&
+        item.decoration_name === decoration
       ) {
         console.log({
           id: item.id,
-          color: item.color,
-          decoration: item.decoration,
+          color: item.color_name,
+          decoration: item.decoration_name,
           quantity: item.quantity,
         });
 
@@ -202,13 +197,13 @@ const MainUser = () => {
     carts.map((item) => {
       if (
         item.id === id &&
-        item.color === color &&
-        item.decoration === decoration
+        item.color_name === color &&
+        item.decoration_name === decoration
       ) {
         console.log({
           id: item.id,
-          color: item.color,
-          decoration: item.decoration,
+          color: item.color_name,
+          decoration: item.decoration_name,
           quantity: item.quantity,
         });
         dispatch(decrementQuantity({ id, color, decoration }));
@@ -238,7 +233,7 @@ const MainUser = () => {
                 <ul>
                   {carts?.map((item) => (
                     <div
-                      key={`${item.id}-${item.color}-${item.decoration}`}
+                      key={`${item.id}-${item.color_name}-${item.decoration_name}`}
                       className="mt-2 flex items-center justify-between px-2 py-2 rounded-xg bg-gray-50 relative"
                     >
                       <div className="flex items-center justify-start">
@@ -246,13 +241,13 @@ const MainUser = () => {
                           src={`${import.meta.env.VITE_API_BASE_URL}/public/${
                             (item as any).box_image_url
                           }`}
-                          alt={item.name}
+                          alt={item.box_name}
                           className="w-16 h-16 object-cover rounded mr-4"
                         />
                         <div className="flex flex-col">
                           <span className="font-medium">
-                            {(item as any).box_name} ({item.decoration}/
-                            {item.color})
+                            {item.box_name} ({item.decoration_name}/
+                            {item.color_name})
                           </span>
                           <span>Rp {item.price}</span>
                         </div>
@@ -266,8 +261,8 @@ const MainUser = () => {
                           onClick={() =>
                             handleDecrementQuantity(
                               item.id,
-                              item?.color as string,
-                              item?.decoration as string,
+                              item?.color_name as string,
+                              item?.decoration_name as string,
                               item.quantity
                             )
                           }
@@ -285,8 +280,8 @@ const MainUser = () => {
                           onClick={() =>
                             handleIncrementQuantity(
                               item.id,
-                              item?.color as string,
-                              item?.decoration as string
+                              item?.color_name as string,
+                              item?.decoration_name as string
                             )
                           }
                           disabled={item.quantity >= 10 || totalCart >= 10}
@@ -299,8 +294,8 @@ const MainUser = () => {
                           onClick={() =>
                             dispatch(
                               removeSpecificCart({
-                                color: item.color as string,
-                                decoration: item.decoration as string,
+                                color: item.color_name as string,
+                                decoration: item.decoration_name as string,
                                 id: item.id,
                               })
                             )
