@@ -30,6 +30,7 @@ import { setUserLoginWithProfile } from '@/states/userState';
 import hero from '@/assets/hero.jpg';
 import { Item } from '@radix-ui/react-navigation-menu';
 import { Toaster } from './ui/toaster';
+
 const MainUser = () => {
   const [userWithProfile, setUserWithProfile] = useState<{
     [key: string]: any;
@@ -211,95 +212,96 @@ const MainUser = () => {
 
   return (
     <div>
-      <div className="fixed bottom-10 right-10 text-center">
-        <div>
-          <Sheet>
+      <div className="relative bg-yellow-500">
+        <Sheet>
+          <div className="fixed bottom-10 right-10 text-center">
             <SheetTrigger asChild>
               <Button>
                 <ShoppingCart />
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-[800px]">
-              <SheetHeader>
-                <SheetTitle className="after:block after:w-full after:h-0.5 after:bg-black after:contents-['']">
-                  Carts
-                </SheetTitle>
-              </SheetHeader>
-              <div className="p-4 bg-white rounded shadow mt-4 max-h-[70vh] overflow-y-scroll">
-                {carts.length > 0 ? (
-                  <ul>
-                    {carts?.map((item) => (
-                      <div
-                        key={item.id}
-                        className="mt-2 flex items-center justify-between px-2 py-2 rounded-lg bg-gray-50"
-                      >
-                        <div className="flex items-center justify-start">
-                          <img
-                            src={`${import.meta.env.VITE_API_BASE_URL}/public/${
-                              (item as any).box_image_url
-                            }`}
-                            alt={item.name}
-                            className="w-16 h-16 object-cover rounded mr-4"
-                          />
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              {(item as any).box_name}
-                            </span>
-                            <span>Rp {item.price}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            className="bg-red-500 p-0.5 text-white"
-                            onClick={() =>
-                              handleDecrementQuantity(
-                                item.id,
-                                item?.color as string,
-                                item?.decoration as string,
-                                item.quantity
-                              )
-                            }
-                          >
-                            <Minus />
-                          </button>
-                          <p>{item.quantity}</p>
-                          <button
-                            type="button"
-                            className="bg-green-400 text-white p-0.5"
-                            onClick={() =>
-                              handleIncrementQuantity(
-                                item.id,
-                                item?.color as string,
-                                item?.decoration as string
-                              )
-                            }
-                          >
-                            <Plus />
-                          </button>
+          </div>
+          <SheetContent className="lg:min-w-[550px]">
+            <SheetHeader>
+              <SheetTitle className="after:block after:w-full after:h-0.5 after:bg-black after:contents-['']">
+                Carts
+              </SheetTitle>
+            </SheetHeader>
+            <div className="p-4 bg-white rounded shadow mt-4 max-h-[70vh] overflow-y-scroll">
+              {carts.length > 0 ? (
+                <ul>
+                  {carts?.map((item) => (
+                    <div
+                      key={item.id}
+                      className="mt-2 flex items-center justify-between px-2 py-2 rounded-lg bg-gray-50"
+                    >
+                      <div className="flex items-center justify-start">
+                        <img
+                          src={`${import.meta.env.VITE_API_BASE_URL}/public/${
+                            (item as any).box_image_url
+                          }`}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded mr-4"
+                        />
+                        <div className="flex flex-col">
+                          <span className="font-medium">
+                            {(item as any).box_name} ({item.decoration}/
+                            {item.color})
+                          </span>
+                          <span>Rp {item.price}</span>
                         </div>
                       </div>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>Your cart is empty.</p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          className="bg-red-500 p-0.5 text-white"
+                          onClick={() =>
+                            handleDecrementQuantity(
+                              item.id,
+                              item?.color as string,
+                              item?.decoration as string,
+                              item.quantity
+                            )
+                          }
+                        >
+                          <Minus />
+                        </button>
+                        <p>{item.quantity}</p>
+                        <button
+                          type="button"
+                          className="bg-green-400 text-white p-0.5"
+                          onClick={() =>
+                            handleIncrementQuantity(
+                              item.id,
+                              item?.color as string,
+                              item?.decoration as string
+                            )
+                          }
+                        >
+                          <Plus />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p>Your cart is empty.</p>
+              )}
+            </div>
+            <div className="mt-7">
+              <p className="text-lg font-bold">
+                Total: Rp{' '}
+                {carts.reduce(
+                  (acc, current) => acc + current.price * current.quantity,
+                  0
                 )}
-              </div>
-              <div className="mt-7">
-                <p className="text-lg font-bold">
-                  Total: Rp{' '}
-                  {carts.reduce(
-                    (acc, current) => acc + current.price * current.quantity,
-                    0
-                  )}
-                </p>
-                <Button className="w-full" onClick={handleCheckout}>
-                  Checkout
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+              </p>
+              <Button className="w-full" onClick={handleCheckout}>
+                Checkout
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <HeroSection hero={hero} />
