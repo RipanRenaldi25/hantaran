@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dialog';
 import { SelectLabel } from '@radix-ui/react-select';
 import { Button } from './ui/button';
+import { formatCurrency } from '@/lib/utils';
 
 export function BoxCard({
   image,
@@ -67,7 +68,7 @@ export function BoxCard({
           className="w-full h-48 object-cover rounded"
         />
         <h3 className="mt-2 text-gray-700 font-bold">{name}</h3>
-        <p className="mt-1 text-gray-500">Rp{price}</p>
+        <p className="mt-1 text-gray-500">{formatCurrency(price)}</p>
 
         <Dialog open={isAddItemOpen} onOpenChange={setisAddItemOpen}>
           <DialogTrigger asChild>

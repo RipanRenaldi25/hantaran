@@ -12,9 +12,12 @@ import mandiri from '@/assets/mandiri.jpeg';
 import permata from '@/assets/permata.jpeg';
 import qris from '@/assets/qris.jpg';
 import { ICartItem } from '@/states/interface';
+import { formatCurrency } from '@/lib/utils';
+import { useAppSelector } from '@/states';
 
 const OrderPage = () => {
   const { id } = useParams();
+  const { carts } = useAppSelector((state) => state.cart);
   const { state } = useLocation();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [selectedPaymentMethod, setSelectedpaymentMethod] = useState<
@@ -243,18 +246,45 @@ const OrderPage = () => {
 
           <div className="section">
             <h2>Ringkasan Pesanan</h2>
-            <div className="order-summary">
+            <div className="order-summary flex flex-col gap-5">
               {state.carts.map((item: ICartItem) => (
-                <div className="order-item">
-                  <img src="https://via.placeholder.com/100" alt="Hantaran 1" />
-                  <div className="item-details">
-                    <h3>{item.box_name}</h3>
-                    <p>10 Kotak Hantaran - Sesuai Permintaan</p>
+                <div className="order-item flex justify-between items-center shadow-md p-4">
+                  <div className="item-details flex gap-2 items-center">
+                    <div className="relative">
+                      <img
+                        src={`${import.meta.env.VITE_API_BASE_URL}/public/${
+                          item.box_image_url
+                        }`}
+                        alt="Hantaran 1"
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                      {/* <span className="absolute top-0 right-0 bg-gray-700 text-white font-bold text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                        {item.quantity}
+                      </span> */}
+                      <span className="absolute translate-x-1/2 -translate-y-1/2 top-0 right-0 bg-gray-700 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <div>
+                      <h3>{item.box_name}</h3>
+                      <p>Warna {item.color_name}</p>
+                      <p>Dekorasi {item.decoration_name}</p>
+                    </div>
                   </div>
-                  <div className="item-price">Rp 500,000</div>
+                  <div className="item-price">
+                    {formatCurrency(item.price * item.quantity)}
+                  </div>
                 </div>
               ))}
-              <div className="total-price">Total: Rp 500,000</div>
+              <div className="total-price">
+                Total:{' '}
+                {formatCurrency(
+                  carts.reduce(
+                    (acc, item) => acc + item.price * item.quantity,
+                    0
+                  )
+                )}
+              </div>
             </div>
           </div>
 

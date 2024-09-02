@@ -39,6 +39,7 @@ import { setUserLoginWithProfile } from '@/states/userState';
 import hero from '@/assets/hero.jpg';
 import { Item } from '@radix-ui/react-navigation-menu';
 import { Toaster } from './ui/toaster';
+import { formatCurrency } from '@/lib/utils';
 
 const MainUser = () => {
   const [userWithProfile, setUserWithProfile] = useState<{
@@ -249,7 +250,7 @@ const MainUser = () => {
                             {item.box_name} ({item.decoration_name}/
                             {item.color_name})
                           </span>
-                          <span>Rp {item.price}</span>
+                          <span>{formatCurrency(item.price)}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -315,10 +316,12 @@ const MainUser = () => {
             </div>
             <div className="mt-7">
               <p className="text-lg font-bold">
-                Total: Rp{' '}
-                {carts.reduce(
-                  (acc, current) => acc + current.price * current.quantity,
-                  0
+                Total:{' '}
+                {formatCurrency(
+                  carts.reduce(
+                    (acc, current) => acc + current.price * current.quantity,
+                    0
+                  )
                 )}
               </p>
               <Button className="w-full" onClick={handleCheckout}>
