@@ -7,7 +7,7 @@ export class OrderItem {
   constructor(
     private readonly boxId: BoxId,
     private readonly userId: UserId,
-    private readonly quantity: number
+    private quantity: number
   ) {
     if (quantity < 0) {
       throw new InvariantError('Quantity must be greater than equal 0');
@@ -24,5 +24,13 @@ export class OrderItem {
 
   getQuantity(): number {
     return this.quantity;
+  }
+
+  setQuantity(quantity: number) {
+    this.quantity = quantity;
+  }
+
+  addQuantity(quantity: number) {
+    this.quantity += quantity;
   }
 }

@@ -54,6 +54,40 @@ export interface IOrderRepository {
       box_quantity: number;
       box_image_url: string;
       box_price: number;
+      address: string;
+      manage_status: string;
+      wedding_date: string;
+      qr_code_url: string;
+      va_number: string;
+      bill_key: string;
+      biller_code: string;
     }[]
   >;
+  updateOrder(
+    orderId: OrderId,
+    data: Partial<{
+      price: number;
+      status: StatusType;
+      payment_method: PaymentMethodType;
+      address: string;
+      weddings_date: string;
+      manage_status: string;
+      qr_code_url: string;
+      va_number: string;
+      bill_key: string;
+      biller_code: string;
+    }>
+    // ): Promise<{
+    //   price: number;
+    //   status: StatusType;
+    //   payment_method: PaymentMethodType;
+    //   address: string;
+    //   weddings_date: string;
+    //   manage_status: string;
+    //   qr_code_url: string;
+    //   va_number: string;
+    //   bill_info_1: string;
+    //   bill_info_2: string;
+    // }>;
+  ): Promise<void>;
 }

@@ -69,7 +69,7 @@ export class Order {
       this.items.push(item);
       return;
     } else {
-      this.items[index] = item;
+      this.items[index].addQuantity(item.getQuantity());
     }
   }
 }

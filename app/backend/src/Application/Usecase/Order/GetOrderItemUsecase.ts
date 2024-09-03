@@ -6,44 +6,38 @@ import { IOrderRepository } from '../../../Domain/Repository/IOrderRepository';
 export class GetOrderItemUsecase {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  async execute(payload: { userId: string; orderId: string }): Promise<{
-    totalPrice: number;
-    boxes: {
-      id: string;
-      user_id: string;
-      status: StatusType;
-      paymentMethod: PaymentMethodType;
-      fullName: string;
-      phoneNumber: string;
-      createdAt: string;
-      updatedAt: string;
-      boxId: string;
-      boxName: string;
-      boxQuantity: number;
-      boxImageUrl: string;
-      boxPrice: number;
-    }[];
-  }> {
+  async execute(payload: { userId: string; orderId: string }) {
     const orderItems = await this.orderRepository.getOrderItems(
       new OrderId(payload.orderId)
     );
     return {
-      totalPrice: orderItems[0].price,
       boxes: orderItems.map((orderItem) => ({
         boxId: orderItem.box_id,
         boxName: orderItem.box_name,
         boxImageUrl: orderItem.box_image_url,
         boxQuantity: orderItem.box_quantity,
-        createdAt: orderItem.created_at,
-        fullName: orderItem.full_name,
-        id: orderItem.id,
-        paymentMethod: orderItem.payment_method,
-        phoneNumber: orderItem.phone_number,
         boxPrice: orderItem.box_price,
-        status: orderItem.status,
-        updatedAt: orderItem.updated_at,
-        user_id: orderItem.user_id,
       })),
+      user: {
+        id: payload.userId,
+        fullName: orderItems[0].full_name,
+        address: orderItems[0].address,
+        phoneNumber: orderItems[0].phone_number,
+      },
+      order: {
+        id: orderItems[0].id,
+        paymentMethod: orderItems[0].payment_method,
+        weddingDate: orderItems[0].wedding_date,
+        manageStatus: orderItems[0].manage_status,
+        paymentStatus: orderItems[0].status,
+        createdAt: orderItems[0].created_at,
+        updatedAt: orderItems[0].updated_at,
+        totalPrice: orderItems[0].price,
+        qrCodeUrl: orderItems[0].qr_code_url,
+        va_number: orderItems[0].va_number,
+        bill_key: orderItems[0].bill_key,
+        biller_code: orderItems[0].biller_code,
+      },
     };
   }
 }

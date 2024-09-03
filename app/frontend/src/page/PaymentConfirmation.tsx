@@ -1,20 +1,24 @@
-import { getOrderById } from '@/feature/order';
+import { getOrderWithItems } from '@/feature/order';
+import { formatCurrency } from '@/lib/utils';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 function PaymentConfirmation() {
-  const { state } = useLocation();
+  const { orderId } = useParams();
   const [order, setOrder] = useState<{ [key: string]: any }>();
 
   useEffect(() => {
-    const getOrder = async () => {
-      const order = await getOrderById(state.orderId);
-      console.log({ order });
+    const getOrderItems = async () => {
+      if (!orderId) {
+        return;
+      }
+      const order = await getOrderWithItems(orderId);
       setOrder(order);
     };
-    getOrder();
+    getOrderItems();
   }, []);
-  console.log({ state, order });
+  console.log({ order });
   return (
     <div className="container mx-auto p-6">
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -29,22 +33,26 @@ function PaymentConfirmation() {
         {/* Order Summary Section */}
         <div className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Ringkasan Pesanan</h2>
-          <div className="bg-gray-100 p-4 rounded">
-            <div className="flex justify-between mb-2">
-              <span className="font-medium">Nama Produk</span>
-              <span>Beige Casual Bag</span>
-            </div>
-            <div className="flex justify-between mb-2">
-              <span className="font-medium">Jumlah</span>
-              <span>1</span>
-            </div>
-            <div className="flex justify-between mb-2">
-              <span className="font-medium">Harga</span>
-              <span>Rp0</span>
-            </div>
+          <div className="bg-gray-100 p-4 rounded flex flex-col gap-5">
+            {order?.boxes?.map((box: any) => (
+              <div className="border-b border-gray-300">
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium">Nama Produk</span>
+                  <span>{box.boxName}</span>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium">Jumlah</span>
+                  <span>{box.boxQuantity}</span>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium">Harga</span>
+                  <span>{formatCurrency(box.boxPrice)}</span>
+                </div>
+              </div>
+            ))}
             <div className="flex justify-between border-t border-gray-300 pt-2">
               <span className="font-medium">Total</span>
-              <span>Rp{order?.price}</span>
+              <span>{formatCurrency(order?.order?.totalPrice)}</span>
             </div>
           </div>
         </div>
@@ -54,55 +62,55 @@ function PaymentConfirmation() {
           <h2 className="text-2xl font-semibold mb-4">Instruksi Pembayaran</h2>
           <div className="bg-gray-100 p-4 rounded">
             <p className="mb-2">
-              Silakan transfer jumlah total ke rekening berikut:
+              Silakan transfer menggunakan kode yang tertera di bawah ini
+              virtual account dengan informasi berikut:
             </p>
             <div className="mb-4">
               <p>
-                <strong>Metode Pembayaran:</strong> {order?.paymentMethod}
+                <strong>Metode Pembayaran:</strong>{' '}
+                {order?.order?.paymentMethod}
               </p>
-              {order?.paymentMethod === 'echannel' && (
+              {order?.order?.paymentMethod === 'echannel' && (
                 <>
                   <p>
                     <strong>Nama Bank:</strong> Mandiri
                   </p>
-                  <p>
-                    <strong>Nomor Rekening:</strong> 1234567890
-                  </p>
                 </>
               )}
 
-              {order?.paymentMethod === 'echannel' && (
-                <p>
-                  <strong>Biller Code: {state.billerCode}</strong>
-                  <strong>Biller Key: {state.billerKey}</strong>
-                </p>
-              )}
-              {order?.paymentMethod === 'bank_transfer' && (
-                <>
+              {order?.order?.paymentMethod === 'echannel' && (
+                <div>
                   <p>
-                    <strong>Bank Pilihan: {state.bankName}</strong>
+                    <strong>Biller Code: {order?.order?.biller_code}</strong>
                   </p>
                   <p>
-                    <strong>VA Number: {state.vaNumber}</strong>
+                    <strong>Biller Key: {order?.order?.bill_key}</strong>
+                  </p>
+                </div>
+              )}
+              {order?.order?.paymentMethod === 'bank_transfer' && (
+                <>
+                  <p>
+                    <strong>VA Number: {order?.order?.va_number}</strong>
                   </p>
                 </>
               )}
             </div>
-            {order?.paymentMethod === 'qris' && (
+            {order?.order?.paymentMethod === 'qris' && (
               <>
                 <p className="mb-2">
-                  Atau Anda dapat menggunakan QRIS untuk pembayaran lebih cepat:
+                  Anda dapat menggunakan QRIS untuk pembayaran:
                 </p>
-                <div className="text-center">
+                <div className="w-[450px]">
                   <img
-                    src={state.qrCodeUrl}
-                    alt="QR Code"
-                    className="inline-block"
+                    src={order?.order?.qrCodeUrl}
+                    alt="qrCode"
+                    className="rounded-md object-cover"
                   />
                 </div>
               </>
             )}
-            <p>
+            <p className="mt-8">
               <strong>Atas Nama:</strong> PT. Hantaran
             </p>
           </div>

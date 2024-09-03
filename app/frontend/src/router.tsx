@@ -92,7 +92,7 @@ export const router = createBrowserRouter([
         element: <OrderPage />,
       },
       {
-        path: 'payment/:id',
+        path: 'payment/:orderId',
         element: <PaymentConfirmation />,
       },
       {

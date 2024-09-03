@@ -16,6 +16,7 @@ import { GetOrdersUsecase } from '../../../../../Application/Usecase/Order/GetOr
 import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/Order/GetOrderOwnedByUserUsecase';
 import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/GetOrderItemUsecase';
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
+import { UserController } from '../Controller/UserController';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()

@@ -42,6 +42,22 @@ export class OrderService implements IOrderService {
         }
       );
       const { data }: { data: ITransactionResponse } = response;
+      if (data.bill_key || data.biller_code) {
+        await this.orderRepository.updateOrder(order.getId(), {
+          bill_key: data.bill_key,
+          biller_code: data.biller_code,
+        });
+      }
+      if (data.va_numbers?.length > 0) {
+        await this.orderRepository.updateOrder(order.getId(), {
+          va_number: data.va_numbers[0].va_number,
+        });
+      }
+      if (data.actions?.length > 0) {
+        await this.orderRepository.updateOrder(order.getId(), {
+          qr_code_url: data.actions[0].url,
+        });
+      }
       return {
         createdOrder,
         transaction: {

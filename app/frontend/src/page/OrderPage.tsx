@@ -14,6 +14,18 @@ import qris from '@/assets/qris.jpg';
 import { ICartItem } from '@/states/interface';
 import { formatCurrency } from '@/lib/utils';
 import { useAppSelector } from '@/states';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { useToast } from '@/components/ui/use-toast';
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -28,15 +40,29 @@ const OrderPage = () => {
   const [billerCode, setBillerCode] = useState('');
   const [vaNumber, setVaNumber] = useState('');
   const navigate = useNavigate();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [address, setAddress] = useState<string>('');
+  const [isDateOpen, setIsDateOpen] = useState<boolean>(false);
+  const { toast } = useToast();
 
+  console.log({ state });
   const handleOrder = async () => {
+    if (!selectedPaymentMethod || !date || !address) {
+      toast({
+        title: 'Please fill all required fields',
+        variant: 'destructive',
+      });
+      return;
+    }
     const payload = {
-      orderItems: state.items.map((item: any) => ({
+      orderItems: state.carts.map((item: any) => ({
         boxId: item.id,
         quantity: item.quantity,
         price: item.price === 0 ? 50_000 : item.price,
         name: item.box_name,
       })),
+      address,
+      weddingDate: date.toISOString().split('T')[0],
     };
     if (selectedPaymentMethod === 'qris') {
       (payload as any)['acquirer'] = 'gopay';
@@ -50,10 +76,10 @@ const OrderPage = () => {
     (payload as any)['paymentMethod'] = selectedPaymentMethod;
     const order = await createOrder(payload as any);
     console.log({ order });
-    if (order.qrCode) {
+    if (order?.qrCode) {
       setQrCodeUrl(order.qrCode);
     }
-    if (order.billerKey || order.billerCode) {
+    if (order?.billerKey || order?.billerCode) {
       setBillerCode(order.billerCode);
       setBillerKey(order.billerKey);
     }
@@ -73,23 +99,15 @@ const OrderPage = () => {
       (payloadToSend as any)['bankName'] = order.vaNumbers[0].bank;
       (payloadToSend as any)['vaNumber'] = order.vaNumbers[0].va_number;
     }
-    navigate(`/user/payment/${order.id}`, { state: payloadToSend });
+
+    setSelectedpaymentMethod('');
+    setDate(undefined);
+    setAddress('');
+    navigate(`/user/payment/${order.id}`);
   };
-  console.log({ state });
 
   return (
     <div>
-      {qrCodeUrl.length > 0 && (
-        <div className="w-[450px]">
-          <AspectRatio ratio={16 / 9}>
-            <img
-              src={qrCodeUrl}
-              alt="qrCode"
-              className="rounded-md object-cover"
-            />
-          </AspectRatio>
-        </div>
-      )}
       <>
         <div className="container">
           <h1 className="text-4xl font-semibold">Checkout Hantaran</h1>
@@ -223,24 +241,42 @@ const OrderPage = () => {
               </div>
             </div>
           </div>
-
           <div className="section">
             <h2>Informasi Pengiriman</h2>
-            <div className="input-group">
-              <label htmlFor="alamat">Alamat Lengkap</label>
-              <textarea
-                id="alamat"
-                name="alamat"
-                placeholder="Masukkan alamat lengkap Anda"
-              ></textarea>
-            </div>
-            <div className="input-group">
-              <label htmlFor="tanggal-pernikahan">Tanggal Pernikahan</label>
-              <input
-                type="date"
-                id="tanggal-pernikahan"
-                name="tanggal-pernikahan"
+            <div className="grid w-full gap-2 font-semibold">
+              <Label htmlFor="message">Alamat Pengiriman</Label>
+              <Textarea
+                placeholder="Masukkan alamat pengiriman lengkap"
+                id="message"
+                name="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
+            </div>
+            <div className="section flex flex-col gap-2 font-semibold">
+              <label>Tanggal Pernikahan</label>
+              <Popover open={isDateOpen} onOpenChange={setIsDateOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    className={cn(
+                      'w-[280px] justify-start text-left font-normal',
+                      !date && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 

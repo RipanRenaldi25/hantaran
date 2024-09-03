@@ -56,6 +56,8 @@ export const createOrder = async ({
   billInfo2,
   bankName,
   vaNumber,
+  weddingDate,
+  address,
 }: {
   orderItems: {
     boxId: string;
@@ -69,6 +71,8 @@ export const createOrder = async ({
   billInfo2?: string;
   bankName?: string;
   vaNumber?: string;
+  weddingDate: string;
+  address: string;
 }) => {
   try {
     let methodPayment =
@@ -80,6 +84,8 @@ export const createOrder = async ({
     const payload = {
       orderItems,
       paymentMethod: methodPayment,
+      weddingDate,
+      address,
     };
     if (payload.paymentMethod === 'qris') {
       (payload as any)['acquirer'] = acquirer;
@@ -107,10 +113,10 @@ export const createOrder = async ({
   }
 };
 
-export const getOrderById = async (orderId: string) => {
+export const getOrderWithItems = async (orderId: string) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/items`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,

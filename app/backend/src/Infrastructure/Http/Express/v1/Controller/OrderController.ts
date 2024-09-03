@@ -21,6 +21,7 @@ export class OrderController {
 
   async createOrder(req: Request, res: Response) {
     try {
+      console.log(req.body);
       validateCreateOrderPayload(req.body);
       const {
         orderItems,
