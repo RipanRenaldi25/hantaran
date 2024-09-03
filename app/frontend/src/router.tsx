@@ -13,6 +13,7 @@ import ActivatedEmail from './components/ActivateEmail';
 import ActivateEmail from './components/ActivateEmail';
 import EditProfile from './page/EditProfile';
 import MainUser from './components/MainUser';
+import PaymentSuccessPage from './page/PaymentSuccessPage';
 
 export const router = createBrowserRouter([
   {
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile/:userId',
         element: <EditProfile />,
+      },
+      {
+        path: 'payment/success/:orderId',
+        element: <PaymentSuccessPage />,
       },
     ],
   },

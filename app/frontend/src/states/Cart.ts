@@ -76,6 +76,11 @@ export const cartSlice = createSlice({
           item.decoration_name !== action.payload.decoration
       );
     },
+
+    clearCartState(state) {
+      state.carts = [];
+      localStorage.setItem('CARTS', JSON.stringify(state.carts));
+    },
   },
 });
 
@@ -86,6 +91,7 @@ export const {
     incrementQuantity,
     decrementQuantity,
     removeSpecificCart,
+    clearCartState,
   },
   reducer,
 } = cartSlice;

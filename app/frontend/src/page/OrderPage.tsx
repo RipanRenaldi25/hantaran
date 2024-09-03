@@ -13,7 +13,7 @@ import permata from '@/assets/permata.jpeg';
 import qris from '@/assets/qris.jpg';
 import { ICartItem } from '@/states/interface';
 import { formatCurrency } from '@/lib/utils';
-import { useAppSelector } from '@/states';
+import { useAppDispatch, useAppSelector } from '@/states';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { format } from 'date-fns';
@@ -26,6 +26,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useToast } from '@/components/ui/use-toast';
+import ButtonLoading from '@/components/ButtonLoading';
+import { clearCartState } from '@/states/Cart';
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -40,12 +42,12 @@ const OrderPage = () => {
   const [billerCode, setBillerCode] = useState('');
   const [vaNumber, setVaNumber] = useState('');
   const navigate = useNavigate();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [address, setAddress] = useState<string>('');
   const [isDateOpen, setIsDateOpen] = useState<boolean>(false);
+  const [isOrderCreated, setIsOrderCreated] = useState<boolean>(false);
   const { toast } = useToast();
-
-  console.log({ state });
+  const dispatch = useAppDispatch();
   const handleOrder = async () => {
     if (!selectedPaymentMethod || !date || !address) {
       toast({
@@ -54,6 +56,7 @@ const OrderPage = () => {
       });
       return;
     }
+    setIsOrderCreated(true);
     const payload = {
       orderItems: state.carts.map((item: any) => ({
         boxId: item.id,
@@ -75,7 +78,6 @@ const OrderPage = () => {
     }
     (payload as any)['paymentMethod'] = selectedPaymentMethod;
     const order = await createOrder(payload as any);
-    console.log({ order });
     if (order?.qrCode) {
       setQrCodeUrl(order.qrCode);
     }
@@ -99,7 +101,8 @@ const OrderPage = () => {
       (payloadToSend as any)['bankName'] = order.vaNumbers[0].bank;
       (payloadToSend as any)['vaNumber'] = order.vaNumbers[0].va_number;
     }
-
+    dispatch(clearCartState());
+    setIsOrderCreated(false);
     setSelectedpaymentMethod('');
     setDate(undefined);
     setAddress('');
@@ -111,7 +114,7 @@ const OrderPage = () => {
       <>
         <div className="container">
           <h1 className="text-4xl font-semibold">Checkout Hantaran</h1>
-          <div className="section payment-options">
+          <div className="section payment-options ">
             <h2>Pilih Metode Pembayaran</h2>
             <div className="container mx-auto p-6">
               <div className="section payment-options mb-4">
@@ -128,7 +131,9 @@ const OrderPage = () => {
                         setIsBankTransferOpen((prevValue) => !prevValue)
                       }
                     >
-                      <h3 className="text-lg font-medium">Bank Transfer</h3>
+                      <h3 className="text-lg font-medium">
+                        Bank Virtual Account
+                      </h3>
                       <p className="text-sm text-gray-600">
                         Transfer ke rekening bank kami. Info rekening akan
                         dikirimkan setelah pemilihan.
@@ -145,7 +150,9 @@ const OrderPage = () => {
                       >
                         <img src={bca} alt="Bank Transfer" className="mr-4" />
                         <div className="payment-details">
-                          <h3 className="text-lg font-medium">Bank BCA</h3>
+                          <h3 className="text-lg font-medium">
+                            BCA Virtual Account
+                          </h3>
                           <p className="text-sm text-gray-600">
                             Transfer ke rekening bank kami. Info rekening akan
                             dikirimkan setelah pemilihan.
@@ -164,7 +171,9 @@ const OrderPage = () => {
                           className="mr-4"
                         />
                         <div className="payment-details">
-                          <h3 className="text-lg font-medium">Bank Mandiri</h3>
+                          <h3 className="text-lg font-medium">
+                            Mandiri Virtual Account
+                          </h3>
                           <p className="text-sm text-gray-600">
                             Transfer ke rekening bank kami. Info rekening akan
                             dikirimkan setelah pemilihan.
@@ -179,10 +188,13 @@ const OrderPage = () => {
                       >
                         <img src={bri} alt="Bank Transfer" className="mr-4" />
                         <div className="payment-details">
-                          <h3 className="text-lg font-medium">Bank BRI</h3>
+                          <h3 className="text-lg font-medium">
+                            BRI Virtual Account
+                          </h3>
                           <p className="text-sm text-gray-600">
-                            Transfer ke rekening bank kami. Info rekening akan
-                            dikirimkan setelah pemilihan.
+                            Transfer melalui virtual account ke rekening di
+                            bawah. Info pembayaran akan dikirimkan setelah
+                            pemilihan.
                           </p>
                         </div>
                       </div>
@@ -194,7 +206,9 @@ const OrderPage = () => {
                       >
                         <img src={bni} alt="Bank Transfer" className="mr-4" />
                         <div className="payment-details">
-                          <h3 className="text-lg font-medium">Bank BNI</h3>
+                          <h3 className="text-lg font-medium">
+                            BNI Virtual Account
+                          </h3>
                           <p className="text-sm text-gray-600">
                             Transfer ke rekening bank kami. Info rekening akan
                             dikirimkan setelah pemilihan.
@@ -213,7 +227,9 @@ const OrderPage = () => {
                           className="mr-4"
                         />
                         <div className="payment-details">
-                          <h3 className="text-lg font-medium">Bank Permata</h3>
+                          <h3 className="text-lg font-medium">
+                            Permata Virtual Account
+                          </h3>
                           <p className="text-sm text-gray-600">
                             Transfer ke rekening bank kami. Info rekening akan
                             dikirimkan setelah pemilihan.
@@ -243,7 +259,7 @@ const OrderPage = () => {
           </div>
           <div className="section">
             <h2>Informasi Pengiriman</h2>
-            <div className="grid w-full gap-2 font-semibold">
+            <div className="grid w-full gap-2 font-semibold mb-5">
               <Label htmlFor="message">Alamat Pengiriman</Label>
               <Textarea
                 placeholder="Masukkan alamat pengiriman lengkap"
@@ -251,6 +267,7 @@ const OrderPage = () => {
                 name="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+                className="border-2"
               />
             </div>
             <div className="section flex flex-col gap-2 font-semibold">
@@ -324,7 +341,14 @@ const OrderPage = () => {
             </div>
           </div>
 
-          <button className="checkout-btn" onClick={handleOrder}>
+          <button
+            className={`checkout-btn flex items-center justify-center gap-2 ${
+              isOrderCreated && 'bg-gray-400'
+            }`}
+            onClick={handleOrder}
+            disabled={isOrderCreated}
+          >
+            <ButtonLoading isLoading={isOrderCreated} />
             Lanjutkan ke Pembayaran
           </button>
         </div>
