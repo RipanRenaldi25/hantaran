@@ -8,6 +8,7 @@ import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/O
 import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/GetOrderItemUsecase';
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
+import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
 
 export class OrderController {
   constructor(
@@ -16,7 +17,8 @@ export class OrderController {
     private readonly getOrderUsecase: GetOrdersUsecase,
     private readonly getOrderOwnedByUserUsecase: GetOrderOwnedByUserUsecase,
     private readonly getOrderItemUsecase: GetOrderItemUsecase,
-    private readonly getOrderByIdUsecase: GetOrderByIdUsecase
+    private readonly getOrderByIdUsecase: GetOrderByIdUsecase,
+    private readonly getOrderStatusUsecase: GetOrderStatusUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -183,6 +185,30 @@ export class OrderController {
     try {
       const { orderId } = req.params;
       const order = await this.getOrderByIdUsecase.execute(orderId);
+      res.status(200).json({
+        status: 'Success',
+        message: `Order fetched`,
+        data: order,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async getOrderStatus(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const order = await this.getOrderStatusUsecase.execute(orderId);
       res.status(200).json({
         status: 'Success',
         message: `Order fetched`,

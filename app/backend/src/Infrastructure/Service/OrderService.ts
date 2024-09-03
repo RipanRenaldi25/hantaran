@@ -1,4 +1,4 @@
-import { Axios } from 'axios';
+import axios, { Axios } from 'axios';
 import { IOrderService } from '../../Application/Service/IOrderService';
 import { IOrderRepository } from '../../Domain/Repository/IOrderRepository';
 import { Order } from '../../Domain/Entity/Order/Order';
@@ -142,5 +142,28 @@ export class OrderService implements IOrderService {
         paymentMethod
       );
     });
+  }
+
+  async getOrderStatus(
+    orderId: OrderId
+  ): Promise<Partial<ITransactionResponse>> {
+    try {
+      const { data }: { data: ITransactionResponse } =
+        await this.axiosClient.get(
+          `${this.configService.get(
+            'MIDTRANS_BASE_URL'
+          )}/${orderId.toString()}/status`,
+          {
+            headers: {
+              Authorization: `Basic ${Buffer.from(
+                this.configService.get('MIDTRANS_SERVER_KEY')
+              ).toString('base64')}`,
+            },
+          }
+        );
+      return data;
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
   }
 }

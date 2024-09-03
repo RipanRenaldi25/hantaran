@@ -17,6 +17,7 @@ import { GetOrderOwnedByUserUsecase } from '../../../../../Application/Usecase/O
 import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/GetOrderItemUsecase';
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
 import { UserController } from '../Controller/UserController';
+import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -51,6 +52,7 @@ const getOrderOwnedByUserUsecase = new GetOrderOwnedByUserUsecase(
 
 const getOrderItemUsecase = new GetOrderItemUsecase(orderRepository);
 const getOrderByIdUsecase = new GetOrderByIdUsecase(orderRepository);
+const getOrderStatusUsecase = new GetOrderStatusUsecase(orderService);
 
 const updateOrderStatusUsecase = new UpdateOrderStatusUsecase(orderService);
 const orderController = new OrderController(
@@ -59,7 +61,8 @@ const orderController = new OrderController(
   getOrderUsecase,
   getOrderOwnedByUserUsecase,
   getOrderItemUsecase,
-  getOrderByIdUsecase
+  getOrderByIdUsecase,
+  getOrderStatusUsecase
 );
 
 const orderRouter = express.Router();
@@ -90,5 +93,7 @@ orderRouter.get(
   authMiddleware.applyWithRole(['admin', 'user']),
   (req, res) => orderController.getOrderById(req, res)
 );
-
+orderRouter.get('/:orderId/status', (req, res) =>
+  orderController.getOrderStatus(req, res)
+);
 export default orderRouter;
