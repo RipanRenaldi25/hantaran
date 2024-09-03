@@ -1,4 +1,5 @@
-import { getOrderWithItems } from '@/feature/order';
+import { Button } from '@/components/ui/button';
+import { getOrderWithItems, getTransactionStatus } from '@/feature/order';
 import { formatCurrency } from '@/lib/utils';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import React, { useEffect, useState } from 'react';
@@ -6,9 +7,19 @@ import { useLocation, useParams } from 'react-router-dom';
 
 function PaymentConfirmation() {
   const { orderId } = useParams();
-  const [order, setOrder] = useState<{ [key: string]: any }>();
+  const [order, setOrder] = useState<{ [key: string]: any } | null>();
+  const [transactionStatus, setTransactionStatus] = useState<{
+    [key: string]: any;
+  }>({});
 
   useEffect(() => {
+    const getStatus = async () => {
+      if (!orderId) {
+        return;
+      }
+      const data = await getTransactionStatus(orderId);
+      setTransactionStatus(data);
+    };
     const getOrderItems = async () => {
       if (!orderId) {
         return;
@@ -16,9 +27,9 @@ function PaymentConfirmation() {
       const order = await getOrderWithItems(orderId);
       setOrder(order);
     };
-    getOrderItems();
+    Promise.all([getStatus(), getOrderItems()]);
   }, []);
-  console.log({ order });
+  console.log({ order, transactionStatus });
   return (
     <div className="container mx-auto p-6">
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -62,24 +73,20 @@ function PaymentConfirmation() {
           <h2 className="text-2xl font-semibold mb-4">Instruksi Pembayaran</h2>
           <div className="bg-gray-100 p-4 rounded">
             <p className="mb-2">
-              Silakan transfer menggunakan kode yang tertera di bawah ini
-              virtual account dengan informasi berikut:
+              Silakan transfer menggunakan kode yang tertera di bawah ini dengan
+              metode pembayaran yang dipilih:
             </p>
             <div className="mb-4">
               <p>
                 <strong>Metode Pembayaran:</strong>{' '}
                 {order?.order?.paymentMethod}
               </p>
-              {order?.order?.paymentMethod === 'echannel' && (
-                <>
-                  <p>
-                    <strong>Nama Bank:</strong> Mandiri
-                  </p>
-                </>
-              )}
 
               {order?.order?.paymentMethod === 'echannel' && (
                 <div>
+                  <p>
+                    <strong>Nama Bank:</strong> Mandiri
+                  </p>
                   <p>
                     <strong>Biller Code: {order?.order?.biller_code}</strong>
                   </p>
@@ -90,6 +97,14 @@ function PaymentConfirmation() {
               )}
               {order?.order?.paymentMethod === 'bank_transfer' && (
                 <>
+                  <p>
+                    <strong>
+                      Bank Pilihan:{' '}
+                      {Object.keys(transactionStatus).length <= 0
+                        ? '-'
+                        : transactionStatus?.va_numbers[0]?.bank}
+                    </strong>
+                  </p>
                   <p>
                     <strong>VA Number: {order?.order?.va_number}</strong>
                   </p>
@@ -116,11 +131,16 @@ function PaymentConfirmation() {
           </div>
         </div>
 
-        {/* Footer Note */}
-        <p className="text-center text-sm text-gray-500">
-          Setelah pembayaran, konfirmasi pembayaran Anda melalui halaman profil
-          Anda.
-        </p>
+        <footer>
+          <div>
+            <Button>Cek Status Transaksi</Button>
+            <Button>Batalkan transaksi</Button>
+          </div>
+          <p className="text-gray-500">
+            Setelah pembayaran, konfirmasi pembayaran Anda melalui halaman
+            profil Anda.
+          </p>
+        </footer>
       </div>
     </div>
   );

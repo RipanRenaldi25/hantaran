@@ -14,4 +14,11 @@ export interface IOrderService {
   getOrderListOwnedByUser(userId: UserId): Promise<Order[]>;
   getOrders(): Promise<Order[]>;
   getOrderStatus(orderId: OrderId): Promise<Partial<ITransactionResponse>>;
+  cancelOrder(
+    orderId: OrderId
+  ): Promise<{
+    status_code: number;
+    status_message: string;
+    transaction_status: string;
+  }>;
 }

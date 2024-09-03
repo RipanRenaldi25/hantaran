@@ -18,6 +18,7 @@ import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/Ge
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
 import { UserController } from '../Controller/UserController';
 import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
+import { CancelTransactionUsecase } from '../../../../../Application/Usecase/Order/CancelTransactionUsecase';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -53,6 +54,7 @@ const getOrderOwnedByUserUsecase = new GetOrderOwnedByUserUsecase(
 const getOrderItemUsecase = new GetOrderItemUsecase(orderRepository);
 const getOrderByIdUsecase = new GetOrderByIdUsecase(orderRepository);
 const getOrderStatusUsecase = new GetOrderStatusUsecase(orderService);
+const cancelOrderUsecase = new CancelTransactionUsecase(orderService);
 
 const updateOrderStatusUsecase = new UpdateOrderStatusUsecase(orderService);
 const orderController = new OrderController(
@@ -62,7 +64,8 @@ const orderController = new OrderController(
   getOrderOwnedByUserUsecase,
   getOrderItemUsecase,
   getOrderByIdUsecase,
-  getOrderStatusUsecase
+  getOrderStatusUsecase,
+  cancelOrderUsecase
 );
 
 const orderRouter = express.Router();
@@ -95,5 +98,8 @@ orderRouter.get(
 );
 orderRouter.get('/:orderId/status', (req, res) =>
   orderController.getOrderStatus(req, res)
+);
+orderRouter.post('/:orderId/cancel', (req, res) =>
+  orderController.cancelOrder(req, res)
 );
 export default orderRouter;

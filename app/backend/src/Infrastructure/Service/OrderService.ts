@@ -166,4 +166,39 @@ export class OrderService implements IOrderService {
       throw new Error(err.message);
     }
   }
+
+  async cancelOrder(
+    orderId: OrderId
+  ): Promise<{
+    status_code: number;
+    status_message: string;
+    transaction_status: string;
+  }> {
+    try {
+      const {
+        data,
+      }: {
+        data: {
+          status_code: number;
+          status_message: string;
+          transaction_status: string;
+        };
+      } = await this.axiosClient.post(
+        `${this.configService.get(
+          'MIDTRANS_BASE_URL'
+        )}/${orderId.toString()}/cancel`,
+        {},
+        {
+          headers: {
+            Authorization: `Basic ${Buffer.from(
+              this.configService.get('MIDTRANS_SERVER_KEY')
+            ).toString('base64')}`,
+          },
+        }
+      );
+      return data;
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+  }
 }

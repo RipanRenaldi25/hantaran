@@ -9,6 +9,7 @@ import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
 import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/GetOrderItemUsecase';
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
 import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
+import { CancelTransactionUsecase } from '../../../../../Application/Usecase/Order/CancelTransactionUsecase';
 
 export class OrderController {
   constructor(
@@ -18,7 +19,8 @@ export class OrderController {
     private readonly getOrderOwnedByUserUsecase: GetOrderOwnedByUserUsecase,
     private readonly getOrderItemUsecase: GetOrderItemUsecase,
     private readonly getOrderByIdUsecase: GetOrderByIdUsecase,
-    private readonly getOrderStatusUsecase: GetOrderStatusUsecase
+    private readonly getOrderStatusUsecase: GetOrderStatusUsecase,
+    private readonly cancelOrderUsecase: CancelTransactionUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -76,19 +78,7 @@ export class OrderController {
       console.log({ body: req.body });
       let updatedOrder = {};
       const { transaction_status: status, order_id: orderId } = req.body;
-      if (status === 'settlement') {
-        updatedOrder = await this.updateOrderStatusUsecase.execute({
-          orderId,
-          status,
-        });
-        console.log({ updatedOrder });
-        console.log('settlement');
-      } else if (status === 'expired') {
-        updatedOrder = await this.updateOrderStatusUsecase.execute({
-          orderId,
-          status,
-        });
-      } else if (status === 'failed') {
+      if (!!status) {
         updatedOrder = await this.updateOrderStatusUsecase.execute({
           orderId,
           status,
@@ -213,6 +203,30 @@ export class OrderController {
         status: 'Success',
         message: `Order fetched`,
         data: order,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async cancelOrder(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const order = await this.cancelOrderUsecase.execute(orderId);
+      res.status(order.status_code || 200).json({
+        status: 'Success',
+        message: order.status_message || 'Order cancelled',
+        data: { transaction_status: order.transaction_status },
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

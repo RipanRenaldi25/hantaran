@@ -129,3 +129,14 @@ export const getOrderWithItems = async (orderId: string) => {
     return null;
   }
 };
+
+export const getTransactionStatus = async (orderId: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/status`
+    );
+    return response.data.data;
+  } catch (err: any) {
+    return null;
+  }
+};
