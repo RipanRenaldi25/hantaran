@@ -25,7 +25,7 @@ export const Header = ({
 }) => {
   const pathname = useLocation();
   return (
-    <header className="bg-white py-4 px-8 flex justify-between items-center">
+    <header className="bg-white py-4 px-8 flex justify-between items-center text-lg">
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -67,6 +67,14 @@ export const Header = ({
             to={item.path}
             className={`text-gray-800 ${item.isActive && 'font-bold'}`}
             id={item.path}
+            onClick={() =>
+              setNavList((prevNavlist: any[]) =>
+                prevNavlist.map((nav) => ({
+                  ...nav,
+                  isActive: nav.path === item.path,
+                }))
+              )
+            }
           >
             {item.title}
           </NavLink>

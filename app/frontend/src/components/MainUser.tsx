@@ -121,14 +121,8 @@ const MainUser = () => {
     dispatch(setBoxWithColorAndDecoration(boxesReturned));
   };
 
-  const getUserProfileById = async () => {
-    const user = await getUserWithProfile();
-    dispatch(setUserLoginWithProfile(user));
-  };
-  const { userLoginWithProfile } = useAppSelector((state) => state.user);
-
   useEffect(() => {
-    Promise.all([getBoxWithDecorationAndColor(), getUserProfileById()]);
+    getBoxWithDecorationAndColor();
   }, []);
 
   const handleCheckout = () => {

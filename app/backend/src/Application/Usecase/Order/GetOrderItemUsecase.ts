@@ -37,6 +37,7 @@ export class GetOrderItemUsecase {
         va_number: orderItems[0].va_number,
         bill_key: orderItems[0].bill_key,
         biller_code: orderItems[0].biller_code,
+        status: orderItems[0].status,
       },
     };
   }

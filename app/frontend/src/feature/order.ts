@@ -140,3 +140,21 @@ export const getTransactionStatus = async (orderId: string) => {
     return null;
   }
 };
+
+export const getOrdersOwnedByUser = async (userId: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/orders/users/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    console.log({ err });
+    return null;
+  }
+};

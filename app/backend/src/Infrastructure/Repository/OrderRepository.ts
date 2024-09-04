@@ -138,10 +138,13 @@ export class OrderRepository implements IOrderRepository {
       phone_number: string;
       created_at: string;
       updated_at: string;
+      address: string;
+      wedding_date: string;
+      manage_status: string;
     }[]
   > {
     const query =
-      'SELECT orders.id, orders.user_id, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders JOIN profiles ON orders.user_id = profiles.user_id WHERE orders.user_id = ?';
+      'SELECT orders.id, orders.user_id, orders.manage_status, orders.date, orders.address, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders JOIN profiles ON orders.user_id = profiles.user_id WHERE orders.user_id = ?';
 
     const [results]: [any[], any[]] = await this.dbConnection.query(query, [
       userId.toString(),

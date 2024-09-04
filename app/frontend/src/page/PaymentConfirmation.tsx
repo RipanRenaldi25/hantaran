@@ -58,7 +58,7 @@ function PaymentConfirmation() {
     setIsLoading(false);
     navigate('/user/payment/success/' + orderId);
   };
-  console.log({ transactionStatusChange });
+  console.log({ transactionStatusChange, order });
 
   return (
     <>

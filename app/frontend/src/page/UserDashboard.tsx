@@ -5,7 +5,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 
 import { Header } from '@/components/UserHeader';
-import { useAppSelector } from '@/states';
+import { useAppDispatch, useAppSelector } from '@/states';
+import { getUserWithProfile } from '@/feature/user';
+import { setUserLoginWithProfile } from '@/states/userState';
 
 export type NavListType = {
   title: string;
@@ -25,11 +27,6 @@ const UserDashboard = () => {
       isActive: isPathActive(''),
     },
     {
-      title: 'Cart',
-      path: 'cart',
-      isActive: isPathActive('cart'),
-    },
-    {
       title: 'Transactions',
       path: 'transaction',
       isActive: isPathActive('transaction'),
@@ -38,7 +35,13 @@ const UserDashboard = () => {
   const userLogin = useAppSelector((state) => state.userLogedIn);
   const navigate = useNavigate();
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const getUserProfileById = async () => {
+    const user = await getUserWithProfile();
+    dispatch(setUserLoginWithProfile(user));
+  };
   useEffect(() => {
+    getUserProfileById();
     if (
       !localStorage.getItem('ROLE') &&
       !localStorage.getItem('ACCESS_TOKEN')
