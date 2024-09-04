@@ -8,7 +8,7 @@ export type StatusType =
   | 'pending'
   | 'settlement'
   | 'canceled'
-  | 'expired'
+  | 'expire'
   | 'failed';
 
 export class Order {

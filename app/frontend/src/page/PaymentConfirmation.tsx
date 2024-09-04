@@ -44,11 +44,21 @@ function PaymentConfirmation() {
     }
     setIsLoading(true);
     const data = await getTransactionStatus(orderId);
+    console.log({ data });
     if (data.transaction_status === 'pending') {
       toast({
         title: 'Transaksi sedang diproses',
         description:
           'Harap pastikan anda telah membayar sebelum menyelesaikan transaksi',
+      });
+      setIsLoading(false);
+      return;
+    }
+    if (data.transaction_status === 'expire') {
+      toast({
+        title: 'Expired',
+        description: 'Transaksi anda telah kadaluarsa',
+        variant: 'destructive',
       });
       setIsLoading(false);
       return;

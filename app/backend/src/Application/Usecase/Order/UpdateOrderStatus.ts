@@ -7,7 +7,7 @@ export class UpdateOrderStatusUsecase {
 
   async execute(payload: {
     orderId: string;
-    status: 'pending' | 'settlement' | 'canceled' | 'expired' | 'failed';
+    status: 'pending' | 'settlement' | 'canceled' | 'expire' | 'failed';
   }) {
     const orderId = new OrderId(payload.orderId);
     const existingOrder = await this.orderService.getOrderById(orderId);

@@ -153,6 +153,7 @@ export class CreateOrderUsecase {
       status: transaction.transaction_status,
       address: payload.address || customer.details,
       weddingDate: payload.weddingDate,
+      expiredAt: transaction.expiry_time,
     };
 
     if (createdOrder.getPaymentMethod().getPaymentType() === 'qris') {

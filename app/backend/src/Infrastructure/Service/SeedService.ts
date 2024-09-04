@@ -209,6 +209,7 @@ export class SeedService {
     va_number VARCHAR(255),
     bill_key VARCHAR(255),
     biller_code VARCHAR(255),
+    expired_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT orders_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),

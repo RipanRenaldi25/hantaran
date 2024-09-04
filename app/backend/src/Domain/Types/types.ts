@@ -7,13 +7,13 @@ export interface ITransactionResponse {
   gross_amount: string;
   currency: string;
   payment_type: string;
-  transaction_time: Date;
+  transaction_time: string;
   transaction_status: string;
   fraud_status: string;
   actions: Action[];
   channel_response_code: string;
   channel_response_message: string;
-  expiry_time: Date;
+  expiry_time: string;
   va_numbers: { bank: string; va_number: string }[];
   permata_va_number: string;
   bill_key: string;

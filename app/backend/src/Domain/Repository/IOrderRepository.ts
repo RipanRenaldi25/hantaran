@@ -76,6 +76,7 @@ export interface IOrderRepository {
       va_number: string;
       bill_key: string;
       biller_code: string;
+      expired_at: string;
     }>
     // ): Promise<{
     //   price: number;

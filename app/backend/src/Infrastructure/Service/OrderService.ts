@@ -46,16 +46,19 @@ export class OrderService implements IOrderService {
         await this.orderRepository.updateOrder(order.getId(), {
           bill_key: data.bill_key,
           biller_code: data.biller_code,
+          expired_at: data.expiry_time,
         });
       }
       if (data.va_numbers?.length > 0) {
         await this.orderRepository.updateOrder(order.getId(), {
           va_number: data.va_numbers[0].va_number,
+          expired_at: data.expiry_time,
         });
       }
       if (data.actions?.length > 0) {
         await this.orderRepository.updateOrder(order.getId(), {
           qr_code_url: data.actions[0].url,
+          expired_at: data.expiry_time,
         });
       }
       return {
@@ -167,9 +170,7 @@ export class OrderService implements IOrderService {
     }
   }
 
-  async cancelOrder(
-    orderId: OrderId
-  ): Promise<{
+  async cancelOrder(orderId: OrderId): Promise<{
     status_code: number;
     status_message: string;
     transaction_status: string;

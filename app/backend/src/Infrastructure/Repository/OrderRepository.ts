@@ -199,6 +199,7 @@ export class OrderRepository implements IOrderRepository {
       va_number: string;
       bill_key: string;
       biller_code: string;
+      expired_at: string;
     }>
   ): Promise<void> {
     try {
@@ -250,6 +251,10 @@ export class OrderRepository implements IOrderRepository {
         columnToUpdate.push('biller_code = ?');
         valueToUpdate.push(data.bill_key);
         valueToUpdate.push(data.biller_code);
+      }
+      if (data.expired_at) {
+        columnToUpdate.push('expired_at = ?');
+        valueToUpdate.push(data.expired_at);
       }
 
       const query = `UPDATE orders SET ${columnToUpdate.join(
