@@ -54,15 +54,6 @@ function PaymentConfirmation() {
       setIsLoading(false);
       return;
     }
-    if (data.transaction_status === 'expire') {
-      toast({
-        title: 'Expired',
-        description: 'Transaksi anda telah kadaluarsa',
-        variant: 'destructive',
-      });
-      setIsLoading(false);
-      return;
-    }
     setTransactionStatusChange(data);
 
     setIsLoading(false);

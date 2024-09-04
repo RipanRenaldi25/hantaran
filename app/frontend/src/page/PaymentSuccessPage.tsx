@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, Phone, X } from 'lucide-react';
 import { getTransactionStatus } from '@/feature/order';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
@@ -48,27 +48,34 @@ const PaymentSuccessPage = () => {
             </button>
           </>
         )}
-        {transactionStatus?.transaction_status === 'failed' && (
-          <>
-            <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-              <X className="text-red-500 size-7" />
-            </div>
-            <h2 className="mb-2 text-xl font-semibold text-gray-700">
-              Pembayaran Gagal!
-            </h2>
-            <p className="mb-4 text-gray-600">
-              Maaf, terjadi kesalahan pada transaksi Anda.
-            </p>
-            <button
-              className="px-6 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
-              onClick={() =>
-                alert('Silakan coba lagi atau hubungi dukungan pelanggan.')
-              }
-            >
-              Coba Lagi
-            </button>
-          </>
-        )}
+        {transactionStatus?.transaction_status === 'failed' ||
+          (transactionStatus?.transaction_status === 'expire' && (
+            <>
+              <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                <X className="text-red-500 size-7" />
+              </div>
+              <h2 className="mb-2 text-xl font-semibold text-gray-700">
+                {transactionStatus?.transaction_status === 'expire'
+                  ? 'Transaksi telah kadaluarsa'
+                  : 'Pembayaran Gagal'}
+              </h2>
+              <p className="mb-4 text-gray-600">
+                Maaf, terjadi kesalahan pada transaksi Anda.
+              </p>
+              <button
+                className="px-6 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 flex gap-2 transition-colors"
+                onClick={() =>
+                  window.open(
+                    `https://wa.me/+6281280010646?text=Nomor Pesanan: ${orderId}%0%0ANama Lengkap: %0AKendala: %0ABukti kendala: `,
+                    '_blank'
+                  )
+                }
+              >
+                <Phone />
+                Hubungi WhatsApp kami
+              </button>
+            </>
+          ))}
       </div>
     </div>
   );

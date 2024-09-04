@@ -3,7 +3,7 @@ import OrderList from '@/components/OrderList';
 import { getOrdersOwnedByUser } from '@/feature/order';
 import { useAppSelector } from '@/states';
 import { Button } from '@/components/ui/button';
-import { ArrowDownUp, ChevronDown } from 'lucide-react';
+import { ArrowDownUp, ChevronDown, Search } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -14,16 +14,20 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { useDebounce } from '@/hooks/useDebounce';
 
 function UserTransactionPage() {
   // Contoh data order
-  const [orders, setOrders] = useState<{ [key: string]: any }[] | null>(null);
+  const [orders, setOrders] = useState<{ [key: string]: any }[]>([]);
   const [filteredOrder, setFilteredOrder] = useState(orders);
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
   const [sortedByDate, setSortedbyDate] = useState<boolean>(false);
   const [sortedByProcessed, setSortedByProcessed] = useState<
-    'processed' | 'completed' | 'unprocessed'
+    'processed' | 'completed' | 'unprocessed' | 'settlement'
   >('unprocessed');
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [inputDebounce, setInputDebounce] = useDebounce(searchInput);
 
   useEffect(() => {
     const getOrdersByUser = async () => {
@@ -45,8 +49,21 @@ function UserTransactionPage() {
       getOrdersByUser();
     }
   }, [userLoginWithProfile]);
+
+  useEffect(() => {
+    if (inputDebounce !== '' && orders.length > 0) {
+      setFilteredOrder(
+        orders?.filter((order) =>
+          (order.id as string).includes(inputDebounce as string)
+        )
+      );
+    }
+    if (inputDebounce === '') {
+      setFilteredOrder(orders);
+    }
+  }, [inputDebounce]);
   const handleSortedProcess = (
-    process: 'processed' | 'completed' | 'unprocessed'
+    process: 'processed' | 'completed' | 'unprocessed' | 'settlement'
   ) => {
     setSortedByProcessed(process);
     setFilteredOrder((prevOrder: any) => {
@@ -55,7 +72,10 @@ function UserTransactionPage() {
         return prevOrder;
       }
       console.log({ sortedByProcessed });
-      return prevOrder.filter((order: any) => order.manage_status === process);
+      return orders?.filter(
+        (order: any) =>
+          order.manage_status === process || order.status === process
+      );
     });
   };
 
@@ -83,7 +103,21 @@ function UserTransactionPage() {
           <h2 className="mb-6 text-2xl font-semibold text-gray-700">
             Riwayat Pesanan
           </h2>
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <Search
+                className={cn(
+                  'absolute left-3 top-1/2 -translate-y-1/2 size-5 text-slate-500'
+                )}
+              />
+              <Input
+                type="text"
+                className={cn('w-96 border-2 shadow-sm px-10 text-md')}
+                placeholder='Cari berdasarkan "nomor pesanan"'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+            </div>
             <div className="flex gap-3">
               <Button
                 onClick={() => handleSortedDate()}
@@ -96,7 +130,10 @@ function UserTransactionPage() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant={'outline'}>
-                    {sortedByProcessed ? 'Selesai' : 'Diproses'}
+                    {sortedByProcessed === 'unprocessed' && 'Belum Diproses'}
+                    {sortedByProcessed === 'processed' && 'Sedang Diproses'}
+                    {sortedByProcessed === 'completed' && 'Selesai'}
+                    {sortedByProcessed === 'settlement' && 'Sudah Bayar'}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -123,6 +160,12 @@ function UserTransactionPage() {
                     onClick={() => handleSortedProcess('completed')}
                   >
                     Selesai
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="hover:cursor-pointer hover:bg-slate-100 transition-colors"
+                    onClick={() => handleSortedProcess('settlement')}
+                  >
+                    Sudah bayar
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -1,18 +1,16 @@
 import { formatCurrency } from '@/lib/utils';
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
 
-function OrderList({
-  orders = [],
-}: {
-  orders: { [key: string]: any }[] | null;
-}) {
+function OrderList({ orders = [] }: { orders: { [key: string]: any }[] }) {
   const navigate = useNavigate();
   return (
     <>
-      {orders === null ? (
-        <p className="text-gray-600">Anda belum memiliki riwayat pesanan.</p>
+      {orders.length === 0 ? (
+        <p className="text-gray-600 text-center">
+          Anda belum memiliki riwayat pesanan.
+        </p>
       ) : (
         <ul className="space-y-4 mt-10">
           {orders.map((order) => (
