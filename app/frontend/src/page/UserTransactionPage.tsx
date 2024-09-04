@@ -13,9 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/useDebounce';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 function UserTransactionPage() {
   // Contoh data order
@@ -28,6 +37,7 @@ function UserTransactionPage() {
   >('unprocessed');
   const [searchInput, setSearchInput] = useState<string>('');
   const [inputDebounce, setInputDebounce] = useDebounce(searchInput);
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     const getOrdersByUser = async () => {
@@ -62,6 +72,20 @@ function UserTransactionPage() {
       setFilteredOrder(orders);
     }
   }, [inputDebounce]);
+
+  useEffect(() => {
+    if (date) {
+      setFilteredOrder((prevOrder: any) => {
+        if (prevOrder === null) {
+          return prevOrder;
+        }
+        return orders?.filter(
+          (order: any) =>
+            new Date(order.created_at).getTime() >= new Date(date).getTime()
+        );
+      });
+    }
+  }, [date]);
   const handleSortedProcess = (
     process: 'processed' | 'completed' | 'unprocessed' | 'settlement'
   ) => {
@@ -96,6 +120,14 @@ function UserTransactionPage() {
     setFilteredOrder(sortedOrders);
   };
 
+  const handleReset = () => {
+    setDate(undefined);
+    setSearchInput('');
+    setSortedByProcessed('unprocessed');
+    setSortedbyDate(false);
+    setFilteredOrder(orders);
+  };
+
   return (
     <div className="flex items-center justify-center">
       <div className="p-8 bg-white rounded-md shadow-lg w-11/12">
@@ -119,6 +151,28 @@ function UserTransactionPage() {
               />
             </div>
             <div className="flex gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    className={cn(
+                      'w-[280px] justify-start text-left font-normal',
+                      !date && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <Button
                 onClick={() => handleSortedDate()}
                 className="flex items-center gap-1"
@@ -169,7 +223,7 @@ function UserTransactionPage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button onClick={() => setFilteredOrder(orders)}>Reset</Button>
+              <Button onClick={() => handleReset()}>Reset</Button>
             </div>
           </div>
         </div>
