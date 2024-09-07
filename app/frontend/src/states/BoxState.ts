@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  IBox,
   IBoxes,
   IBoxesResponse,
   IBoxResponseWithColorAndDecoration,
@@ -8,11 +9,13 @@ import {
 
 const initState: IBoxesResponse & {
   boxesWithColorAndDecoration: IMapBoxResponse[];
+  onlyBoxes: IBox[];
 } = {
   boxes: [],
   total: 0,
   page: 0,
   boxesWithColorAndDecoration: [],
+  onlyBoxes: [],
 };
 
 export const boxSlice = createSlice({
@@ -87,18 +90,19 @@ export const boxSlice = createSlice({
 
       state.boxesWithColorAndDecoration = groupedBoxes;
     },
+
+    setOnlyBoxes(state, action: PayloadAction<IBox[]>) {
+      state.onlyBoxes = action.payload;
+    },
   },
 });
 
-const { setBox, setBoxes, setPage, setTotal, setBoxWithColorAndDecoration } =
-  boxSlice.actions;
-const boxReducer = boxSlice.reducer;
-
-export {
-  boxReducer,
+export const {
   setBox,
   setBoxes,
   setPage,
   setTotal,
   setBoxWithColorAndDecoration,
-};
+  setOnlyBoxes,
+} = boxSlice.actions;
+export const boxReducer = boxSlice.reducer;

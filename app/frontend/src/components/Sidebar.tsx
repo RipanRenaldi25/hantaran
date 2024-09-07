@@ -11,18 +11,19 @@ import {
 import { NavLink } from 'react-router-dom';
 import SidebarList from './SidebarList';
 import { ISidebarItem } from './SidebarItem';
-import { IUserWithProfile } from '@/states/interface';
+import { IUserWithProfileAndAddress } from '@/states/interface';
+
 import logo from '@/assets/Logo.png';
 
 export interface ISidebar {
   sidebarItems: Omit<ISidebarItem, 'setSidebarItems'>[];
   setSidebarItems: any;
-  user: IUserWithProfile;
+  user: IUserWithProfileAndAddress;
 }
 
 const Sidebar = ({ setSidebarItems, sidebarItems = [], user }: ISidebar) => {
   return (
-    <aside className="bg-black min-h-screen lg:w-60 shadow-md text-white min-w-[calc(100vw-85vw)]">
+    <aside className="bg-black min-h-screen shadow-md text-white md:min-w-[calc(100vw-75vw)] lg:min-w-[calc(100vw-75vw)] xl:min-w-[calc(100vw-85vw)]">
       <header className="flex gap-4 justify-between border-b border-0.5 border-gray-400 px-4 py-2 items-center">
         <div className="overflow-hidden">
           <img src={logo} width={40} />

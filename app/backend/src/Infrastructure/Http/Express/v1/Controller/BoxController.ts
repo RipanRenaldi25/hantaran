@@ -56,7 +56,7 @@ export class BoxController {
       }
       const minSize = 1024 * 1024 * 0.02;
       if (req.file.size < minSize) {
-        throw new Error('test');
+        throw new Error('Ukuran file terlalu kecil');
       }
       const payload = {
         name: req.body.name,
@@ -76,7 +76,7 @@ export class BoxController {
       } else {
         res.status(500).json({
           status: 'Fail',
-          message: `Server error: ${err.message}`,
+          message: `Server error: ${err}`,
         });
       }
     }

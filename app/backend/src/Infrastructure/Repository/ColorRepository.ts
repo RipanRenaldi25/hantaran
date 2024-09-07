@@ -1,5 +1,8 @@
 import { Pool } from 'mysql2/promise';
-import { IColorRepository } from '../../Domain/Repository/IColorRepository';
+import {
+  IColor,
+  IColorRepository,
+} from '../../Domain/Repository/IColorRepository';
 import { Color, ColorId } from '../../Domain/Entity';
 
 export class ColorRepository implements IColorRepository {
@@ -42,6 +45,18 @@ export class ColorRepository implements IColorRepository {
       return new Color(new ColorId(result[0].id), result[0].name);
     } catch (err: any) {
       return null;
+    }
+  }
+
+  async getColors(): Promise<IColor[]> {
+    try {
+      const getColorsQuery = `SELECT * FROM colors`;
+      const [result]: [any[], any[]] = await this.dbConnection.query(
+        getColorsQuery
+      );
+      return result;
+    } catch (err) {
+      return [];
     }
   }
 }

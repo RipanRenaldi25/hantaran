@@ -103,7 +103,7 @@ userRouter.get(
 );
 userRouter.get(
   '/self/profiles/',
-  authMiddleware.applyWithRole(['user']),
+  authMiddleware.applyWithRole(['user', 'admin']),
   (req, res) => userController.getUserWithProfile(req, res)
 );
 userRouter.get('/:userId/profiles/addresses/', (req, res) =>

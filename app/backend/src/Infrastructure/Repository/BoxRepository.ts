@@ -27,11 +27,13 @@ export class BoxRepository implements IBoxRepository {
     this.decorationRepository = decorationRepository;
   }
   async createBox(box: Box): Promise<BoxId> {
-    const query = 'INSERT INTO boxes (id, name, image_url) VALUES (?, ?, ?)';
+    const query =
+      'INSERT INTO boxes (id, name, image_url, price) VALUES (?, ?, ?, ?)';
     await this.dbConnection.query(query, [
       box.getId().toString(),
       box.getName(),
       box.getBoxImageUrl(),
+      box.getPrice().getValue(),
     ]);
     return box.getId();
   }

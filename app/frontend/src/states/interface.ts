@@ -72,3 +72,27 @@ export interface IUserWithProfileAndAddress {
   street: string;
   details: string;
 }
+
+export interface ITableProps<Thead, Tbody> {
+  tableData: Tbody[];
+  tableHeader: Thead[];
+}
+
+export interface IBox {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IColor {
+  id: string;
+  name: string;
+}
+
+export interface IDecoration {
+  id: string;
+  name: string;
+}

@@ -1,6 +1,9 @@
 import { Pool } from 'mysql2/promise';
 import { Decoration, DecorationId } from '../../Domain/Entity';
-import { IDecorationRepository } from '../../Domain/Repository/IDecorationRepository';
+import {
+  IDecoration,
+  IDecorationRepository,
+} from '../../Domain/Repository/IDecorationRepository';
 
 export class DecorationRepository implements IDecorationRepository {
   private readonly dbConnection: Pool;
@@ -36,6 +39,19 @@ export class DecorationRepository implements IDecorationRepository {
       return new Decoration(new DecorationId(result[0].id), result[0].name);
     } catch (err) {
       return null;
+    }
+  }
+
+  async getDecorations(): Promise<IDecoration[]> {
+    try {
+      const getDecorationQuery = `SELECT * FROM decorations`;
+      const [result]: [any[], any[]] = await this.dbConnection.query(
+        getDecorationQuery
+      );
+
+      return result;
+    } catch (err) {
+      return [];
     }
   }
 }

@@ -136,7 +136,7 @@ function UserTransactionPage() {
             Riwayat Pesanan
           </h2>
           <div className="flex flex-col items-center gap-4">
-            <div className="relative">
+            <div className="relative w-full">
               <Search
                 className={cn(
                   'absolute left-3 top-1/2 -translate-y-1/2 size-5 text-slate-500'
@@ -144,7 +144,7 @@ function UserTransactionPage() {
               />
               <Input
                 type="text"
-                className={cn('w-96 border-2 shadow-sm px-10 text-md')}
+                className={cn('border-2 shadow-sm px-10 text-md')}
                 placeholder='Cari berdasarkan "nomor pesanan"'
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}

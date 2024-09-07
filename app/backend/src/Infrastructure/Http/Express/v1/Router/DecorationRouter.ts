@@ -8,6 +8,7 @@ import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { CreateDecorationUsecase } from '../../../../../Application/Usecase/Decoration/CreateDecorationUsecase';
 import { v4 } from 'uuid';
 import { DecorationController } from '../Controller/DecorationController';
+import { GetDecorationUsecase } from '../../../../../Application/Usecase/Decoration/GetDecorationUsecase';
 
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
 const authMiddleware = AuthMiddleware.getInstance(
@@ -24,9 +25,20 @@ const createDecorationUsecase = new CreateDecorationUsecase(
   v4
 );
 
-const decorationController = new DecorationController(createDecorationUsecase);
+const getDecorationUsecase = new GetDecorationUsecase(decorationRepository);
+
+const decorationController = new DecorationController(
+  createDecorationUsecase,
+  getDecorationUsecase
+);
 
 const decorationRouter = express.Router();
+
+decorationRouter.get(
+  '/',
+  authMiddleware.applyWithRole(['admin', 'user']),
+  (req, res) => decorationController.getDecorations(req, res)
+);
 
 decorationRouter.post(
   '/',

@@ -63,13 +63,13 @@ const AdminDashboard = () => {
   const { userLoginWithProfile } = useAppSelector((state) => state.user);
 
   return (
-    <article className="flex gap-4">
+    <article className="flex gap-4 bg-slate-200">
       <Sidebar
         sidebarItems={sidebarItems}
         setSidebarItems={setSidebarItems}
         user={userLoginWithProfile}
       />
-      <main className="py-4">
+      <main className="py-6 md:max-w-[calc(100vw-25vw-40px)] lg:max-w-[calc(100vw-25vw-40px)] xl:max-w-[calc(100vw-15vw-40px)] overflow-x-hidden min-w-[calc(100vw-25vw-40px)]">
         <Outlet />
       </main>
     </article>

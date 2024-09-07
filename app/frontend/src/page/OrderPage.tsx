@@ -1,33 +1,29 @@
-import { Button } from '@/components/ui/button';
-import { createOrder } from '@/feature/order';
-import { stringify } from 'querystring';
-import React, { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Landmark } from 'lucide-react';
 import bca from '@/assets/bca.jpeg';
 import bni from '@/assets/bni.jpeg';
 import bri from '@/assets/bri.jpeg';
 import mandiri from '@/assets/mandiri.jpeg';
 import permata from '@/assets/permata.jpeg';
 import qris from '@/assets/qris.jpg';
-import { ICartItem } from '@/states/interface';
-import { formatCurrency } from '@/lib/utils';
-import { useAppDispatch, useAppSelector } from '@/states';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import ButtonLoading from '@/components/ButtonLoading';
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import ButtonLoading from '@/components/ButtonLoading';
+import { createOrder } from '@/feature/order';
+import { cn, formatCurrency } from '@/lib/utils';
+import { useAppDispatch, useAppSelector } from '@/states';
 import { clearCartState } from '@/states/Cart';
+import { ICartItem } from '@/states/interface';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon, Landmark } from 'lucide-react';
+import { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const OrderPage = () => {
   const { id } = useParams();
