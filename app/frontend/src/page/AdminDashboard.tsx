@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
-import { LayoutDashboard } from 'lucide-react';
+import { Box, LayoutDashboard, Palette, Ribbon } from 'lucide-react';
 import { getUserWithProfile } from '@/feature/user';
 import { setUserLoginWithProfile } from '@/states/userState';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
@@ -11,20 +11,27 @@ const AdminDashboard = () => {
   const dispatch = useAppDispatch();
   const userLogin = useAppSelector((state) => state.userLogedIn);
   const { state } = useLocation();
+  const { pathname } = useLocation();
+  console.log({ pathname });
   const [sidebarItems, setSidebarItems] = useState([
     // { icon: LayoutDashboard, title: 'Dashboard', path: '', isActive: true },
-    { icon: LayoutDashboard, title: 'Box', path: 'box', isActive: true },
     {
-      icon: LayoutDashboard,
-      title: 'Color',
-      path: 'color',
-      isActive: false,
+      icon: Box,
+      title: 'Box',
+      path: 'box',
+      isActive: pathname === '/dashboard/box',
     },
     {
-      icon: LayoutDashboard,
+      icon: Palette,
+      title: 'Color',
+      path: 'color',
+      isActive: pathname === '/dashboard/color',
+    },
+    {
+      icon: Ribbon,
       title: 'Decoration',
       path: 'decoration',
-      isActive: false,
+      isActive: pathname === '/dashboard/decoration',
     },
   ]);
 
