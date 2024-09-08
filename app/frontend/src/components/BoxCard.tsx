@@ -59,8 +59,6 @@ export function BoxCard({
     setisAddItemOpen(false);
     onAddToCart(selectedColor, selectedDecoration);
   };
-  console.log({ boxesWithColorAndDecoration });
-  console.log({ grouped: groupedBoxes[id] });
 
   return (
     <>

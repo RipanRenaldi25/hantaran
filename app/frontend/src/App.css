@@ -1,9 +1,9 @@
+.mainpage {
+  background: linear-gradient(135deg, #f8f1e4, #d1b79e);
+}
+
 .mainpage header {
-  background: linear-gradient(
-    135deg,
-    #f8f1e4,
-    #d1b79e
-  ); /* Gradasi dari putih ke coklat muda */
+  background: linear-gradient(135deg, #f8f1e4, #d1b79e);
   padding: 60px 20px;
   text-align: center;
   color: #4a3c2f; /* Warna coklat tua untuk teks */

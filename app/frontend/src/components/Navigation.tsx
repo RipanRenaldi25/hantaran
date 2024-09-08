@@ -54,7 +54,7 @@ export const Navigation = ({ navItems }: INavigationProps) => {
         <div className="flex items-center gap-6">
           <div>
             <button
-              className="px-10 py-1 border font-bold border-white"
+              className="px-10 py-1 border font-bold border-white shadow-d mainpage"
               onClick={() => navigate('/register')}
             >
               Register

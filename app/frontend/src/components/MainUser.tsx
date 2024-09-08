@@ -61,7 +61,6 @@ const MainUser = () => {
       });
       return;
     }
-    console.log({ tempList });
     const index = tempList.findIndex(
       (item) =>
         item.id === box.id &&
