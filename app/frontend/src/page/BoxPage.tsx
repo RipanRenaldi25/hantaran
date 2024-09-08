@@ -1,14 +1,7 @@
-import TableComponent from '@/components/TableComponent';
-import {
-  createBoxAndConnectWithDecorationAndColor,
-  getBoxes,
-} from '@/feature/box';
-import { useAppDispatch, useAppSelector } from '@/states';
-import React, { useEffect, useState } from 'react';
-import { setBoxes, setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
-import { Button } from '@/components/ui/button';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import AddBox from '@/components/AddBox';
 import DashboardCard from '@/components/DashboardCard';
+import TableComponent from '@/components/TableComponent';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -16,9 +9,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import AddBox from '@/components/AddBox';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  createBoxAndConnectWithDecorationAndColor,
+  getBoxes,
+} from '@/feature/box';
+import { useAppDispatch, useAppSelector } from '@/states';
+import { setBox, setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const BoxPage = () => {
   const [colors, setColors] = useState([]);
@@ -38,8 +38,6 @@ const BoxPage = () => {
   );
   const isNext = currentPage < totalPage;
   const isPrevious = currentPage > 1;
-
-  useEffect(() => {}, [currentPage]);
 
   const getBox = async (page?: number, size?: number) => {
     const responseData = await getBoxes(page, size);
@@ -66,14 +64,20 @@ const BoxPage = () => {
         decorations,
         { name, image, price }
       );
-      console.log({ boxId });
       if (boxId) {
         toast({
           title: 'Success',
           description: 'Box created successfully',
         });
       }
-      console.log({ colors, decorations, box: { name, image, price } });
+      dispatch(
+        setBox({
+          id: boxId || '',
+          box_name: name,
+          box_image_url: image || URL.createObjectURL(image) || '',
+          price: price,
+        })
+      );
     } catch (err: any) {
       console.log({ err: err.message });
     }
@@ -108,16 +112,6 @@ const BoxPage = () => {
           value={total}
           description={`Total Box`}
         />
-        <DashboardCard
-          title="Total Box"
-          value={total}
-          description={`Total Box`}
-        />
-        <DashboardCard
-          title="Total Box"
-          value={total}
-          description={`Total Box`}
-        />
       </div>
       <div className="bg-white rounded-xl">
         <TableComponent
@@ -135,10 +129,7 @@ const BoxPage = () => {
               as: 'Price',
               name: 'price',
             },
-            {
-              name: 'image_url',
-              as: 'Image',
-            },
+
             {
               name: 'created_at',
               as: 'Created At',
@@ -146,10 +137,6 @@ const BoxPage = () => {
             {
               name: 'updated_at',
               as: 'Updated At',
-            },
-            {
-              name: 'action',
-              as: 'Action',
             },
           ]}
           currentPage={currentPage}

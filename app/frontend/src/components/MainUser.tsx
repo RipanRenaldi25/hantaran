@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import hero from '@/assets/hero.jpg';
 import {
   Sheet,
   SheetContent,
@@ -7,39 +8,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Button } from './ui/button';
-import {
-  CircleX,
-  Minus,
-  Plus,
-  ShoppingCart,
-  Trash2,
-  TrashIcon,
-  X,
-} from 'lucide-react';
-import HeroSection from './HeroSection';
-import { BoxCard } from './BoxCard';
-import { Sidebar } from './UserSidebar';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { getBoxesWithColorAndDecoration } from '@/feature/box';
+import { formatCurrency } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { useToast } from './ui/use-toast';
-import { IBoxes, ICartItem } from '@/states/interface';
+import { setBoxWithColorAndDecoration } from '@/states/BoxState';
 import {
   decrementQuantity,
   incrementQuantity,
   removeSpecificCart,
-  setCart,
   updateSpecificCart,
 } from '@/states/Cart';
-import { createCart, getCartOwnedByUser } from '@/feature/cart';
-import { getBoxesWithColorAndDecoration } from '@/feature/box';
-import { setBoxWithColorAndDecoration } from '@/states/BoxState';
-import { getUserWithProfile } from '@/feature/user';
-import { setUserLoginWithProfile } from '@/states/userState';
-import hero from '@/assets/hero.jpg';
-import { Item } from '@radix-ui/react-navigation-menu';
-import { Toaster } from './ui/toaster';
-import { formatCurrency } from '@/lib/utils';
+import { ICartItem } from '@/states/interface';
+import { Minus, Plus, ShoppingCart, TrashIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { BoxCard } from './BoxCard';
+import HeroSection from './HeroSection';
+import { Button } from './ui/button';
+import { useToast } from './ui/use-toast';
+import { Sidebar } from './UserSidebar';
 
 const MainUser = () => {
   const [userWithProfile, setUserWithProfile] = useState<{

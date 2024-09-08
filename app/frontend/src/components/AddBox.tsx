@@ -18,6 +18,7 @@ export interface IAddBox {
   setColors: any;
   decorations: IDecoration[];
   setDecorations: any;
+  children?: React.ReactNode;
 }
 
 const AddBox = ({
@@ -26,6 +27,7 @@ const AddBox = ({
   decorations,
   setColors,
   setDecorations,
+  children,
 }: IAddBox) => {
   const { toast } = useToast();
   const [availableColors, setAvailableColors] = useState<IColor[]>([]);
@@ -175,7 +177,7 @@ const AddBox = ({
                 }`}
                 disabled={isLoading}
               >
-                {<ButtonLoading isLoading={isLoading} />}Tambah Box
+                {<ButtonLoading isLoading={isLoading} />}Tambah
               </Button>
             </form>
           </div>

@@ -1,24 +1,26 @@
 import express from 'express';
-import { BoxController } from '../Controller/BoxController';
-import { CreateBoxUsecase } from '../../../../../Application/Usecase/Box/CreateBoxUsecase';
-import { BoxRepository } from '../../../../Repository/BoxRepository';
-import { MysqlConnection } from '../../../../DB/MysqlConnection';
-import { ConfigService } from '../../../../Service/ConfigService';
-import { v4 } from 'uuid';
-import { multerMiddleware } from '../Middleware/Multer';
-import { AuthMiddleware } from '../Middleware/Auth';
-import { JwtService } from '../../../../Service/JwtService';
 import jwt from 'jsonwebtoken';
-import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
-import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
-import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
-import { ColorRepository } from '../../../../Repository/ColorRepository';
-import { DecorationRepository } from '../../../../Repository/DecorationRepository';
-import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
+import { v4 } from 'uuid';
 import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
 import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
 import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
+import { CreateBoxUsecase } from '../../../../../Application/Usecase/Box/CreateBoxUsecase';
+import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
+import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
+import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
 import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
+import { UnconnectBoxDecorationUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxDecoration';
+import { UnconnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxWithColor';
+import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
+import { MysqlConnection } from '../../../../DB/MysqlConnection';
+import { BoxRepository } from '../../../../Repository/BoxRepository';
+import { ColorRepository } from '../../../../Repository/ColorRepository';
+import { DecorationRepository } from '../../../../Repository/DecorationRepository';
+import { ConfigService } from '../../../../Service/ConfigService';
+import { JwtService } from '../../../../Service/JwtService';
+import { BoxController } from '../Controller/BoxController';
+import { AuthMiddleware } from '../Middleware/Auth';
+import { multerMiddleware } from '../Middleware/Multer';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -63,6 +65,13 @@ const connectBoxWithDecorationUsecase = new ConnectBoxWithDecorationUsecase(
 const getBoxesWithColorAndDecoration =
   new getBoxesWithColorAndDecorationUsecase(boxRepository);
 
+const unconnectBoxWithColorUsecase = new UnconnectBoxWithColorUsecase(
+  boxRepository
+);
+const unconnectBoxWithDecorationUsecase = new UnconnectBoxDecorationUsecase(
+  boxRepository
+);
+
 // CONTROLLER
 const boxController = new BoxController(
   createBoxUsecase,
@@ -73,7 +82,9 @@ const boxController = new BoxController(
   connectBoxUsecase,
   connectBoxWithColorUsecase,
   connectBoxWithDecorationUsecase,
-  getBoxesWithColorAndDecoration
+  getBoxesWithColorAndDecoration,
+  unconnectBoxWithColorUsecase,
+  unconnectBoxWithDecorationUsecase
 );
 
 const authMiddleware = AuthMiddleware.getInstance(
@@ -83,9 +94,6 @@ const authMiddleware = AuthMiddleware.getInstance(
 
 const boxRouter = express.Router();
 
-// boxRouter.post('/', multerMiddleware.single('image'), (req, res) =>
-//   boxController.createBox(req, res)
-// );
 boxRouter.post(
   '/',
   authMiddleware.applyWithRole(['admin']),
@@ -134,6 +142,12 @@ boxRouter.get(
   '/colors/decorations/',
   authMiddleware.applyWithRole(['admin', 'user']),
   (req, res) => boxController.getBoxesWithColorAndDecoration(req, res)
+);
+
+boxRouter.delete(
+  '/:boxId/colors/:colorId',
+  authMiddleware.applyWithRole(['admin']),
+  (req, res) => boxController.unconnectBoxWithColor(req, res)
 );
 
 export default boxRouter;

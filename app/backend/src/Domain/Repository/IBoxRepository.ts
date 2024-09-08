@@ -1,4 +1,4 @@
-import { Box, BoxId, Color, Decoration } from '../Entity';
+import { Box, BoxId, ColorId, DecorationId } from '../Entity';
 
 export interface IBoxRepository {
   getBoxById(id: BoxId): Promise<Box | null>;
@@ -28,4 +28,10 @@ export interface IBoxRepository {
       price: number;
     }[]
   >;
+  unconnectBoxWithDecorationId(
+    id: BoxId,
+    decorationId: DecorationId
+  ): Promise<void>;
+
+  unconnectBoxWithColorId(id: BoxId, colorId: ColorId): Promise<void>;
 }

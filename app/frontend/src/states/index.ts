@@ -5,6 +5,8 @@ import { boxReducer } from './BoxState';
 import { orderReducer } from './OrderState';
 import { cartReducer } from './Cart';
 import { userReducer } from './userState';
+import { colorReducer } from './ColorState';
+import { decorationReducer } from './DecorationState';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +15,8 @@ const store = configureStore({
     order: orderReducer,
     cart: cartReducer,
     user: userReducer,
+    color: colorReducer,
+    decoration: decorationReducer,
   },
 });
 

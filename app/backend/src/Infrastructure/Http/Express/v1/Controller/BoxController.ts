@@ -1,21 +1,23 @@
 import { Request, Response } from 'express';
+import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
+import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
+import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
 import { CreateBoxUsecase } from '../../../../../Application/Usecase/Box/CreateBoxUsecase';
-import { ClientError } from '../../../../../Domain/Exception/ClientError';
-import { NotFoundError } from '../../../../../Domain/Exception/NotFoundError';
 import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteBoxUsecase';
-import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
+import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
 import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
+import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
+import { UnconnectBoxDecorationUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxDecoration';
+import { UnconnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxWithColor';
+import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
+import { ClientError } from '../../../../../Domain/Exception/ClientError';
+import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
+import { NotFoundError } from '../../../../../Domain/Exception/NotFoundError';
 import {
   validateConnectBoxPayload,
   validateCreateBoxPayload,
   validateUpdateBoxPayload,
 } from '../../../../Helper/Validator/Box/BoxValidator';
-import { InvariantError } from '../../../../../Domain/Exception/InvariantError';
-import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
-import { ConnectBoxWithDecorationAndColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorAndDecorationUsecase';
-import { ConnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithColorUsecase';
-import { ConnectBoxWithDecorationUsecase } from '../../../../../Application/Usecase/Box/ConnectBoxWithDecorationUsecase';
-import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -36,7 +38,9 @@ export class BoxController {
     connectBoxUsecase: ConnectBoxWithDecorationAndColorUsecase,
     connectBoxWithColorUsecase: ConnectBoxWithColorUsecase,
     connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase,
-    private readonly getBoxesWithColorAndDecorationUsecase: getBoxesWithColorAndDecorationUsecase
+    private readonly getBoxesWithColorAndDecorationUsecase: getBoxesWithColorAndDecorationUsecase,
+    private readonly unconnectBoxWithColorUsecase: UnconnectBoxWithColorUsecase,
+    private readonly unconnectBoxWithDecorationUsecase: UnconnectBoxDecorationUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
@@ -305,6 +309,69 @@ export class BoxController {
         status: 'Success',
         message: 'Boxes retrieved',
         data: boxes,
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+
+  async unconnectBoxWithColor(req: Request, res: Response) {
+    try {
+      const { boxId, colorId } = req.params;
+      if (!boxId || !colorId) {
+        throw new InvariantError(
+          'Box id and color id are required in parameter'
+        );
+      }
+      await this.unconnectBoxWithColorUsecase.execute(boxId, colorId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Color on box deleted',
+        data: {
+          boxId,
+          colorId,
+        },
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+  async unconnectBoxWithDecoration(req: Request, res: Response) {
+    try {
+      const { boxId, decorationId } = req.params;
+      if (!boxId || !decorationId) {
+        throw new InvariantError(
+          'Box id and color id are required in parameter'
+        );
+      }
+      await this.unconnectBoxWithDecorationUsecase.execute(boxId, decorationId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Color on box deleted',
+        data: {
+          boxId,
+          decorationId,
+        },
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

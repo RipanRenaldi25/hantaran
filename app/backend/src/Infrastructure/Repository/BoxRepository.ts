@@ -8,10 +8,8 @@ import {
   DecorationId,
 } from '../../Domain/Entity';
 import { IBoxRepository } from '../../Domain/Repository/IBoxRepository';
-import { InvariantError } from '../../Domain/Exception/InvariantError';
 import { IColorRepository } from '../../Domain/Repository/IColorRepository';
 import { IDecorationRepository } from '../../Domain/Repository/IDecorationRepository';
-import { Price } from '../../Domain/ValueObject/Price';
 
 export class BoxRepository implements IBoxRepository {
   private readonly dbConnection: Pool;
@@ -185,5 +183,25 @@ export class BoxRepository implements IBoxRepository {
       await this.dbConnection.query(query);
 
     return resultBox;
+  }
+
+  async unconnectBoxWithDecorationId(
+    id: BoxId,
+    decorationId: DecorationId
+  ): Promise<void> {
+    const query =
+      'DELETE FROM box_decorations WHERE box_id = ? AND decoration_id = ?';
+    const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+      id.toString(),
+      decorationId.toString(),
+    ]);
+  }
+
+  async unconnectBoxWithColorId(id: BoxId, colorId: ColorId): Promise<void> {
+    const query = 'DELETE FROM box_colors WHERE box_id = ? AND color_id = ?';
+    const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+      id.toString(),
+      colorId.toString(),
+    ]);
   }
 }

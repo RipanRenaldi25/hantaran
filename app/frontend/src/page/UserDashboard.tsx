@@ -8,6 +8,7 @@ import { Header } from '@/components/UserHeader';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { getUserWithProfile } from '@/feature/user';
 import { setUserLoginWithProfile } from '@/states/userState';
+import { resetUserLogedIn } from '@/states/UserLogedInState';
 
 export type NavListType = {
   title: string;
@@ -47,6 +48,7 @@ const UserDashboard = () => {
       !localStorage.getItem('ACCESS_TOKEN')
     ) {
       navigate('/');
+      dispatch(resetUserLogedIn());
     }
     if (
       localStorage.getItem('ROLE') === 'admin' &&

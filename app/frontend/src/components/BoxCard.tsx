@@ -44,9 +44,10 @@ export function BoxCard({
 }) {
   const { toast } = useToast();
   const [isAddItemOpen, setisAddItemOpen] = useState(false);
-  const { boxesWithColorAndDecoration } = useAppSelector((state) => state.box);
+  const { boxesWithColorAndDecoration, groupedBoxes } = useAppSelector(
+    (state) => state.box
+  );
   const handleAddToCart = () => {
-    console.log({ selectedColor, selectedDecoration });
     if (!selectedColor || !selectedDecoration) {
       toast({
         title: 'Error',
@@ -58,6 +59,8 @@ export function BoxCard({
     setisAddItemOpen(false);
     onAddToCart(selectedColor, selectedDecoration);
   };
+  console.log({ boxesWithColorAndDecoration });
+  console.log({ grouped: groupedBoxes[id] });
 
   return (
     <>
@@ -94,15 +97,18 @@ export function BoxCard({
                     <SelectValue placeholder="Select Color" />
                   </SelectTrigger>
                   <SelectContent>
-                    {boxesWithColorAndDecoration.map((box) =>
-                      box.colors.map((color) => (
-                        <>
-                          <SelectItem value={color.name} id={box.id}>
-                            {color.name}
-                          </SelectItem>
-                        </>
-                      ))
-                    )}
+                    {boxesWithColorAndDecoration
+                      .find((box) => box.id === id)
+                      ?.colors.map((color) => (
+                        <SelectItem key={color.id} value={color.name}>
+                          {color.name}
+                        </SelectItem>
+                      ))}
+                    {/* {groupedBoxes[id]?.map((box) => (
+                      <SelectItem key={box.color_id} value={box.color_name}>
+                        {box.color_name}
+                      </SelectItem>
+                    ))} */}
                   </SelectContent>
                 </Select>
               </div>
@@ -117,15 +123,13 @@ export function BoxCard({
                     <SelectValue placeholder="Select Decoration" />
                   </SelectTrigger>
                   <SelectContent>
-                    {boxesWithColorAndDecoration.map((box) =>
-                      box.decorations.map((decoration) => (
-                        <>
-                          <SelectItem value={decoration.name} id={box.id}>
-                            {decoration.name}
-                          </SelectItem>
-                        </>
-                      ))
-                    )}
+                    {boxesWithColorAndDecoration
+                      .find((box) => box.id === id)
+                      ?.decorations.map((color) => (
+                        <SelectItem key={color.id} value={color.name}>
+                          {color.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>

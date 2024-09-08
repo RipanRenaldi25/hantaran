@@ -180,3 +180,44 @@ export const createBoxAndConnectWithDecorationAndColor = async (
     return null;
   }
 };
+
+export const createColor = async (color: string) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/colors`,
+      {
+        name: color,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    console.log({ err });
+    return null;
+  }
+};
+
+export const createDecoration = async (decoration: string) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/decorations`,
+      {
+        name: decoration,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    return null;
+  }
+};

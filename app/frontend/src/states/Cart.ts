@@ -75,6 +75,7 @@ export const cartSlice = createSlice({
           item.color_name !== action.payload.color ||
           item.decoration_name !== action.payload.decoration
       );
+      localStorage.setItem('CARTS', JSON.stringify(state.carts));
     },
 
     clearCartState(state) {

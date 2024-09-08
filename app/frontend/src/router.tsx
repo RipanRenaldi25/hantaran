@@ -15,6 +15,8 @@ import EditProfile from './page/EditProfile';
 import MainUser from './components/MainUser';
 import PaymentSuccessPage from './page/PaymentSuccessPage';
 import UserTransactionPage from './page/UserTransactionPage';
+import ColorPage from './page/ColorPage';
+import DecorationPage from './page/DecorationPage';
 
 export const router = createBrowserRouter([
   {
@@ -48,8 +50,8 @@ export const router = createBrowserRouter([
     element: <AdminDashboard />,
     children: [
       {
-        path: 'user',
-        element: <h1>User</h1>,
+        path: '',
+        element: <BoxPage />,
       },
       {
         path: 'box',
@@ -57,11 +59,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'color',
-        element: <BoxPage />,
+        element: <ColorPage />,
       },
       {
         path: 'decoration',
-        element: <BoxPage />,
+        element: <DecorationPage />,
       },
       {
         path: 'box/color',

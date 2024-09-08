@@ -19,11 +19,11 @@ import { NavLink, useSearchParams } from 'react-router-dom';
 export interface ITableComponent<T> {
   tableData: T[];
   tableHeader: { name: string; as: string }[];
-  totalPage: number;
-  currentPage: number;
-  setCurrentPage: any;
-  isNext: boolean;
-  isPrevious: boolean;
+  totalPage?: number;
+  currentPage?: number;
+  setCurrentPage?: any;
+  isNext?: boolean;
+  isPrevious?: boolean;
 }
 
 const TableComponent = ({
@@ -37,8 +37,8 @@ const TableComponent = ({
 }: ITableComponent<any>) => {
   const [searchParam, setSearchParam] = useSearchParams();
   return (
-    <Table className="overflow-x-scroll">
-      <TableCaption>A list of all boxes</TableCaption>
+    <Table className="overflow-x-scrol table-fixed">
+      {/* <TableCaption>A list of all boxes</TableCaption> */}
       <TableHeader>
         <TableRow>
           {tableHeader.map((header) => (
@@ -52,67 +52,69 @@ const TableComponent = ({
             {tableHeader.map((header) => {
               return <TableCell>{data[header.name]}</TableCell>;
             })}
-            <TableCell>
+            {/* <TableCell>
               <div>
                 <NavLink to={`edit/`}>Edit</NavLink>
               </div>
               <div>
                 <NavLink to="">Delete</NavLink>
               </div>
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         ))}
       </TableBody>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              aria-disabled={!isPrevious}
+      {totalPage && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                aria-disabled={!isPrevious}
+                onClick={() => {
+                  if (!isPrevious) {
+                    return;
+                  }
+                  setSearchParam((prevParam) => ({
+                    ...prevParam,
+                    page: currentPage - 1,
+                  }));
+                  setCurrentPage(currentPage - 1);
+                }}
+                className={`${
+                  !isPrevious && 'text-gray-400 cursor-not-allowed'
+                } cursor-pointer`}
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPage }).map((val, index) => {
+              return (
+                <PaginationItem id={`${index}`}>
+                  <NavLink to=""> {index + 1} </NavLink>
+                </PaginationItem>
+              );
+            })}
+            {/* <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem> */}
+            <PaginationItem
               onClick={() => {
-                if (!isPrevious) {
+                if (!isNext) {
                   return;
                 }
                 setSearchParam((prevParam) => ({
                   ...prevParam,
-                  page: currentPage - 1,
+                  page: currentPage + 1,
                 }));
-                setCurrentPage(currentPage - 1);
+                setCurrentPage(currentPage + 1);
               }}
+              aria-disabled={!isNext}
               className={`${
-                !isPrevious && 'text-gray-400 cursor-not-allowed'
+                !isNext && 'text-gray-400 cursor-not-allowed'
               } cursor-pointer`}
-            />
-          </PaginationItem>
-          {Array.from({ length: totalPage }).map((val, index) => {
-            return (
-              <PaginationItem id={`${index}`}>
-                <NavLink to=""> {index + 1} </NavLink>
-              </PaginationItem>
-            );
-          })}
-          {/* <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem> */}
-          <PaginationItem
-            onClick={() => {
-              if (!isNext) {
-                return;
-              }
-              setSearchParam((prevParam) => ({
-                ...prevParam,
-                page: currentPage + 1,
-              }));
-              setCurrentPage(currentPage + 1);
-            }}
-            aria-disabled={!isNext}
-            className={`${
-              !isNext && 'text-gray-400 cursor-not-allowed'
-            } cursor-pointer`}
-          >
-            <PaginationNext />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            >
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </Table>
   );
 };
