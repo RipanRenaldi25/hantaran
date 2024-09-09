@@ -1,8 +1,6 @@
-import React from 'react';
-
 export const MainPage = () => {
   return (
-    <div className="mainpage">
+    <div className="mainpage relative">
       <header>
         <h1> Selamat Datang di HantaranByJoo</h1>
         <p>

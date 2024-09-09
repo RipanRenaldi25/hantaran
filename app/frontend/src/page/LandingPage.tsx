@@ -3,6 +3,7 @@ import { useAppSelector } from '@/states';
 import { Toaster } from '@/components/ui/toaster';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import wave from '@/assets/wave.svg';
 
 function LandingPage() {
   const { role } = useAppSelector((state) => state.userLogedIn);
@@ -41,7 +42,7 @@ function LandingPage() {
   return (
     <>
       <Toaster />
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-white">
         <Navigation navItems={navItems} />
         <Outlet />
 

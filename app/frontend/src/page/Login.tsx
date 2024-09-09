@@ -62,7 +62,7 @@ const Login = () => {
   return (
     <div>
       <form
-        className="flex justify-center h-screen items-center flex-col shadow-md relative"
+        className="flex h-screen items-center flex-col shadow-md relative"
         onSubmit={handleLogin}
       >
         <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8">

@@ -11,3 +11,13 @@ export const formatCurrency = (value: number) => {
     currency: 'IDR',
   }).format(value);
 };
+
+export const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  }).format(date);
+};

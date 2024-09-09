@@ -15,6 +15,10 @@ export class GetOrdersUsecase {
       phoneNumber: order.phone_number,
       createdAt: order.created_at,
       updatedAt: order.updated_at,
+      manageStatus: order.manage_status,
+      expiredAt: order.expired_at,
+      date: order.date,
+      address: order.address,
     }));
   }
 }

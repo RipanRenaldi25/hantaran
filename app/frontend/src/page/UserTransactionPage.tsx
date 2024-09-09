@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
 import OrderList from '@/components/OrderList';
-import { getOrdersOwnedByUser } from '@/feature/order';
-import { useAppSelector } from '@/states';
 import { Button } from '@/components/ui/button';
-import { ArrowDownUp, ChevronDown, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { getOrdersOwnedByUser } from '@/feature/order';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useAppSelector } from '@/states';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/useDebounce';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import {
+  ArrowDownUp,
+  Calendar as CalendarIcon,
+  ChevronDown,
+  Search,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -27,7 +28,6 @@ import {
 import { cn } from '@/lib/utils';
 
 function UserTransactionPage() {
-  // Contoh data order
   const [orders, setOrders] = useState<{ [key: string]: any }[]>([]);
   const [filteredOrder, setFilteredOrder] = useState(orders);
   const { userLoginWithProfile } = useAppSelector((state) => state.user);

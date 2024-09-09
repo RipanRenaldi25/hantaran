@@ -40,6 +40,9 @@ export interface IOrder {
   phoneNumber: string;
   createdAt: string;
   updatedAt: string;
+  manageStatus: string;
+  date: string;
+  address: string;
 }
 
 export interface IOwnedCart {

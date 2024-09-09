@@ -35,6 +35,10 @@ export interface IOrderRepository {
       phone_number: string;
       created_at: string;
       updated_at: string;
+      address: string;
+      date: string;
+      manage_status: string;
+      expired_at: string;
     }[]
   >;
 

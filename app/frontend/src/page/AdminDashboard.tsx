@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
-import { Box, LayoutDashboard, Palette, Ribbon } from 'lucide-react';
+import { Box, LayoutDashboard, Palette, Receipt, Ribbon } from 'lucide-react';
 import { getUserWithProfile } from '@/feature/user';
 import { setUserLoginWithProfile } from '@/states/userState';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
@@ -15,6 +15,12 @@ const AdminDashboard = () => {
   console.log({ pathname });
   const [sidebarItems, setSidebarItems] = useState([
     // { icon: LayoutDashboard, title: 'Dashboard', path: '', isActive: true },
+    {
+      icon: Receipt,
+      title: 'Order',
+      path: 'order',
+      isActive: pathname === '/dashboard/order' || pathname === '/dashboard',
+    },
     {
       icon: Box,
       title: 'Box',
