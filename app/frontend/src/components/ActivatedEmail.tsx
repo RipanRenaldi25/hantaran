@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ActivatedEmail = () => {
   return (
     <div className="activate-container">

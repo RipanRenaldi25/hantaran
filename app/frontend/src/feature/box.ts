@@ -221,3 +221,78 @@ export const createDecoration = async (decoration: string) => {
     return null;
   }
 };
+
+export const getBoxById = async (id: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/boxes/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getBoxWithColorAndDecorationBelongToBox = async (id: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/boxes/${id}/colors/decorations`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    return null;
+  }
+};
+
+export const updateBox = async (
+  colors: IColor[],
+  decorations: IDecoration[],
+  boxPayload: {
+    id: string;
+    name: string;
+    price: number;
+    image: any;
+  }
+) => {
+  try {
+    const formData = new FormData();
+    formData.append('name', boxPayload.name);
+    formData.append('price', boxPayload.price as any);
+    if (boxPayload.image) {
+      formData.append('image', boxPayload.image);
+    }
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/boxes/${boxPayload.id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    await Promise.all([
+      ...colors.map((color) => connectBoxWithColor(color.id, boxPayload.id)),
+      ...decorations.map((decoration) =>
+        connectBoxWithDecoration(decoration.id, boxPayload.id)
+      ),
+    ]);
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    console.log({ err });
+    return null;
+  }
+};

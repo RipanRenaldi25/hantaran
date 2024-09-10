@@ -1,5 +1,4 @@
-import React from 'react';
-import AddBox from '@/components/AddBox';
+import ButtonLoading from '@/components/ButtonLoading';
 import DashboardCard from '@/components/DashboardCard';
 import TableComponent from '@/components/TableComponent';
 import { Button } from '@/components/ui/button';
@@ -10,21 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
-import {
-  createBoxAndConnectWithDecorationAndColor,
-  createColor,
-  getBoxes,
-  getColors,
-} from '@/feature/box';
+import { createColor, getColors } from '@/feature/box';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { setAllColors, setColor } from '@/states/ColorState';
-import { Input } from '@/components/ui/input';
-import ButtonLoading from '@/components/ButtonLoading';
+import { useEffect, useState } from 'react';
 const ColorPage = () => {
   const { colors: allColors } = useAppSelector((state) => state.color);
   const dispatch = useAppDispatch();
@@ -32,6 +23,9 @@ const ColorPage = () => {
 
   const getAllColor = async () => {
     const responseData = await getColors();
+    if (!responseData) {
+      return;
+    }
     console.log({ responseData });
     dispatch(setAllColors(responseData));
   };
@@ -40,7 +34,7 @@ const ColorPage = () => {
   }, []);
   const [newColor, setNewColor] = useState<string>('');
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
@@ -60,6 +54,7 @@ const ColorPage = () => {
     });
   };
 
+  console.log({ allColors });
   return (
     <div className="p-4 rounded-lg flex flex-col gap-3">
       <Toaster />
@@ -121,7 +116,7 @@ const ColorPage = () => {
       </div>
       <div className="bg-white rounded-xl">
         <TableComponent
-          tableData={allColors.length ? allColors : []}
+          tableData={allColors?.length ? allColors : []}
           tableHeader={[
             {
               as: 'Id',

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ContactPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center p-6 mainpage">

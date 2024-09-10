@@ -1,5 +1,5 @@
 import { Pool } from 'mysql2/promise';
-import { Decoration, DecorationId } from '../../Domain/Entity';
+import { BoxId, Decoration, DecorationId } from '../../Domain/Entity';
 import {
   IDecoration,
   IDecorationRepository,
@@ -51,6 +51,26 @@ export class DecorationRepository implements IDecorationRepository {
 
       return result;
     } catch (err) {
+      return [];
+    }
+  }
+
+  async getDecorationBelongToBox(boxId: BoxId): Promise<
+    {
+      box_id: string;
+      decoration_id: string;
+      decoration_name: string;
+    }[]
+  > {
+    try {
+      const getDecorationBelongToBoxQuery =
+        'SELECT box_decorations.box_id, box_decorations.decoration_id, decorations.name FROM box_decorations JOIN decorations ON box_decorations.decoration_id = decorations.id WHERE box_decorations.box_id = ?';
+      const [results]: [any[], any[]] = await this.dbConnection.query(
+        getDecorationBelongToBoxQuery,
+        [boxId.toString()]
+      );
+      return results;
+    } catch (err: any) {
       return [];
     }
   }

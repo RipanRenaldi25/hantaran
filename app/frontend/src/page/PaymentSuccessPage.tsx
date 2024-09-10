@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Check, Phone, X } from 'lucide-react';
 import { getTransactionStatus } from '@/feature/order';
+import { Check, Phone, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { resetUserLogedIn } from '@/states/UserLogedInState';
 
 const PaymentSuccessPage = () => {
   const [transactionStatus, setTransactionStatus] = useState<{

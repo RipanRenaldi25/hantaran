@@ -9,6 +9,7 @@ import { DeleteBoxUsecase } from '../../../../../Application/Usecase/Box/DeleteB
 import { GetBoxByIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxByIdUsecase';
 import { GetBoxesUsecase } from '../../../../../Application/Usecase/Box/GetBoxesUsecase';
 import { getBoxesWithColorAndDecorationUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorAndDecorationUsecase';
+import { GetBoxWithColorAndDecorationByBoxIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorsAndDecorationByBoxId';
 import { UnconnectBoxDecorationUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxDecoration';
 import { UnconnectBoxWithColorUsecase } from '../../../../../Application/Usecase/Box/UnconnectBoxWithColor';
 import { UpdateBoxUsecase } from '../../../../../Application/Usecase/Box/UpdateBoxUsecase';
@@ -21,6 +22,7 @@ import { JwtService } from '../../../../Service/JwtService';
 import { BoxController } from '../Controller/BoxController';
 import { AuthMiddleware } from '../Middleware/Auth';
 import { multerMiddleware } from '../Middleware/Multer';
+import { Request, Response } from 'express';
 
 // MIDDLEWARE
 const jwtService = new JwtService(jwt, ConfigService.getInstance());
@@ -71,6 +73,12 @@ const unconnectBoxWithColorUsecase = new UnconnectBoxWithColorUsecase(
 const unconnectBoxWithDecorationUsecase = new UnconnectBoxDecorationUsecase(
   boxRepository
 );
+const getBoxWithColorAndDecorationByBoxIdUsecase =
+  new GetBoxWithColorAndDecorationByBoxIdUsecase(
+    boxRepository,
+    colorRepository,
+    decorationRepository
+  );
 
 // CONTROLLER
 const boxController = new BoxController(
@@ -84,7 +92,8 @@ const boxController = new BoxController(
   connectBoxWithDecorationUsecase,
   getBoxesWithColorAndDecoration,
   unconnectBoxWithColorUsecase,
-  unconnectBoxWithDecorationUsecase
+  unconnectBoxWithDecorationUsecase,
+  getBoxWithColorAndDecorationByBoxIdUsecase
 );
 
 const authMiddleware = AuthMiddleware.getInstance(
@@ -94,6 +103,11 @@ const authMiddleware = AuthMiddleware.getInstance(
 
 const boxRouter = express.Router();
 
+boxRouter.get(
+  '/:boxId/colors/decorations',
+  authMiddleware.applyWithRole(['admin', 'user']),
+  (req: Request, res: Response) => boxController.getBoxWithColor(req, res)
+);
 boxRouter.post(
   '/',
   authMiddleware.applyWithRole(['admin']),
@@ -105,8 +119,11 @@ boxRouter.delete(
   authMiddleware.applyWithRole(['admin']),
   (req, res) => boxController.deleteBox(req, res)
 );
-boxRouter.put('/:boxId', authMiddleware.applyWithRole(['admin']), (req, res) =>
-  boxController.updateBox(req, res)
+boxRouter.put(
+  '/:boxId',
+  multerMiddleware.single('image'),
+  authMiddleware.applyWithRole(['admin']),
+  (req, res) => boxController.updateBox(req, res)
 );
 
 boxRouter.get(

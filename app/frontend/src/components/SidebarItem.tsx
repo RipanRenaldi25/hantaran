@@ -1,7 +1,7 @@
-import React, { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
-import { NavLink } from 'react-router-dom';
 import { LucideProps } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 export interface ISidebarItem {
   title: string;

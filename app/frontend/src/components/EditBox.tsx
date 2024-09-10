@@ -1,15 +1,19 @@
 import boxImage from '@/assets/box1.jpg';
-import { getColors, getDecorations } from '@/feature/box';
+import ColorPicker from '@/components/ColorPicker';
+import DecorationSelector from '@/components/DecorationSelector';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
+import {
+  getBoxWithColorAndDecorationBelongToBox,
+  getColors,
+  getDecorations,
+} from '@/feature/box';
 import { IColor, IDecoration } from '@/states/interface';
-import React, { useEffect, useRef, useState } from 'react';
-import ColorPicker from './ColorPicker';
-import DecorationSelector from './DecorationSelector';
-import { Button } from './ui/button';
-
 import { CloudUpload } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import ButtonLoading from './ButtonLoading';
-import { Input } from './ui/input';
-import { useToast } from './ui/use-toast';
 export interface IAddBox {
   handleAddProduct: any;
   colors: IColor[];
@@ -19,7 +23,7 @@ export interface IAddBox {
   children?: React.ReactNode;
 }
 
-const AddBox = ({
+const EditBox = ({
   handleAddProduct,
   colors,
   decorations,
@@ -38,6 +42,17 @@ const AddBox = ({
     price: number;
     image: any;
   }>({ image: null, name: '', price: 0 });
+  const [currentBox, setCurrentBox] = useState<{
+    boxes: {
+      box_id: string;
+      box_image_url: string;
+      box_name: string;
+      box_price: number;
+    };
+    colors: { box_id: string; color_id: string; name: string }[];
+    decorations: { decoration_id: string; box_id: string; name: string }[];
+  } | null>(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const getAllColors = async () => {
@@ -51,31 +66,34 @@ const AddBox = ({
       setAvailableDecorations(decorationsData);
     };
 
-    getAllColors();
-    getAllDecorations();
+    const getBox = async () => {
+      if (!id) {
+        return;
+      }
+      const boxData = await getBoxWithColorAndDecorationBelongToBox(id);
+      console.log({ boxData });
+      setCurrentBox(boxData);
+    };
+
+    Promise.all([getAllColors(), getAllDecorations(), getBox()]);
   }, []);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    for (const [key, value] of Object.entries(newBox)) {
-      if (!value) {
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: `Please fill in ${key} field`,
-        });
-        return;
-      }
-    }
-    handleAddProduct(newBox);
+    handleAddProduct({
+      name: newBox.name || currentBox?.boxes.box_name,
+      image: newBox.image,
+      price: newBox.price || currentBox?.boxes.box_price,
+      id,
+    });
+
     setIsLoading(false);
-    setNewBox({ image: null, name: '', price: 0 });
   };
 
   return (
-    <div className="py-5 flex flex-col justify-center max-h-[80vh] overflow-hidden overflow-y-scroll shadow-lg rounded-xl">
+    <div className="py-5 flex flex-col justify-center overflow-hidden shadow-lg rounded-xl">
       <div className="relative py-10 sm:max-w-xl sm:mx-auto w-full ">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-blue-500 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
@@ -92,13 +110,22 @@ const AddBox = ({
                     className="size-64 group-hover:cursor-pointer"
                     onClick={() => inputRef.current?.click()}
                   />
-                ) : (
+                ) : currentBox?.boxes?.box_image_url === null ? (
                   <div className="flex flex-col justify-start">
                     <CloudUpload
                       className="size-36 hover:cursor-pointer shadow-sm"
                       onClick={() => inputRef.current?.click()}
                     />
                   </div>
+                ) : (
+                  <img
+                    src={`${import.meta.env.VITE_API_BASE_URL}/public/${
+                      currentBox?.boxes?.box_image_url
+                    }`}
+                    className="size-64 group-hover:cursor-pointer"
+                    onClick={() => inputRef.current?.click()}
+                    alt="box image"
+                  />
                 )}
                 <Input
                   type="file"
@@ -125,7 +152,7 @@ const AddBox = ({
                 </label>
                 <input
                   type="text"
-                  value={newBox.name}
+                  value={newBox.name || currentBox?.boxes?.box_name}
                   name={'name'}
                   onChange={(e) =>
                     setNewBox((prevValue) => ({
@@ -143,7 +170,11 @@ const AddBox = ({
                 </label>
                 <input
                   type="number"
-                  value={newBox.price === 0 ? '' : newBox.price}
+                  value={
+                    newBox.price > 0
+                      ? newBox.price
+                      : currentBox?.boxes?.box_price
+                  }
                   name={'price'}
                   onChange={(e) =>
                     setNewBox((prevValue) => ({
@@ -158,13 +189,25 @@ const AddBox = ({
               <ColorPicker
                 colors={colors}
                 setColors={setColors}
-                availableColors={availableColors}
+                availableColors={availableColors.filter((availableColor) => {
+                  const colorId = availableColor.id;
+                  return !currentBox?.colors?.some(
+                    (color) => color.color_id === colorId
+                  );
+                })}
                 setAvailableColors={setAvailableColors}
               />
               <DecorationSelector
                 decorations={decorations}
                 setDecorations={setDecorations}
-                availableDecorations={availableDecorations}
+                availableDecorations={availableDecorations.filter(
+                  (availableDecoration) => {
+                    const colorId = availableDecoration.id;
+                    return !currentBox?.decorations?.some(
+                      (decor) => decor.decoration_id === colorId
+                    );
+                  }
+                )}
                 setAvailableDecorations={setAvailableDecorations}
               />
               <Button
@@ -174,7 +217,7 @@ const AddBox = ({
                 }`}
                 disabled={isLoading}
               >
-                {<ButtonLoading isLoading={isLoading} />}Tambah
+                {<ButtonLoading isLoading={isLoading} />}Ubah
               </Button>
             </form>
           </div>
@@ -184,4 +227,4 @@ const AddBox = ({
   );
 };
 
-export default AddBox;
+export default EditBox;

@@ -10,6 +10,7 @@ import {
 import { IBoxRepository } from '../../Domain/Repository/IBoxRepository';
 import { IColorRepository } from '../../Domain/Repository/IColorRepository';
 import { IDecorationRepository } from '../../Domain/Repository/IDecorationRepository';
+import { Price } from '../../Domain/ValueObject/Price';
 
 export class BoxRepository implements IBoxRepository {
   private readonly dbConnection: Pool;
@@ -44,7 +45,12 @@ export class BoxRepository implements IBoxRepository {
       const query = 'SELECT * FROM boxes WHERE id = ?';
       const [rows, fields]: [rows: any[], fields: any[]] =
         await this.dbConnection.query(query, [id.toString()]);
-      return new Box(new BoxId(rows[0].id), rows[0].name, rows[0].image_url);
+      return new Box(
+        new BoxId(rows[0].id),
+        rows[0].name,
+        rows[0].image_url,
+        new Price(rows[0].price)
+      );
     } catch (err) {
       return null;
     }

@@ -1,6 +1,3 @@
-import { useAppSelector } from '@/states';
-import React, { useState } from 'react';
-import { useToast } from './ui/use-toast';
 import {
   Select,
   SelectContent,
@@ -8,18 +5,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useAppSelector } from '@/states';
+import { useState } from 'react';
+import { useToast } from './ui/use-toast';
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { SelectLabel } from '@radix-ui/react-select';
-import { Button } from './ui/button';
 import { formatCurrency } from '@/lib/utils';
+import { Button } from './ui/button';
 
 export function BoxCard({
   image,
@@ -44,9 +42,7 @@ export function BoxCard({
 }) {
   const { toast } = useToast();
   const [isAddItemOpen, setisAddItemOpen] = useState(false);
-  const { boxesWithColorAndDecoration, groupedBoxes } = useAppSelector(
-    (state) => state.box
-  );
+  const { boxesWithColorAndDecoration } = useAppSelector((state) => state.box);
   const handleAddToCart = () => {
     if (!selectedColor || !selectedDecoration) {
       toast({

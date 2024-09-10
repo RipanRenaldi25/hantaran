@@ -25,6 +25,9 @@ const DecorationPage = () => {
 
   const getAllDecoration = async () => {
     const responseData = await getDecorations();
+    if (!responseData) {
+      return;
+    }
     dispatch(setAllDecorations(responseData));
   };
   useEffect(() => {
@@ -32,7 +35,7 @@ const DecorationPage = () => {
   }, []);
   const [newDecoration, setNewDecoration] = useState<string>('');
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ButtonLoading = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <>

@@ -19,6 +19,7 @@ import ColorPage from './page/ColorPage';
 import DecorationPage from './page/DecorationPage';
 import AboutPage from './page/AboutPage';
 import ContactPage from './page/ContactPage';
+import EditBoxPage from './page/EditBoxPage';
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: 'box',
         element: <BoxPage />,
+      },
+      {
+        path: 'box/edit/:id',
+        element: <EditBoxPage />,
       },
       {
         path: 'color',

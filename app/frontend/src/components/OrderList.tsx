@@ -1,7 +1,5 @@
 import { formatCurrency } from '@/lib/utils';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '@/components/ui/input';
 
 function OrderList({ orders = [] }: { orders: { [key: string]: any }[] }) {
   const navigate = useNavigate();

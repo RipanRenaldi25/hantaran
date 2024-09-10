@@ -19,20 +19,19 @@ import { useAppDispatch, useAppSelector } from '@/states';
 import { setBox, setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import EditBoxPage from './EditBoxPage';
+import EditBox from '@/components/EditBox';
 
 const BoxPage = () => {
   const [colors, setColors] = useState([]);
   const [decorations, setDecorations] = useState([]);
-  const {
-    onlyBoxes: boxes,
-    page,
-    total,
-  } = useAppSelector((state) => state.box);
+  const { onlyBoxes: boxes, total } = useAppSelector((state) => state.box);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const totalPage = Math.ceil(total / 10);
-  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchParam] = useSearchParams();
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get('page')) || 1
   );
@@ -96,6 +95,7 @@ const BoxPage = () => {
             <DialogHeader>
               <DialogTitle>Tambah box</DialogTitle>
             </DialogHeader>
+            (
             <AddBox
               handleAddProduct={handleAddProduct}
               colors={colors}
@@ -103,6 +103,7 @@ const BoxPage = () => {
               setColors={setColors}
               setDecorations={setDecorations}
             />
+            )
           </DialogContent>
         </Dialog>
       </header>
@@ -132,11 +133,7 @@ const BoxPage = () => {
 
             {
               name: 'created_at',
-              as: 'Created At',
-            },
-            {
-              name: 'updated_at',
-              as: 'Updated At',
+              as: 'Tanggal Dibuat',
             },
           ]}
           currentPage={currentPage}
@@ -144,6 +141,7 @@ const BoxPage = () => {
           isPrevious={isPrevious}
           setCurrentPage={setCurrentPage}
           totalPage={totalPage}
+          isEditAction
         />
       </div>
     </div>

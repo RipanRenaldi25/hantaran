@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 // import Sidebar from '@/components/Sidebar';
 
 import { Toaster } from '@/components/ui/toaster';
 
 import { Header } from '@/components/UserHeader';
-import { useAppDispatch, useAppSelector } from '@/states';
 import { getUserWithProfile } from '@/feature/user';
-import { setUserLoginWithProfile } from '@/states/userState';
+import { useAppDispatch, useAppSelector } from '@/states';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
+import { setUserLoginWithProfile } from '@/states/userState';
 
 export type NavListType = {
   title: string;

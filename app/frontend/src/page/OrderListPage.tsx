@@ -1,5 +1,4 @@
 import DashboardCard from '@/components/DashboardCard';
-import OrderList from '@/components/OrderList';
 import TableComponent from '@/components/TableComponent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,12 +27,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 import { useDebounce } from '@/hooks/useDebounce';
+import { cn } from '@/lib/utils';
 
 const OrderListPage = () => {
   const [filteredOrder, setFilteredOrder] = useState<any[]>([]);
-  const { userLoginWithProfile } = useAppSelector((state) => state.user);
   const [sortedByDate, setSortedbyDate] = useState<boolean>(false);
   const [sortedByProcessed, setSortedByProcessed] = useState<
     | 'processed'
@@ -44,7 +42,7 @@ const OrderListPage = () => {
     | 'settlement'
   >('unprocessed');
   const [searchInput, setSearchInput] = useState<string>('');
-  const [inputDebounce, setInputDebounce] = useDebounce(searchInput);
+  const [inputDebounce] = useDebounce(searchInput);
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   const dispatch = useAppDispatch();
@@ -308,7 +306,7 @@ const OrderListPage = () => {
             tableHeader={[
               {
                 name: 'id',
-                as: 'Nomor Pembayaran',
+                as: 'Nomor Pesanan',
               },
               {
                 name: 'price',
@@ -337,7 +335,6 @@ const OrderListPage = () => {
               },
               { name: 'manageStatus', as: 'Proses' },
             ]}
-            isEditAction
           />
         </div>
       </div>

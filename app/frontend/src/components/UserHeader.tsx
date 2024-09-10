@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,10 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import { NavLink, useLocation } from 'react-router-dom';
 import { NavListType } from '@/page/UserDashboard';
+import { NavLink } from 'react-router-dom';
 export const Header = ({
   username = '',
   avatar,
@@ -23,7 +23,6 @@ export const Header = ({
   navList: NavListType[];
   setNavList: any;
 }) => {
-  const pathname = useLocation();
   return (
     <header className="bg-white py-4 px-8 flex justify-between items-center text-lg">
       <div className="flex items-center gap-2">

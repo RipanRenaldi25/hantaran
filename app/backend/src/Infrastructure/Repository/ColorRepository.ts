@@ -3,7 +3,7 @@ import {
   IColor,
   IColorRepository,
 } from '../../Domain/Repository/IColorRepository';
-import { Color, ColorId } from '../../Domain/Entity';
+import { BoxId, Color, ColorId } from '../../Domain/Entity';
 
 export class ColorRepository implements IColorRepository {
   private readonly dbConnection: Pool;
@@ -57,6 +57,20 @@ export class ColorRepository implements IColorRepository {
       return result;
     } catch (err) {
       return [];
+    }
+  }
+
+  async getColorBelongToBox(
+    boxId: BoxId
+  ): Promise<{ box_id: string; color_id: string; color_name: string }[]> {
+    try {
+      const query = `SELECT box_colors.box_id, box_colors.color_id, colors.name FROM box_colors JOIN colors ON box_colors.color_id = colors.id WHERE box_colors.box_id = ?`;
+      const [result]: [any[], any[]] = await this.dbConnection.query(query, [
+        boxId.toString(),
+      ]);
+      return result;
+    } catch (err: any) {
+      throw new Error(err.message);
     }
   }
 }

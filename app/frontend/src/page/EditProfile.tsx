@@ -3,13 +3,12 @@ import { toast } from '@/components/ui/use-toast';
 import {
   createProfileWithAddress,
   editProfile,
-  getUserWithProfile,
   getUserWithProfileAndAddress,
 } from '@/feature/user';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { setUserLoginProps, setUserLoginWithProfile } from '@/states/userState';
+import { setUserLoginWithProfile } from '@/states/userState';
 import { CircleChevronLeft, Pencil } from 'lucide-react';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 const EditProfile = () => {
@@ -80,7 +79,7 @@ const EditProfile = () => {
       });
       return;
     }
-    const data = await createProfileWithAddress(payload);
+    createProfileWithAddress(payload);
     dispatch(
       setUserLoginWithProfile({
         avatar: userProfileInputField.avatar,

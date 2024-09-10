@@ -41,12 +41,11 @@ const TableComponent = ({
   tableData,
   tableHeader,
   totalPage,
-  children,
   isDeleteAction,
   isEditAction,
   handleDelete,
 }: ITableComponent<any>) => {
-  const [searchParam, setSearchParam] = useSearchParams();
+  const [, setSearchParam] = useSearchParams();
   return (
     <Table className="overflow-x-scrol table-fixed">
       {/* <TableCaption>A list of all boxes</TableCaption> */}
@@ -64,7 +63,9 @@ const TableComponent = ({
               if (
                 header.name === 'createdAt' ||
                 header.name === 'updatedAt' ||
-                header.name === 'date'
+                header.name === 'date' ||
+                header.name === 'created_at' ||
+                header.name === 'updated_at'
               ) {
                 return (
                   <TableCell>
@@ -113,10 +114,10 @@ const TableComponent = ({
               }
               return <TableCell>{data[header.name]}</TableCell>;
             })}
-            {(isEditAction || isDeleteAction) && (
+            {isEditAction || isDeleteAction ? (
               <TableCell
                 className="h-full"
-                colSpan={isEditAction && isDeleteAction ? 2 : 1}
+                colSpan={isEditAction && isDeleteAction ? 2 : 0}
               >
                 <div className="flex gap-2">
                   {isEditAction && (
@@ -140,20 +141,21 @@ const TableComponent = ({
                   )}
                 </div>
               </TableCell>
-            )}
+            ) : null}
           </TableRow>
         ))}
       </TableBody>
-      {totalPage && (
+      {!!totalPage ? (
         <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
                 aria-disabled={!isPrevious}
                 onClick={() => {
-                  if (!isPrevious) {
+                  if (!isPrevious || !currentPage) {
                     return;
                   }
+
                   setSearchParam((prevParam) => ({
                     ...prevParam,
                     page: currentPage - 1,
@@ -165,7 +167,7 @@ const TableComponent = ({
                 } cursor-pointer`}
               />
             </PaginationItem>
-            {Array.from({ length: totalPage }).map((val, index) => {
+            {Array.from({ length: totalPage }).map((_, index) => {
               return (
                 <PaginationItem id={`${index}`}>
                   <NavLink to=""> {index + 1} </NavLink>
@@ -177,7 +179,7 @@ const TableComponent = ({
           </PaginationItem> */}
             <PaginationItem
               onClick={() => {
-                if (!isNext) {
+                if (!isNext || !currentPage) {
                   return;
                 }
                 setSearchParam((prevParam) => ({
@@ -195,7 +197,7 @@ const TableComponent = ({
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      )}
+      ) : null}
     </Table>
   );
 };

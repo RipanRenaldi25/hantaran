@@ -1,7 +1,5 @@
 import { IDecoration } from '@/states/interface';
-import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 
 export interface IColorPicker {
   decorations: IDecoration[];
@@ -14,7 +12,6 @@ const DecorationSelector = ({
   decorations,
   setDecorations,
   availableDecorations,
-  setAvailableDecorations,
 }: IColorPicker) => {
   const handleDecorationChange = (decoration: IDecoration) => {
     setDecorations((prevColors: IDecoration[]) =>
@@ -25,7 +22,7 @@ const DecorationSelector = ({
   };
 
   return (
-    <div className="mb-4 flex flex-col gap-4">
+    <div className="mb-4 flex flex-col gap-1">
       <header className="flex justify-between items-center relative">
         <h1 className="block text-sm font-medium text-gray-600">
           Select Decoration
@@ -58,22 +55,26 @@ const DecorationSelector = ({
           </Button>
         </div>
       </div> */}
-      <div className="grid grid-cols-5 gap-2">
-        {availableDecorations?.map((decoration: IDecoration) => (
-          <Button
-            type="button"
-            key={decoration.id}
-            onClick={() => handleDecorationChange(decoration)}
-            className={`px-4 py-2 rounded-lg text-sm border ${
-              decorations.some((decor) => decor.id === decoration.id)
-                ? 'bg-teal-500 text-white'
-                : 'bg-white text-teal-500 border-teal-500'
-            } hover:bg-teal-600 hover:text-white`}
-          >
-            {decoration.name}
-          </Button>
-        ))}
-      </div>
+      {availableDecorations.length > 0 ? (
+        <div className="grid grid-cols-5 gap-2">
+          {availableDecorations?.map((decoration: IDecoration) => (
+            <Button
+              type="button"
+              key={decoration.id}
+              onClick={() => handleDecorationChange(decoration)}
+              className={`px-4 py-2 rounded-lg text-sm border ${
+                decorations.some((decor) => decor.id === decoration.id)
+                  ? 'bg-teal-500 text-white'
+                  : 'bg-white text-teal-500 border-teal-500'
+              } hover:bg-teal-600 hover:text-white`}
+            >
+              {decoration.name}
+            </Button>
+          ))}
+        </div>
+      ) : (
+        <h1>Dekorasi tidak tersedia / box sudah memiliki seluruh dekorasi</h1>
+      )}
     </div>
   );
 };

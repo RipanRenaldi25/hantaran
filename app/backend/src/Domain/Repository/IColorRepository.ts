@@ -11,4 +11,11 @@ export interface IColorRepository {
   getColorById(id: ColorId): Promise<Color | null>;
   // createOrConnect(color: Color, boxId: BoxId): Promise<Color>
   getColors(): Promise<IColor[]>;
+  getColorBelongToBox(boxId: BoxId): Promise<
+    {
+      box_id: string;
+      color_id: string;
+      color_name: string;
+    }[]
+  >;
 }

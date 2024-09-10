@@ -21,7 +21,7 @@ export class UpdateBoxUsecase {
       throw new NotFoundError('Box not found');
     }
     box.setName(payload.name);
-    if (payload.imageUrl) {
+    if (!!payload.imageUrl) {
       box.setBoxImageUrl(payload.imageUrl);
     }
     box.setPrice(new Price(payload.price));

@@ -12,6 +12,11 @@ const connectBoxSchema = joi.object({
   colorId: joi.string().required(),
 });
 
+const updateBoxSchema = joi.object({
+  name: joi.string().required(),
+  price: joi.number().min(0).required(),
+});
+
 export const validateCreateBoxPayload = (payload: any) => {
   const result = createBoxSchema.validate(payload);
   if (result.error) {
@@ -21,7 +26,11 @@ export const validateCreateBoxPayload = (payload: any) => {
 };
 
 export const validateUpdateBoxPayload = (payload: any) => {
-  return validateCreateBoxPayload(payload);
+  const result = updateBoxSchema.validate(payload);
+  if (result.error) {
+    throw new InvariantError(result.error.message);
+  }
+  return result.value;
 };
 
 export const validateConnectBoxPayload = (payload: any) => {

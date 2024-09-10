@@ -28,22 +28,19 @@ import { useToast } from './ui/use-toast';
 import { Sidebar } from './UserSidebar';
 
 const MainUser = () => {
-  const [userWithProfile, setUserWithProfile] = useState<{
-    [key: string]: any;
-  }>({});
+  // const [userWithProfile, setUserWithProfile] = useState<{
+  //   [key: string]: any;
+  // }>({});
 
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedDecoration, setSelectedDecoration] = useState('');
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { boxes, boxesWithColorAndDecoration, page, total } = useAppSelector(
-    (state) => state.box
-  );
+  const { boxesWithColorAndDecoration } = useAppSelector((state) => state.box);
   const [tempList, setTempList] = useState<ICartItem[]>(
     JSON.parse(localStorage.getItem('CARTS')!) || []
   );
-  const userLogin = useAppSelector((state) => state.userLogedIn);
 
   const { carts } = useAppSelector((state) => state.cart);
 

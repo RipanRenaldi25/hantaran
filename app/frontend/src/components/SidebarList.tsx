@@ -1,6 +1,6 @@
-import React, { ForwardRefExoticComponent, RefAttributes } from 'react';
-import SidebarItem from './SidebarItem';
 import { LucideProps } from 'lucide-react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import SidebarItem from './SidebarItem';
 export interface ISidebarListComponent {
   sidebarItems: {
     title: string;

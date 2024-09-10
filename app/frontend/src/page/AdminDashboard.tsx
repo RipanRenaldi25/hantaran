@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/states';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
-import { Box, LayoutDashboard, Palette, Receipt, Ribbon } from 'lucide-react';
 import { getUserWithProfile } from '@/feature/user';
-import { setUserLoginWithProfile } from '@/states/userState';
+import { useAppDispatch, useAppSelector } from '@/states';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
+import { setUserLoginWithProfile } from '@/states/userState';
+import { Box, Palette, Receipt, Ribbon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

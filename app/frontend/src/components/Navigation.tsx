@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import logo from '@/assets/Logo.png';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -7,7 +6,6 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import { NavLink, useNavigate } from 'react-router-dom';
-import logo from '@/assets/Logo.png';
 
 export interface INavItems {
   title: string;

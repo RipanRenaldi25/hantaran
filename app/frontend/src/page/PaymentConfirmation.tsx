@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { getOrderWithItems, getTransactionStatus } from '@/feature/order';
 import { formatCurrency } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function PaymentConfirmation() {
   const navigate = useNavigate();

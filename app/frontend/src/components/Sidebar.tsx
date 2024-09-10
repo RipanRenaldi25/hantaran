@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -8,10 +7,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { NavLink } from 'react-router-dom';
-import SidebarList from './SidebarList';
-import { ISidebarItem } from './SidebarItem';
 import { IUserWithProfileAndAddress } from '@/states/interface';
+import { NavLink } from 'react-router-dom';
+import { ISidebarItem } from './SidebarItem';
+import SidebarList from './SidebarList';
 
 import logo from '@/assets/Logo.png';
 

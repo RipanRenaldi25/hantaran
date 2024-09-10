@@ -18,6 +18,7 @@ import {
   validateCreateBoxPayload,
   validateUpdateBoxPayload,
 } from '../../../../Helper/Validator/Box/BoxValidator';
+import { GetBoxWithColorAndDecorationByBoxIdUsecase } from '../../../../../Application/Usecase/Box/GetBoxWithColorsAndDecorationByBoxId';
 
 export class BoxController {
   private readonly createBoxUsecase: CreateBoxUsecase;
@@ -40,7 +41,8 @@ export class BoxController {
     connectBoxWithDecorationUsecase: ConnectBoxWithDecorationUsecase,
     private readonly getBoxesWithColorAndDecorationUsecase: getBoxesWithColorAndDecorationUsecase,
     private readonly unconnectBoxWithColorUsecase: UnconnectBoxWithColorUsecase,
-    private readonly unconnectBoxWithDecorationUsecase: UnconnectBoxDecorationUsecase
+    private readonly unconnectBoxWithDecorationUsecase: UnconnectBoxDecorationUsecase,
+    private readonly getBoxWithColorAndDecorationByBoxId: GetBoxWithColorAndDecorationByBoxIdUsecase
   ) {
     this.createBoxUsecase = createBoxUsecase;
     this.deleteBoxUsecase = deleteBoxUsecase;
@@ -120,12 +122,13 @@ export class BoxController {
         throw new InvariantError('Box id is required in parameter');
       }
       validateUpdateBoxPayload(req.body);
-      const { name, imageUrl, price } = req.body;
+      const image = req.file;
+      const { name, price } = req.body;
 
       const updatedBox = await this.updateBoxUsecase.execute({
         boxId,
         name,
-        imageUrl,
+        imageUrl: image?.filename || '',
         price,
       });
       res.status(201).json({
@@ -372,6 +375,33 @@ export class BoxController {
           boxId,
           decorationId,
         },
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Fail',
+          message: `Server error: ${err.message}`,
+        });
+      }
+    }
+  }
+  async getBoxWithColor(req: Request, res: Response) {
+    try {
+      const { boxId } = req.params;
+      if (!boxId) {
+        throw new InvariantError('Box id is required in parameter');
+      }
+      const boxWithColorAndDecoration =
+        await this.getBoxWithColorAndDecorationByBoxId.execute(boxId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Box with color retrieved',
+        data: boxWithColorAndDecoration,
       });
     } catch (err: any) {
       if (err instanceof ClientError) {

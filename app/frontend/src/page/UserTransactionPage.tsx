@@ -36,7 +36,7 @@ function UserTransactionPage() {
     'processed' | 'completed' | 'unprocessed' | 'settlement'
   >('unprocessed');
   const [searchInput, setSearchInput] = useState<string>('');
-  const [inputDebounce, setInputDebounce] = useDebounce(searchInput);
+  const [inputDebounce] = useDebounce(searchInput);
   const [date, setDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {

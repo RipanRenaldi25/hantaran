@@ -1,4 +1,4 @@
-import { IBoxes, IOrder } from '@/states/interface';
+import { IOrder } from '@/states/interface';
 import axios from 'axios';
 
 export const getOrders = async (): Promise<IOrder[]> => {
@@ -17,36 +17,6 @@ export const getOrders = async (): Promise<IOrder[]> => {
     return [];
   }
 };
-
-// {
-//   "orderItems": [{
-//     "boxId": "0d48d0a0-5d9a-41ea-9962-b74a046ef73d",
-//     "quantity": 10000,
-//     "price": 2,
-//     "name": "box"
-//   },
-//   {
-//     "boxId": "b097a16c-82c7-404a-a77d-c12d0bc500ee",
-//     "quantity": 10,
-//     "price": 1000,
-//     "name": "box2"
-//   },
-//   {
-//     "boxId": "c7c57261-5b95-4941-bff5-33959f6867d5",
-//     "quantity": 5,
-//     "price": 5000,
-//     "name": "box3"
-//   }
-//   ],
-//   // "paymentMethod": "qris",
-//   // "acquirer": "airpay shopee"
-//   // "paymentMethod": "bank_transfer",
-//   // "bankName": "bni",
-//   // "vaNumber": "081280010646"
-//   "paymentMethod": "echannel",
-//   "billInfo1": "hantaran",
-//   "billInfo2": "1000"
-// }
 
 export const createOrder = async ({
   orderItems,

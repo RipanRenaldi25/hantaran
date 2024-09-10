@@ -23,20 +23,19 @@ import { ICartItem } from '@/states/interface';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Landmark } from 'lucide-react';
 import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
-  const { id } = useParams();
   const { carts } = useAppSelector((state) => state.cart);
   const { state } = useLocation();
-  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
+  const [, setQrCodeUrl] = useState<string>('');
   const [selectedPaymentMethod, setSelectedpaymentMethod] = useState<
     'bca' | 'mandiri' | 'bri' | 'bni' | 'permata' | 'qris' | ''
   >('');
   const [isBankTransferOpen, setIsBankTransferOpen] = useState(false);
-  const [billerKey, setBillerKey] = useState('');
-  const [billerCode, setBillerCode] = useState('');
-  const [vaNumber, setVaNumber] = useState('');
+  const [, setBillerKey] = useState('');
+  const [, setBillerCode] = useState('');
+  const [, setVaNumber] = useState('');
   const navigate = useNavigate();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [address, setAddress] = useState<string>('');

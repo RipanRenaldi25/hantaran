@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  IBox,
-  IBoxes,
-  IBoxesResponse,
-  IBoxResponseWithColorAndDecoration,
-  IMapBoxResponse,
-} from './interface';
-import { Item } from '@radix-ui/react-navigation-menu';
-import { ChartNoAxesColumnDecreasing } from 'lucide-react';
+import { IBox, IBoxes, IBoxesResponse, IMapBoxResponse } from './interface';
 
 const initState: IBoxesResponse & {
   boxesWithColorAndDecoration: IMapBoxResponse[];
@@ -92,6 +84,18 @@ export const boxSlice = createSlice({
     setOnlyBoxes(state, action: PayloadAction<IBox[]>) {
       state.onlyBoxes = action.payload;
     },
+    updateSpecificBoxes: (state, action: PayloadAction<IBoxes[]>) => {
+      const test = action.payload.reduce((acc, current) => {
+        const updatedBoxIndex = state.boxes.findIndex(
+          (currentBox) => currentBox.id === current.id
+        );
+        if (updatedBoxIndex !== -1) {
+          state.boxes[updatedBoxIndex] = current;
+        }
+        return acc;
+      }, [] as IBoxes[]);
+      return state;
+    },
   },
 });
 
@@ -102,5 +106,6 @@ export const {
   setTotal,
   setBoxWithColorAndDecoration,
   setOnlyBoxes,
+  updateSpecificBoxes,
 } = boxSlice.actions;
 export const boxReducer = boxSlice.reducer;
