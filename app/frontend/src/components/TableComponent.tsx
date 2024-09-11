@@ -57,14 +57,19 @@ const TableComponent = ({
   isEditAction,
   handleDelete,
   isRadioAction,
+  onProcessHandler,
 }: ITableComponent<any>) => {
   const [, setSearchParam] = useSearchParams();
   const [process, setProcess] = useState<
     'unprocessed' | 'processed' | 'completed'
   >('unprocessed');
 
-  const handleProcessChange = (value: any) => {
-    setProcess(value);
+  const handleProcessChange = (
+    orderId: string,
+    status: 'unprocessed' | 'processed' | 'completed'
+  ) => {
+    setProcess(status);
+    onProcessHandler(orderId, status);
   };
 
   return (
@@ -173,7 +178,9 @@ const TableComponent = ({
                           <DropdownMenuSeparator />
                           <DropdownMenuRadioGroup
                             value={process as any}
-                            onValueChange={(e: any) => setProcess(e)}
+                            onValueChange={(e: any) =>
+                              handleProcessChange(data.id, e)
+                            }
                           >
                             <DropdownMenuRadioItem value="unprocessed">
                               Unprocessed

@@ -128,3 +128,27 @@ export const getOrdersOwnedByUser = async (userId: string) => {
     return null;
   }
 };
+
+export const updateOrderManageStatus = async (
+  orderId: string,
+  manageStatus: 'processed' | 'completed' | 'unprocessed' | 'cancelled'
+) => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/status`,
+      {
+        manageStatus,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err) {
+    console.log({ err });
+    return null;
+  }
+};

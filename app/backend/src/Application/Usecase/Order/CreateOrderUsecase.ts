@@ -36,6 +36,7 @@ export class CreateOrderUsecase {
     address?: string;
   }) {
     const orderId = new OrderId(this.idGenerator());
+    console.log({ orderId });
     const paymentMethod =
       payload.paymentMethod === 'bank_transfer'
         ? new BankTransfer(

@@ -3,9 +3,9 @@ import TableComponent from '@/components/TableComponent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
-import { getOrders } from '@/feature/order';
+import { getOrders, updateOrderManageStatus } from '@/feature/order';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { setOrder } from '@/states/OrderState';
+import { setOrder, setOrderStatus } from '@/states/OrderState';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/popover';
 import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
 
 const OrderListPage = () => {
   const [filteredOrder, setFilteredOrder] = useState<any[]>([]);
@@ -145,6 +146,25 @@ const OrderListPage = () => {
       });
     }
   }, [date]);
+  console.log({order})
+
+  const handleChangeOrderManageStatus = async (
+    orderId: string,
+    status: 'processed' | 'completed' | 'unprocessed' | 'cancelled'
+  ) => {
+    const data = await updateOrderManageStatus(orderId, status);
+    if (!data) {
+      toast({
+        description: 'Gagal memperbarui status order',
+        variant: 'destructive',
+      });
+      return;
+    }
+    toast({
+      description: 'Berhasil memperbarui status order',
+    });
+    dispatch(setOrderStatus({ id: orderId, status }));
+  };
 
   return (
     <>
@@ -336,6 +356,7 @@ const OrderListPage = () => {
               { name: 'manageStatus', as: 'Proses' },
             ]}
             isRadioAction
+            onProcessHandler={handleChangeOrderManageStatus}
           />
         </div>
       </div>

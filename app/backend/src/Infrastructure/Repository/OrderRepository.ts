@@ -58,6 +58,7 @@ export class OrderRepository implements IOrderRepository {
   ): Promise<Order> {
     try {
       await this.dbConnection.query('START TRANSACTION');
+      console.log({ id: order.getId().toString() });
       const createOrderQuery = `INSERT INTO orders (id, user_id, price, status, payment_method, date, address) VALUES (?, ?, ?, ?, ?, ?, ?)`;
       await this.dbConnection.query(createOrderQuery, [
         order.getId().toString(),
@@ -126,7 +127,7 @@ export class OrderRepository implements IOrderRepository {
     // const query =
     //   'SELECT orders.id, orders.user_id, orders.price, orders.status, orders.payment_method, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders JOIN profiles ON orders.user_id = profiles.user_id';
     const query =
-      'SELECT * FROM orders JOIN profiles ON orders.user_id = profiles.user_id';
+      'SELECT orders.id as id, orders.user_id, orders.price, orders.status, orders.payment_method, orders.date, orders.address, orders.manage_status, profiles.full_name, profiles.phone_number, orders.created_at, orders.updated_at FROM orders LEFT JOIN profiles ON orders.user_id = profiles.user_id';
 
     const [results]: [any[], any[]] = await this.dbConnection.query(query);
 

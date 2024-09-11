@@ -16,12 +16,27 @@ const orderSlice = createSlice({
     setOrder: (state, action: PayloadAction<IOrder[]>) => {
       state.order = action.payload;
     },
+    setOrderStatus(
+      state,
+      action: PayloadAction<{
+        id: string;
+        status: 'processed' | 'unprocessed' | 'completed' | 'cancelled';
+      }>
+    ) {
+      state.order = state.order.map((order) => ({
+        ...order,
+        manageStatus:
+          order.id === action.payload.id
+            ? action.payload.status
+            : order.manageStatus,
+      }));
+    },
   },
 });
 
-const {
-  actions: { setOrder },
+export const {
+  actions: { setOrder, setOrderStatus },
   reducer,
 } = orderSlice;
 
-export { setOrder, reducer as orderReducer };
+export { reducer as orderReducer };
