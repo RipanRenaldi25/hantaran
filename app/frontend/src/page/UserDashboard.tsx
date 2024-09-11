@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 // import Sidebar from '@/components/Sidebar';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -9,7 +9,6 @@ import { getUserWithProfile } from '@/feature/user';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
 import { setUserLoginWithProfile } from '@/states/userState';
-import { Button } from '@/components/ui/button';
 
 export type NavListType = {
   title: string;

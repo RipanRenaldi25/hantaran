@@ -1,5 +1,3 @@
-import React from 'react';
-
 const TestimoniPage = () => {
   return (
     <div className="testimoni chat-container p-10 bg-white">

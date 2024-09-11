@@ -62,7 +62,7 @@ Here's the full description on what port the application is running:
 3. backend development: localhost:5001
 4. backend production: localhost:5000
 
-For api (backend) documentation route, you can access it on `/` endpoint
+(Not completed) For api (backend) documentation route, you can access it on `/` endpoint
 
 #### Production Environment
 

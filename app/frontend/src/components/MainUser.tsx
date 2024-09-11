@@ -219,7 +219,7 @@ const MainUser = () => {
                 Carts
               </SheetTitle>
             </SheetHeader>
-            <div className="p-4 bg-white rounded-md shadow-md mt-4 overflow-y-scroll min-h-[70vh]">
+            <div className="p-4 bg-white rounded-md shadow-md mt-4 overflow-y-scroll min-h-[70vh] max-h-[70vh]">
               {carts.length > 0 ? (
                 <ul>
                   {carts?.map((item) => (

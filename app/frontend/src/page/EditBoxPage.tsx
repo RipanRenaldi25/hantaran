@@ -5,7 +5,6 @@ import {
   getBoxWithColorAndDecorationBelongToBox,
   updateBox,
 } from '@/feature/box';
-import { useAppDispatch, useAppSelector } from '@/states';
 import { IColor, IDecoration } from '@/states/interface';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,7 +15,7 @@ const EditBoxPage = () => {
   const [deletedColors, setDeletedColors] = useState<IColor[]>([]);
   const [deletedDecoration, setDeletedDecoration] = useState<IDecoration[]>([]);
   const { id } = useParams();
-  const [currentBox, setCurrentBox] = useState([]);
+  const [, setCurrentBox] = useState([]);
   const { toast } = useToast();
   const navigate = useNavigate();
   const handleAddProduct = async ({

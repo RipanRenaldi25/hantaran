@@ -1,5 +1,4 @@
 import { formatCurrency } from '@/lib/utils';
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const PackageCard = ({

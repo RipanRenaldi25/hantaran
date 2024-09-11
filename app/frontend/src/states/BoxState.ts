@@ -85,7 +85,7 @@ export const boxSlice = createSlice({
       state.onlyBoxes = action.payload;
     },
     updateSpecificBoxes: (state, action: PayloadAction<IBoxes[]>) => {
-      const test = action.payload.reduce((acc, current) => {
+      action.payload.reduce((acc, current) => {
         const updatedBoxIndex = state.boxes.findIndex(
           (currentBox) => currentBox.id === current.id
         );

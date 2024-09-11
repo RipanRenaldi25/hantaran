@@ -1,5 +1,5 @@
-import React from 'react';
 import collection1 from '@/assets/Koleksi Hantaran 1.jpg';
+import collection10 from '@/assets/Koleksi Hantaran 10.jpg';
 import collection2 from '@/assets/Koleksi Hantaran 2.jpg';
 import collection3 from '@/assets/Koleksi Hantaran 3.jpg';
 import collection4 from '@/assets/Koleksi Hantaran 4.jpg';
@@ -8,7 +8,6 @@ import collection6 from '@/assets/Koleksi Hantaran 6.jpg';
 import collection7 from '@/assets/Koleksi Hantaran 7.jpg';
 import collection8 from '@/assets/Koleksi Hantaran 8.jpg';
 import collection9 from '@/assets/Koleksi Hantaran 9.jpg';
-import collection10 from '@/assets/Koleksi Hantaran 10.jpg';
 
 const CollectionPage = () => {
   return (

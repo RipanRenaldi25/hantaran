@@ -67,6 +67,8 @@ services:
       context: ../../
       dockerfile: ./misc/docker/Dockerfile
       target: FE_PROD
+    depends_on:
+      - be_prod
     ports:
       - 8080:80
     env_file:
