@@ -89,9 +89,7 @@ const MainUser = () => {
       dispatch(updateSpecificCart(payload));
     }
     toast({
-      title: 'Item is marked to be moved to cart',
-      description:
-        'Please move it to cart by clicking "masukkan keranjang" button',
+      title: 'Item is moved to cart',
       variant: 'default',
     });
     setSelectedColor('');
@@ -108,10 +106,11 @@ const MainUser = () => {
   }, []);
 
   const handleCheckout = () => {
-    if (!carts.length) {
+    console.log({ carts, totalCart });
+    if (!carts.length || totalCart < 10) {
       toast({
         title: 'Failed',
-        description: 'Please choose one or more item to checkout',
+        description: 'Please choose 10 item to checkout',
         variant: 'destructive',
       });
       return;
