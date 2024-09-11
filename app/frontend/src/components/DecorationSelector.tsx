@@ -6,19 +6,55 @@ export interface IColorPicker {
   setDecorations: any;
   availableDecorations: IDecoration[];
   setAvailableDecorations: any;
+  deletedDecoration?: IDecoration[];
+  setDeletedDecoration?: any;
 }
 
 const DecorationSelector = ({
   decorations,
   setDecorations,
   availableDecorations,
+  setDeletedDecoration,
+  deletedDecoration = [],
 }: IColorPicker) => {
   const handleDecorationChange = (decoration: IDecoration) => {
-    setDecorations((prevColors: IDecoration[]) =>
-      prevColors.some((decor) => decor.name === decoration.name)
-        ? prevColors.filter((decor) => decor.name !== decoration.name)
-        : [...prevColors, { ...decoration }]
+    console.log({ decoration });
+    const isDecorationExists = decorations.some(
+      (decor: IDecoration) => decor.name === decoration.name
     );
+    if (!isDecorationExists) {
+      if (deletedDecoration.length > 0 || setDeletedDecoration) {
+        const isPickedColorExistsOnDeletedDecoration = deletedDecoration.some(
+          (decor: IDecoration) => decor.name === decoration.name
+        );
+        if (isPickedColorExistsOnDeletedDecoration) {
+          setDeletedDecoration((prevDecor: IDecoration[]) =>
+            prevDecor.filter(
+              (decor: IDecoration) => decor.name !== decoration.name
+            )
+          );
+        }
+      }
+      setDecorations((prevDecoration: IDecoration[]) => [
+        ...prevDecoration,
+        { ...decoration },
+      ]);
+      return;
+    }
+    if (deletedDecoration.length > 0 || setDeletedDecoration) {
+      setDeletedDecoration((prevDecor: IDecoration[]) => [
+        ...prevDecor,
+        decoration,
+      ]);
+    }
+    setDecorations((prevDecoration: IDecoration[]) =>
+      prevDecoration.filter((decor) => decor.name !== decoration.name)
+    );
+    // setDecorations((prevColors: IDecoration[]) =>
+    //   prevColors.some((decor) => decor.name === decoration.name)
+    //     ? prevColors.filter((decor) => decor.name !== decoration.name)
+    //     : [...prevColors, { ...decoration }]
+    // );
   };
 
   return (
@@ -63,7 +99,7 @@ const DecorationSelector = ({
               key={decoration.id}
               onClick={() => handleDecorationChange(decoration)}
               className={`px-4 py-2 rounded-lg text-sm border ${
-                decorations.some((decor) => decor.id === decoration.id)
+                decorations.some((decor) => decor.name === decoration.name)
                   ? 'bg-teal-500 text-white'
                   : 'bg-white text-teal-500 border-teal-500'
               } hover:bg-teal-600 hover:text-white`}

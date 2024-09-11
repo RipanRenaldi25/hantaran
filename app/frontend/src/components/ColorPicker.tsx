@@ -6,16 +6,45 @@ export interface IColorPicker {
   setColors: any;
   availableColors: IColor[];
   setAvailableColors: any;
+  setDeletedColors?: any;
+  deletedColors?: IColor[];
 }
 
-const ColorPicker = ({ colors, setColors, availableColors }: IColorPicker) => {
+const ColorPicker = ({
+  colors,
+  setColors,
+  availableColors,
+  setDeletedColors,
+  deletedColors = [],
+}: IColorPicker) => {
   // const [selectedColor, setSelectedColors] = useState<IColor[]>([]);
   const handleColorChange = (color: IColor) => {
-    setColors((prevColors: IColor[]) =>
-      prevColors.some((col) => col.name === color.name)
-        ? prevColors.filter((col) => col.name !== color.name)
-        : [...prevColors, { ...color }]
-    );
+    setColors((prevColors: IColor[]) => {
+      const isColorExists = prevColors.some((col) => col.name === color.name);
+      if (isColorExists) {
+        if (!!setDeletedColors) {
+          setDeletedColors((prevColors: IColor[]) => {
+            if (prevColors.some((col) => col.name === color.name)) {
+              return prevColors;
+            }
+            return [...prevColors, { ...color }];
+          });
+        }
+
+        return prevColors.filter((col) => col.name !== color.name);
+      }
+      if (deletedColors.length > 0) {
+        const isSelectedColorIsExistsOnDeletedColors = deletedColors.some(
+          (col) => col.name === color.name
+        );
+        if (isSelectedColorIsExistsOnDeletedColors) {
+          setDeletedColors((prevColors: IColor[]) => {
+            return prevColors.filter((col) => col.name !== color.name);
+          });
+        }
+      }
+      return [...prevColors, { ...color }];
+    });
   };
 
   return (

@@ -256,6 +256,44 @@ export const getBoxWithColorAndDecorationBelongToBox = async (id: string) => {
   }
 };
 
+const unconnectBoxWithDecoration = async (
+  decorationId: string,
+  boxId: string
+) => {
+  try {
+    const response = await axios.delete(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/boxes/${boxId}/decorations/${decorationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    return null;
+  }
+};
+const unconnectBoxWithColor = async (colorId: string, boxId: string) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}/boxes/${boxId}/colors/${colorId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      }
+    );
+    const { data } = response.data;
+    return data;
+  } catch (err: any) {
+    return null;
+  }
+};
+
 export const updateBox = async (
   colors: IColor[],
   decorations: IDecoration[],
@@ -264,7 +302,9 @@ export const updateBox = async (
     name: string;
     price: number;
     image: any;
-  }
+  },
+  deletedColors: IColor[] = [],
+  deletedDecoration: IDecoration[] = []
 ) => {
   try {
     const formData = new FormData();
@@ -283,12 +323,28 @@ export const updateBox = async (
         },
       }
     );
-    await Promise.all([
-      ...colors.map((color) => connectBoxWithColor(color.id, boxPayload.id)),
-      ...decorations.map((decoration) =>
-        connectBoxWithDecoration(decoration.id, boxPayload.id)
-      ),
-    ]);
+    console.log({ colors, decorations });
+    if (colors.length > 0) {
+      colors.map((color) => connectBoxWithColor(color.id, boxPayload.id));
+    }
+    if (decorations.length > 0) {
+      decorations.map(
+        async (decoration) =>
+          await connectBoxWithDecoration(decoration.id, boxPayload.id)
+      );
+    }
+    if (deletedColors.length > 0) {
+      deletedColors.map(
+        async (deletedCol) =>
+          await unconnectBoxWithColor(deletedCol.id, boxPayload.id)
+      );
+    }
+    if (deletedDecoration.length > 0) {
+      deletedDecoration.map(
+        async (deletedDecor) =>
+          await unconnectBoxWithDecoration(deletedDecor.id, boxPayload.id)
+      );
+    }
     const { data } = response.data;
     return data;
   } catch (err: any) {

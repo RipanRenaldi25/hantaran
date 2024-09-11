@@ -3,7 +3,6 @@ import ColorPicker from '@/components/ColorPicker';
 import DecorationSelector from '@/components/DecorationSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
 import {
   getBoxWithColorAndDecorationBelongToBox,
   getColors,
@@ -20,6 +19,10 @@ export interface IAddBox {
   setColors: any;
   decorations: IDecoration[];
   setDecorations: any;
+  deletedColors: { id: string; name: string }[];
+  setDeletedColors: any;
+  deletedDecoration: { id: string; name: string }[];
+  setDeletedDecoration: any;
   children?: React.ReactNode;
 }
 
@@ -29,8 +32,11 @@ const EditBox = ({
   decorations,
   setColors,
   setDecorations,
+  deletedColors,
+  deletedDecoration,
+  setDeletedColors,
+  setDeletedDecoration,
 }: IAddBox) => {
-  const { toast } = useToast();
   const [availableColors, setAvailableColors] = useState<IColor[]>([]);
   const [availableDecorations, setAvailableDecorations] = useState<
     IDecoration[]
@@ -189,26 +195,32 @@ const EditBox = ({
               <ColorPicker
                 colors={colors}
                 setColors={setColors}
-                availableColors={availableColors.filter((availableColor) => {
-                  const colorId = availableColor.id;
-                  return !currentBox?.colors?.some(
-                    (color) => color.color_id === colorId
-                  );
-                })}
+                // availableColors={availableColors.filter((availableColor) => {
+                //   const colorId = availableColor.id;
+                //   return !currentBox?.colors?.some(
+                //     (color) => color.color_id === colorId
+                //   );
+                // })}
+                availableColors={availableColors}
                 setAvailableColors={setAvailableColors}
+                setDeletedColors={setDeletedColors}
+                deletedColors={deletedColors}
               />
               <DecorationSelector
                 decorations={decorations}
                 setDecorations={setDecorations}
-                availableDecorations={availableDecorations.filter(
-                  (availableDecoration) => {
-                    const colorId = availableDecoration.id;
-                    return !currentBox?.decorations?.some(
-                      (decor) => decor.decoration_id === colorId
-                    );
-                  }
-                )}
+                // availableDecorations={availableDecorations.filter(
+                //   (availableDecoration) => {
+                //     const colorId = availableDecoration.id;
+                //     return !currentBox?.decorations?.some(
+                //       (decor) => decor.decoration_id === colorId
+                //     );
+                //   }
+                // )}
+                availableDecorations={availableDecorations}
                 setAvailableDecorations={setAvailableDecorations}
+                deletedDecoration={deletedDecoration}
+                setDeletedDecoration={setDeletedDecoration}
               />
               <Button
                 type="submit"

@@ -167,4 +167,10 @@ boxRouter.delete(
   (req, res) => boxController.unconnectBoxWithColor(req, res)
 );
 
+boxRouter.delete(
+  '/:boxId/decorations/:decorationId',
+  authMiddleware.applyWithRole(['admin']),
+  (req, res) => boxController.unconnectBoxWithDecoration(req, res)
+);
+
 export default boxRouter;

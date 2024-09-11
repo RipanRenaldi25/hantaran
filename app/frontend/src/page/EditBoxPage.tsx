@@ -1,14 +1,22 @@
 import EditBox from '@/components/EditBox';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
-import { updateBox } from '@/feature/box';
+import {
+  getBoxWithColorAndDecorationBelongToBox,
+  updateBox,
+} from '@/feature/box';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { IColor, IDecoration } from '@/states/interface';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditBoxPage = () => {
   const [colors, setColors] = useState([]);
   const [decorations, setDecorations] = useState([]);
+  const [deletedColors, setDeletedColors] = useState<IColor[]>([]);
+  const [deletedDecoration, setDeletedDecoration] = useState<IDecoration[]>([]);
+  const { id } = useParams();
+  const [currentBox, setCurrentBox] = useState([]);
   const { toast } = useToast();
   const navigate = useNavigate();
   const handleAddProduct = async ({
@@ -22,12 +30,18 @@ const EditBoxPage = () => {
     price: number;
     id: string;
   }) => {
-    const updatedBox = await updateBox(colors, decorations, {
-      name,
-      image,
-      price,
-      id,
-    });
+    const updatedBox = await updateBox(
+      colors,
+      decorations,
+      {
+        name,
+        image,
+        price,
+        id,
+      },
+      deletedColors,
+      deletedDecoration
+    );
     if (!updatedBox) {
       toast({
         title: 'Error',
@@ -42,6 +56,19 @@ const EditBoxPage = () => {
     });
     navigate('/dashboard/box');
   };
+  useEffect(() => {
+    const getBox = async () => {
+      if (!id) {
+        return;
+      }
+      const boxData = await getBoxWithColorAndDecorationBelongToBox(id);
+      setCurrentBox(boxData);
+      setColors(boxData.colors);
+      setDecorations(boxData.decorations);
+    };
+    getBox();
+  }, []);
+
   return (
     <div>
       <Toaster />
@@ -51,6 +78,10 @@ const EditBoxPage = () => {
         handleAddProduct={handleAddProduct}
         setColors={setColors}
         setDecorations={setDecorations}
+        deletedColors={deletedColors}
+        setDeletedColors={setDeletedColors}
+        deletedDecoration={deletedDecoration}
+        setDeletedDecoration={setDeletedDecoration}
       />
     </div>
   );

@@ -370,7 +370,7 @@ export class BoxController {
       await this.unconnectBoxWithDecorationUsecase.execute(boxId, decorationId);
       res.status(200).json({
         status: 'Success',
-        message: 'Color on box deleted',
+        message: 'Decoration on box deleted',
         data: {
           boxId,
           decorationId,
