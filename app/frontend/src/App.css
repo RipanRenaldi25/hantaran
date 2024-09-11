@@ -510,3 +510,75 @@
   color: #4a3c2f;
   text-align: center;
 }
+
+.testimoni .chat-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.testimoni h1 {
+  text-align: center;
+  color: #4a3c2f;
+  margin-bottom: 20px;
+}
+
+.testimoni .chat-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.testimoni .message {
+  padding: 15px;
+  margin: 5px 0;
+  border-radius: 20px;
+  max-width: 80%;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.testimoni .message.customer {
+  background-color: #4a3c2f;
+  color: #fff;
+  align-self: flex-start;
+}
+
+.testimoni .message.customer::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #4a3c2f transparent transparent;
+}
+
+.testimoni .message.hantaranbyjoo {
+  background-color: #f4f4f4;
+  color: #333;
+  align-self: flex-end;
+}
+
+.testimoni .message.hantaranbyjoo::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent #f4f4f4;
+}
+
+.testimoni .chat-time {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
