@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router-dom';
+
 export const MainPage = () => {
   return (
     <div className="mainpage relative">
@@ -20,9 +22,9 @@ export const MainPage = () => {
                   Lihat koleksi hantaran kami yang indah dan elegan untuk setiap
                   tema pernikahan.
                 </p>
-                <a href="#" className="jelajahi-link">
+                <NavLink to="collection" className="jelajahi-link">
                   Lihat Selengkapnya
-                </a>
+                </NavLink>
               </div>
               <div className="jelajahi-item">
                 <h3>Paket & Harga</h3>
@@ -30,9 +32,9 @@ export const MainPage = () => {
                   Temukan paket hantaran yang sesuai dengan kebutuhan dan
                   anggaran Anda.
                 </p>
-                <a href="#" className="jelajahi-link">
+                <NavLink to="prices" className="jelajahi-link">
                   Lihat Selengkapnya
-                </a>
+                </NavLink>
               </div>
               <div className="jelajahi-item">
                 <h3>Testimoni</h3>
@@ -40,9 +42,9 @@ export const MainPage = () => {
                   Baca pengalaman pelanggan kami yang telah menggunakan layanan
                   HantaranByJoo.
                 </p>
-                <a href="#" className="jelajahi-link">
+                <NavLink to="testimoni" className="jelajahi-link">
                   Lihat Selengkapnya
-                </a>
+                </NavLink>
               </div>
             </div>
           </div>

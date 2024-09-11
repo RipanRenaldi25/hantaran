@@ -20,6 +20,7 @@ import DecorationPage from './page/DecorationPage';
 import AboutPage from './page/AboutPage';
 import ContactPage from './page/ContactPage';
 import EditBoxPage from './page/EditBoxPage';
+import CollectionPage from './page/CollectionPage';
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'collection',
+        element: <CollectionPage />,
       },
     ],
   },
