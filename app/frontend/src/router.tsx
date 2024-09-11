@@ -22,6 +22,7 @@ import ContactPage from './page/ContactPage';
 import EditBoxPage from './page/EditBoxPage';
 import CollectionPage from './page/CollectionPage';
 import TestimoniPage from './page/TestimoniPage';
+import PricesPage from './page/PricesPage';
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
         element: <CollectionPage />,
       },
       { path: 'testimoni', element: <TestimoniPage /> },
+      { path: 'prices', element: <PricesPage /> },
     ],
   },
   {
