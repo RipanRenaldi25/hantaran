@@ -1,28 +1,30 @@
-import { createBrowserRouter } from 'react-router-dom';
 import LandingPage from '@/page/LandingPage';
-import Register from './page/Register';
-import Login from './page/Login';
-import BoxPage from './page/BoxPage';
-import OrderListPage from './page/OrderListPage';
+import { createBrowserRouter } from 'react-router-dom';
+import {
+  default as ActivatedEmail,
+  default as ActivateEmail,
+} from './components/ActivateEmail';
+import MainUser from './components/MainUser';
+import AboutPage from './page/AboutPage';
 import AdminDashboard from './page/AdminDashboard';
-import UserDashboard from './page/UserDashboard';
+import BoxPage from './page/BoxPage';
+import CollectionPage from './page/CollectionPage';
+import ColorPage from './page/ColorPage';
+import ContactPage from './page/ContactPage';
+import DecorationPage from './page/DecorationPage';
+import EditBoxPage from './page/EditBoxPage';
+import EditProfile from './page/EditProfile';
+import Login from './page/Login';
 import { MainPage } from './page/MainPage';
+import OrderListPage from './page/OrderListPage';
 import OrderPage from './page/OrderPage';
 import PaymentConfirmation from './page/PaymentConfirmation';
-import ActivatedEmail from './components/ActivateEmail';
-import ActivateEmail from './components/ActivateEmail';
-import EditProfile from './page/EditProfile';
-import MainUser from './components/MainUser';
 import PaymentSuccessPage from './page/PaymentSuccessPage';
-import UserTransactionPage from './page/UserTransactionPage';
-import ColorPage from './page/ColorPage';
-import DecorationPage from './page/DecorationPage';
-import AboutPage from './page/AboutPage';
-import ContactPage from './page/ContactPage';
-import EditBoxPage from './page/EditBoxPage';
-import CollectionPage from './page/CollectionPage';
-import TestimoniPage from './page/TestimoniPage';
 import PricesPage from './page/PricesPage';
+import Register from './page/Register';
+import TestimoniPage from './page/TestimoniPage';
+import UserDashboard from './page/UserDashboard';
+import UserTransactionPage from './page/UserTransactionPage';
 
 export const router = createBrowserRouter([
   {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 // import Sidebar from '@/components/Sidebar';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -9,6 +9,7 @@ import { getUserWithProfile } from '@/feature/user';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { resetUserLogedIn } from '@/states/UserLogedInState';
 import { setUserLoginWithProfile } from '@/states/userState';
+import { Button } from '@/components/ui/button';
 
 export type NavListType = {
   title: string;
@@ -41,6 +42,7 @@ const UserDashboard = () => {
     const user = await getUserWithProfile();
     dispatch(setUserLoginWithProfile(user));
   };
+  console.log({ userLoginWithProfile });
   useEffect(() => {
     getUserProfileById();
     if (
@@ -58,7 +60,7 @@ const UserDashboard = () => {
     }
   }, [localStorage.getItem('ROLE'), localStorage.getItem('ACCESS_TOKEN')]);
   return (
-    <article>
+    <article className="relative">
       <Toaster />
       <Header
         username={userLoginWithProfile?.username}

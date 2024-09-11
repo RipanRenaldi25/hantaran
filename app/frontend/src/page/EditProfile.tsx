@@ -66,12 +66,16 @@ const EditProfile = () => {
     };
     for (const input of Object.entries(payload)) {
       const [key, value] = input;
+      console.log({ key, value, isValid: !value });
       if (!value) {
         err = key;
         break;
       }
     }
-    if (err.length) {
+    console.log({ err, length: err.length });
+    if (err.length > 0) {
+      console.log({ err });
+
       toast({
         title: 'Error',
         description: `Please fill ${err} input field`,
@@ -94,6 +98,7 @@ const EditProfile = () => {
         username: userProfileInputField.username,
       })
     );
+    toast({ title: 'Success', description: 'Create profile success' });
   };
 
   const handleEditProfile = async () => {
@@ -110,20 +115,22 @@ const EditProfile = () => {
     const data = await editProfile(payload);
     console.log({ data });
     dispatch(setUserLoginWithProfile(data));
+    toast({ title: 'Success', description: 'Update profile success' });
+    navigate('/user');
   };
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!userLoginWithProfile.city && !userLoginWithProfile.full_name) {
+      console.log('user profile craeted');
       handleCreateUser();
     } else {
+      console.log('user profile updated');
       handleEditProfile();
     }
-
-    toast({ title: 'Success', description: 'Update profile success' });
   };
-  console.log({ userProfileInputField, userLoginWithProfile });
+  console.log({ userLoginWithProfile });
 
   return (
     <>
@@ -143,7 +150,7 @@ const EditProfile = () => {
         >
           <img
             src={
-              userProfileInputField.avatar.length
+              !!userProfileInputField.avatar
                 ? userProfileInputField.avatar
                 : userLoginWithProfile.avatar
                 ? `${import.meta.env.VITE_API_BASE_URL}/public/${

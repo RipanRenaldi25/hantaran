@@ -20,7 +20,7 @@ import {
 } from '@/states/Cart';
 import { ICartItem } from '@/states/interface';
 import { Minus, Plus, ShoppingCart, TrashIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { BoxCard } from './BoxCard';
 import HeroSection from './HeroSection';
 import { Button } from './ui/button';
@@ -67,7 +67,6 @@ const MainUser = () => {
     if (index !== -1) {
       setTempList((prevValue) => {
         return prevValue.map((item, i) => {
-          console.log({ item });
           if (i === index) {
             dispatch(
               updateSpecificCart({ ...item, quantity: item.quantity + 1 })
@@ -106,7 +105,6 @@ const MainUser = () => {
   }, []);
 
   const handleCheckout = () => {
-    console.log({ carts, totalCart });
     if (!carts.length || totalCart < 10) {
       toast({
         title: 'Failed',
@@ -144,13 +142,6 @@ const MainUser = () => {
         item.color_name === color &&
         item.decoration_name === decoration
       ) {
-        console.log({
-          id: item.id,
-          color: item.color_name,
-          decoration: item.decoration_name,
-          quantity: item.quantity,
-        });
-
         dispatch(incrementQuantity({ id, color, decoration }));
       }
     });
@@ -176,19 +167,43 @@ const MainUser = () => {
         item.color_name === color &&
         item.decoration_name === decoration
       ) {
-        console.log({
-          id: item.id,
-          color: item.color_name,
-          decoration: item.decoration_name,
-          quantity: item.quantity,
-        });
         dispatch(decrementQuantity({ id, color, decoration }));
       }
     });
   };
+  const { userLoginWithProfile } = useAppSelector((state) => state.user);
+  console.log({ userLoginWithProfile });
 
   return (
     <div>
+      {userLoginWithProfile.username && !userLoginWithProfile.full_name ? (
+        <section>
+          <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-10"></div>
+          <div className="z-20 bg-white fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 max-w-sm flex flex-col gap-3 rounded-lg">
+            <h1>Isi profile terlebih dahulu untuk menggunakan aplikasi</h1>
+            <div className="flex gap-2">
+              <Button type="button" asChild className="flex-1">
+                <NavLink to={`profile/${userLoginWithProfile.id}`}>
+                  Isi Profile
+                </NavLink>
+              </Button>
+              <Button
+                type="button"
+                asChild
+                variant={'destructive'}
+                className="flex-1"
+                onClick={() => {
+                  localStorage.removeItem('ACCESS_TOKEN');
+                  localStorage.removeItem('ROLE');
+                  navigate('/');
+                }}
+              >
+                <NavLink to={`/`}>Logout</NavLink>
+              </Button>
+            </div>
+          </div>
+        </section>
+      ) : null}
       <div className="relative bg-yellow-500">
         <Sheet>
           <div className="fixed bottom-10 right-10 text-center">
