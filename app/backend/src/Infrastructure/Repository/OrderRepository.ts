@@ -274,4 +274,12 @@ export class OrderRepository implements IOrderRepository {
       throw new Error(err.message);
     }
   }
+
+  async updateOrderManageStatus(
+    orderId: OrderId,
+    manageStatus: 'processed' | 'completed' | 'unprocessed' | 'cancelled'
+  ): Promise<void> {
+    const query = 'UPDATE orders SET manage_status = ? WHERE id = ?';
+    await this.dbConnection.query(query, [manageStatus, orderId.toString()]);
+  }
 }

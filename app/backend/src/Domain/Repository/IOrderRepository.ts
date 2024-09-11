@@ -95,4 +95,9 @@ export interface IOrderRepository {
     //   bill_info_2: string;
     // }>;
   ): Promise<void>;
+
+  updateOrderManageStatus(
+    orderId: OrderId,
+    manageStatus: 'processed' | 'completed' | 'unprocessed' | 'cancelled'
+  ): Promise<void>;
 }

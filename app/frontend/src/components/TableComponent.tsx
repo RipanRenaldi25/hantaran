@@ -1,5 +1,14 @@
 import { Badge } from '@/components/ui/badge';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -15,9 +24,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatDate } from '@/lib/utils';
-import { Pen, Trash2 } from 'lucide-react';
-import React from 'react';
+import { MoreHorizontal, Pen, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
+import { Button } from './ui/button';
 
 export interface ITableComponent<T> {
   tableData: T[];
@@ -31,6 +41,8 @@ export interface ITableComponent<T> {
   isEditAction?: boolean;
   isDeleteAction?: boolean;
   handleDelete?: any;
+  isRadioAction?: boolean;
+  onProcessHandler?: any;
 }
 
 const TableComponent = ({
@@ -44,8 +56,17 @@ const TableComponent = ({
   isDeleteAction,
   isEditAction,
   handleDelete,
+  isRadioAction,
 }: ITableComponent<any>) => {
   const [, setSearchParam] = useSearchParams();
+  const [process, setProcess] = useState<
+    'unprocessed' | 'processed' | 'completed'
+  >('unprocessed');
+
+  const handleProcessChange = (value: any) => {
+    setProcess(value);
+  };
+
   return (
     <Table className="overflow-x-scrol table-fixed">
       {/* <TableCaption>A list of all boxes</TableCaption> */}
@@ -114,7 +135,7 @@ const TableComponent = ({
               }
               return <TableCell>{data[header.name]}</TableCell>;
             })}
-            {isEditAction || isDeleteAction ? (
+            {isEditAction || isDeleteAction || isRadioAction ? (
               <TableCell
                 className="h-full"
                 colSpan={isEditAction && isDeleteAction ? 2 : 0}
@@ -138,6 +159,35 @@ const TableComponent = ({
                       <Trash2 className="size-5" />
                       <h1>Delete</h1>
                     </NavLink>
+                  )}
+                  {isRadioAction && (
+                    <div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuRadioGroup
+                            value={process as any}
+                            onValueChange={(e: any) => setProcess(e)}
+                          >
+                            <DropdownMenuRadioItem value="unprocessed">
+                              Unprocessed
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="processed">
+                              Processed
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="completed">
+                              Completed
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   )}
                 </div>
               </TableCell>

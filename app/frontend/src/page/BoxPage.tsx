@@ -19,8 +19,6 @@ import { useAppDispatch, useAppSelector } from '@/states';
 import { setBox, setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import EditBoxPage from './EditBoxPage';
-import EditBox from '@/components/EditBox';
 
 const BoxPage = () => {
   const [colors, setColors] = useState([]);
@@ -28,7 +26,6 @@ const BoxPage = () => {
   const { onlyBoxes: boxes, total } = useAppSelector((state) => state.box);
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const totalPage = Math.ceil(total / 10);
   const [searchParam] = useSearchParams();

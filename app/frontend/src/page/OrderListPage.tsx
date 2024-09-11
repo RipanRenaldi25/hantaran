@@ -335,6 +335,7 @@ const OrderListPage = () => {
               },
               { name: 'manageStatus', as: 'Proses' },
             ]}
+            isRadioAction
           />
         </div>
       </div>

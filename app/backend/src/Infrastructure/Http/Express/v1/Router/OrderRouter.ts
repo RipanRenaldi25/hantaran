@@ -19,6 +19,7 @@ import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/Ge
 import { UserController } from '../Controller/UserController';
 import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
 import { CancelTransactionUsecase } from '../../../../../Application/Usecase/Order/CancelTransactionUsecase';
+import { UpdateOrderManageStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderManageStatusUsecase';
 
 const mysqlConnection = MysqlConnection.getInstance(
   ConfigService.getInstance()
@@ -57,6 +58,9 @@ const getOrderStatusUsecase = new GetOrderStatusUsecase(orderService);
 const cancelOrderUsecase = new CancelTransactionUsecase(orderService);
 
 const updateOrderStatusUsecase = new UpdateOrderStatusUsecase(orderService);
+const updateOrderManageStatusUsecase = new UpdateOrderManageStatusUsecase(
+  orderService
+);
 const orderController = new OrderController(
   createOrderUsecase,
   updateOrderStatusUsecase,
@@ -65,7 +69,8 @@ const orderController = new OrderController(
   getOrderItemUsecase,
   getOrderByIdUsecase,
   getOrderStatusUsecase,
-  cancelOrderUsecase
+  cancelOrderUsecase,
+  updateOrderManageStatusUsecase
 );
 
 const orderRouter = express.Router();
@@ -101,5 +106,11 @@ orderRouter.get('/:orderId/status', (req, res) =>
 );
 orderRouter.post('/:orderId/cancel', (req, res) =>
   orderController.cancelOrder(req, res)
+);
+
+orderRouter.put(
+  '/:orderId/status/',
+  authMiddleware.applyWithRole(['admin']),
+  (req, res) => orderController.updateOrderManageStatus(req, res)
 );
 export default orderRouter;

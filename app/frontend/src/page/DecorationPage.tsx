@@ -126,7 +126,7 @@ const DecorationPage = () => {
               name: 'id',
             },
             {
-              as: 'Name',
+              as: 'Dekorasi',
               name: 'name',
             },
           ]}

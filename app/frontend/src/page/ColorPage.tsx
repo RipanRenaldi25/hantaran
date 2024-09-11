@@ -123,7 +123,7 @@ const ColorPage = () => {
               name: 'id',
             },
             {
-              as: 'Name',
+              as: 'Warna',
               name: 'name',
             },
           ]}

@@ -202,4 +202,15 @@ export class OrderService implements IOrderService {
       throw new Error(err.message);
     }
   }
+
+  async updateOrderManageStatus(
+    orderId: OrderId,
+    manageStatus: 'processed' | 'completed' | 'unprocessed' | 'cancelled'
+  ): Promise<void> {
+    try {
+      await this.orderRepository.updateOrderManageStatus(orderId, manageStatus);
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+  }
 }

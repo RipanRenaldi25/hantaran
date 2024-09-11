@@ -10,6 +10,7 @@ import { GetOrderItemUsecase } from '../../../../../Application/Usecase/Order/Ge
 import { GetOrderByIdUsecase } from '../../../../../Application/Usecase/Order/GetOrderByIdUsecase';
 import { GetOrderStatusUsecase } from '../../../../../Application/Usecase/Order/GetOrderStatusUsecase';
 import { CancelTransactionUsecase } from '../../../../../Application/Usecase/Order/CancelTransactionUsecase';
+import { UpdateOrderManageStatusUsecase } from '../../../../../Application/Usecase/Order/UpdateOrderManageStatusUsecase';
 
 export class OrderController {
   constructor(
@@ -20,7 +21,8 @@ export class OrderController {
     private readonly getOrderItemUsecase: GetOrderItemUsecase,
     private readonly getOrderByIdUsecase: GetOrderByIdUsecase,
     private readonly getOrderStatusUsecase: GetOrderStatusUsecase,
-    private readonly cancelOrderUsecase: CancelTransactionUsecase
+    private readonly cancelOrderUsecase: CancelTransactionUsecase,
+    private readonly updateOrderManageStatusUsecase: UpdateOrderManageStatusUsecase
   ) {}
 
   async createOrder(req: Request, res: Response) {
@@ -233,6 +235,34 @@ export class OrderController {
         res.status(err.statusCode).json({
           status: 'Fail',
           message: 'Client Error: ' + err.message,
+        });
+      } else {
+        res.status(500).json({
+          status: 'Error',
+          message: err.message,
+        });
+      }
+    }
+  }
+
+  async updateOrderManageStatus(req: Request, res: Response) {
+    try {
+      const { orderId } = req.params;
+      const { manageStatus } = req.body;
+      if (!orderId || !manageStatus) {
+        throw new InvariantError('Order Id and Manage Status cannot be empty');
+      }
+      await this.updateOrderManageStatusUsecase.execute(manageStatus, orderId);
+      res.status(200).json({
+        status: 'Success',
+        message: 'Order manage status updated',
+        data: { id: orderId },
+      });
+    } catch (err: any) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: err.message,
         });
       } else {
         res.status(500).json({
