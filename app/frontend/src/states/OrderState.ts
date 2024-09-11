@@ -21,6 +21,7 @@ const orderSlice = createSlice({
       action: PayloadAction<{
         id: string;
         status: 'processed' | 'unprocessed' | 'completed' | 'cancelled';
+        setStateToUpdate: any;
       }>
     ) {
       state.order = state.order.map((order) => ({
@@ -30,6 +31,7 @@ const orderSlice = createSlice({
             ? action.payload.status
             : order.manageStatus,
       }));
+      action.payload.setStateToUpdate(state.order);
     },
   },
 });

@@ -146,7 +146,7 @@ const OrderListPage = () => {
       });
     }
   }, [date]);
-  console.log({order})
+  console.log({ order });
 
   const handleChangeOrderManageStatus = async (
     orderId: string,
@@ -163,7 +163,13 @@ const OrderListPage = () => {
     toast({
       description: 'Berhasil memperbarui status order',
     });
-    dispatch(setOrderStatus({ id: orderId, status }));
+    dispatch(
+      setOrderStatus({
+        id: orderId,
+        status,
+        setStateToUpdate: setFilteredOrder,
+      })
+    );
   };
 
   return (

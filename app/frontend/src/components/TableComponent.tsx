@@ -177,7 +177,7 @@ const TableComponent = ({
                           <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuRadioGroup
-                            value={process as any}
+                            value={data.manageStatus || (process as any)}
                             onValueChange={(e: any) =>
                               handleProcessChange(data.id, e)
                             }
