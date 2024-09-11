@@ -41,11 +41,11 @@ function LandingPage() {
   return (
     <>
       <Toaster />
-      <div className="flex flex-col bg-white">
+      <div className="flex flex-col bg-white gap-10">
         <Navigation navItems={navItems} />
         <Outlet />
 
-        <footer className="landinpage-footer">
+        <footer className="landinpage-footer min-h-[15vh]">
           <div className="footer-info">
             <address>
               <p>

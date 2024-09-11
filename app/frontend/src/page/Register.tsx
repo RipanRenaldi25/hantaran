@@ -79,7 +79,7 @@ const Register = () => {
       {isEmailsend && (
         <>
           <div
-            className="overlay fixed inset-0 bg-black bg-opacity-60 z-10 hover:cursor-pointer"
+            className="fixed inset-0 bg-black bg-opacity-60 z-10 hover:cursor-pointer"
             onClick={() => setIsEmailSend(false)}
           ></div>
           <section
@@ -124,10 +124,11 @@ const Register = () => {
       )}
       <section>
         <form
-          className="flex justify-center h-screen items-center flex-col relative"
+          className="flex justify-center items-center flex-col relative"
           onSubmit={handleRegister}
         >
-          <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8">
+          {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
+          <article className="flex flex-col gap-5 shadow-lg border w-1/3 py-12 px-8 rounded-lg">
             <h1 className="text-center font-bold text-2xl">
               Create an account
             </h1>

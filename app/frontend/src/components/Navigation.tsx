@@ -20,7 +20,7 @@ export const Navigation = ({ navItems }: INavigationProps) => {
   console.log({ navItems });
   const navigate = useNavigate();
   return (
-    <header className=" py-6 shadow-lg bg-gradient-to-tr from-white to-gray-200">
+    <header className="py-6 shadow-lg bg-gradient-to-tr from-white to-gray-200 sticky top-0 z-30 max-h-[15vh]">
       <nav className="flex items-center justify-between px-10 py-2">
         <div className="flex items-center justify-start gap-10 cursor-pointer">
           <div
