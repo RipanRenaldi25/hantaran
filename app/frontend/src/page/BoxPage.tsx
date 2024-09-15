@@ -16,7 +16,12 @@ import {
   getBoxes,
 } from '@/feature/box';
 import { useAppDispatch, useAppSelector } from '@/states';
-import { setBox, setOnlyBoxes, setPage, setTotal } from '@/states/BoxState';
+import {
+  addOnlyBoxes,
+  setOnlyBoxes,
+  setPage,
+  setTotal,
+} from '@/states/BoxState';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -67,14 +72,21 @@ const BoxPage = () => {
         });
       }
       dispatch(
-        setBox({
+        addOnlyBoxes({
           id: boxId || '',
-          box_name: name,
-          box_image_url: image || URL.createObjectURL(image) || '',
+          name: name,
+          image_url: image || URL.createObjectURL(image) || '',
           price: price,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
       );
+      setColors([]);
+      setDecorations([]);
     } catch (err: any) {
+      toast({
+        description: `Failed to add box because ${err.message}`,
+      });
       console.log({ err: err.message });
     }
   };

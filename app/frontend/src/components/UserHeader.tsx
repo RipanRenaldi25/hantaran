@@ -44,7 +44,7 @@ export const Header = ({
             <DropdownMenuItem asChild>
               <NavLink to={`/user/profile/${userId}`}>Profile</NavLink>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <NavLink
                 to=""
                 onClick={() => {

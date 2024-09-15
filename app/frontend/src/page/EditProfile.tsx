@@ -99,6 +99,7 @@ const EditProfile = () => {
       })
     );
     toast({ title: 'Success', description: 'Create profile success' });
+    navigate('/user');
   };
 
   const handleEditProfile = async () => {
@@ -113,7 +114,6 @@ const EditProfile = () => {
       userId,
     };
     const data = await editProfile(payload);
-    console.log({ data });
     dispatch(setUserLoginWithProfile(data));
     toast({ title: 'Success', description: 'Update profile success' });
     navigate('/user');
@@ -130,7 +130,6 @@ const EditProfile = () => {
       handleEditProfile();
     }
   };
-  console.log({ userLoginWithProfile });
 
   return (
     <>

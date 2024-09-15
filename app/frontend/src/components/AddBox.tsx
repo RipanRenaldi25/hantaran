@@ -10,6 +10,8 @@ import { CloudUpload } from 'lucide-react';
 import ButtonLoading from './ButtonLoading';
 import { Input } from './ui/input';
 import { useToast } from './ui/use-toast';
+import { useAppDispatch } from '@/states';
+import { addOnlyBoxes, setBox } from '@/states/BoxState';
 export interface IAddBox {
   handleAddProduct: any;
   colors: IColor[];
@@ -56,9 +58,8 @@ const AddBox = ({
   }, []);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     for (const [key, value] of Object.entries(newBox)) {
       if (!value) {
         toast({
@@ -69,16 +70,17 @@ const AddBox = ({
         return;
       }
     }
+    setIsLoading(true);
     handleAddProduct(newBox);
-    setIsLoading(false);
     setNewBox({ image: null, name: '', price: 0 });
+    setIsLoading(false);
   };
 
   return (
-    <div className="py-5 flex flex-col justify-center max-h-[80vh] overflow-hidden overflow-y-scroll shadow-lg rounded-xl">
+    <div className="py-5 flex flex-col justify-between max-h-[80vh] overflow-hidden overflow-y-scroll shadow-lg rounded-xl">
       <div className="relative py-10 sm:max-w-xl sm:mx-auto w-full ">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-blue-500 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-blue-500 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl -z-10"></div>
+        <div className="px-4 py-10 shadow-lg sm:rounded-3xl sm:p-20 bg-white">
           <div className="max-w-md mx-auto max-h-full">
             <form onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col items-center gap-5 group border-2 border-dashed">

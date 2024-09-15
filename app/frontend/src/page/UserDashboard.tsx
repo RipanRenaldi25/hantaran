@@ -41,7 +41,6 @@ const UserDashboard = () => {
     const user = await getUserWithProfile();
     dispatch(setUserLoginWithProfile(user));
   };
-  console.log({ userLoginWithProfile });
   useEffect(() => {
     getUserProfileById();
     if (
@@ -59,7 +58,7 @@ const UserDashboard = () => {
     }
   }, [localStorage.getItem('ROLE'), localStorage.getItem('ACCESS_TOKEN')]);
   return (
-    <article className="relative">
+    <article>
       <Toaster />
       <Header
         username={userLoginWithProfile?.username}

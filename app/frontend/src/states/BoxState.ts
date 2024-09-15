@@ -30,7 +30,7 @@ export const boxSlice = createSlice({
       state.total = action.payload;
     },
     setBox: (state, action: PayloadAction<IBoxes>) => {
-      state.boxes = [...state.boxes, action.payload];
+      state.boxes = [action.payload, ...state.boxes];
     },
     setBoxWithColorAndDecoration: (
       state,
@@ -84,6 +84,9 @@ export const boxSlice = createSlice({
     setOnlyBoxes(state, action: PayloadAction<IBox[]>) {
       state.onlyBoxes = action.payload;
     },
+    addOnlyBoxes(state, action: PayloadAction<IBox>) {
+      state.onlyBoxes = [action.payload, ...state.onlyBoxes];
+    },
     updateSpecificBoxes: (state, action: PayloadAction<IBoxes[]>) => {
       action.payload.reduce((acc, current) => {
         const updatedBoxIndex = state.boxes.findIndex(
@@ -107,5 +110,6 @@ export const {
   setBoxWithColorAndDecoration,
   setOnlyBoxes,
   updateSpecificBoxes,
+  addOnlyBoxes,
 } = boxSlice.actions;
 export const boxReducer = boxSlice.reducer;

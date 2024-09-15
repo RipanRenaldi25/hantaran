@@ -7,6 +7,7 @@ import { Check, CircleX, Eye, MailCheck } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import InputField from '../components/InputField';
 import { register } from '@/feature/user';
+import ButtonLoading from '@/components/ButtonLoading';
 
 const Register = () => {
   const { toast } = useToast();
@@ -17,7 +18,8 @@ const Register = () => {
   }>({ username: '', email: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-  const [isEmailsend, setIsEmailSend] = useState<boolean>(false);
+  const [isEmailsend, setIsEmailSend] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const validatePassword = (password: string) => {
     let isValid = true;
@@ -59,6 +61,7 @@ const Register = () => {
       });
       return;
     }
+    setIsLoading(true);
     await register({ ...registerField });
     setIsEmailSend(true);
     setRegisterField(() => ({
@@ -66,6 +69,7 @@ const Register = () => {
       password: '',
       username: '',
     }));
+    setIsLoading(false);
   };
 
   const onInputChangeHandler = (
@@ -83,7 +87,7 @@ const Register = () => {
             onClick={() => setIsEmailSend(false)}
           ></div>
           <section
-            className={`bg-slate-800 w-1/4 h-80 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10 rounded-lg flex items-center px-5 py-10 flex-col text-white justify-evenly ${
+            className={`bg-slate-800 min-h-80 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10 rounded-lg flex items-center px-5 py-10 flex-col text-white justify-evenly ${
               isEmailsend ? 'scale-100' : 'scale-0'
             } transition-transform transform duration-300`}
           >
@@ -107,14 +111,20 @@ const Register = () => {
             </div>
             <footer className="flex gap-5 w-full justify-center">
               <div>
-                <Button className="bg-white text-black w-40 hover:bg-black hover:text-white font-bold">
+                <Button
+                  className="bg-white text-black w-40 hover:bg-black hover:text-white font-bold"
+                  asChild
+                >
                   <NavLink to="https://www.gmail.com" target="_blank">
                     Check Email
                   </NavLink>
                 </Button>
               </div>
               <div>
-                <Button className="w-40 bg-transparent border hover:text-black font-bold">
+                <Button
+                  className="w-40 bg-transparent border hover:text-black font-bold"
+                  asChild
+                >
                   <NavLink to="/login">Login</NavLink>
                 </Button>
               </div>
@@ -246,7 +256,12 @@ const Register = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-2 ">
-                <Button>Register</Button>
+                <Button className="flex gap-2" disabled={isLoading}>
+                  <span>
+                    <ButtonLoading isLoading={isLoading} />
+                  </span>
+                  Register
+                </Button>
                 <p>
                   Already have an account?{' '}
                   <NavLink to="/login" className="font-bold">

@@ -22,7 +22,7 @@ const PaymentSuccessPage = () => {
     getStatus();
   });
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500">
       <div className="flex flex-col items-center justify-center p-8 bg-white border rounded-md shadow-md max-w-md mx-auto">
         {transactionStatus?.transaction_status === 'settlement' && (
           <>

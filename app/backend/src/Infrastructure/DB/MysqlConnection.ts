@@ -20,8 +20,6 @@ export class MysqlConnection {
     if (!!MysqlConnection.pool) {
       return MysqlConnection.pool;
     }
-    console.log(this.configService.get('MYSQL_HOST'));
-    console.log(process.env.MYSQL_HOST);
     MysqlConnection.pool = createPool({
       host: this.configService.get('MYSQL_HOST') || 'localhost',
       user: this.configService.get('MYSQL_USER') || 'root',

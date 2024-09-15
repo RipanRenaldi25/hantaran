@@ -10,10 +10,10 @@ const PackageCard = ({
   description: string;
   price: any;
 }) => (
-  <div className="bg-white shadow-lg rounded-lg p-6 text-center min-h-[40vh] relative">
+  <div className="bg-white shadow-lg rounded-lg p-6 text-center relative flex flex-col justify-between h-full">
     <h2 className="text-xl font-bold text-gray-800">{name}</h2>
     <p className="text-gray-600 my-4">{description}</p>
-    <div className="flex flex-col absolute bottom-8 left-8 right-8">
+    <div className="flex flex-col ">
       <span className="block text-teal-600 text-2xl font-bold">{price}</span>
       <NavLink
         to="/login"
@@ -50,7 +50,7 @@ const PricesPage = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Available Packages
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl place-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl place-items-center place-content-center ">
         {packages.map((pkg) => (
           <PackageCard
             key={pkg.name}

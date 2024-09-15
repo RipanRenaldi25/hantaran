@@ -42,10 +42,10 @@ const Sidebar = ({ setSidebarItems, sidebarItems = [], user }: ISidebar) => {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
+              {/* <DropdownMenuItem asChild>
                 <NavLink to="/profile">Profile</NavLink>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              </DropdownMenuItem> */}
+              <DropdownMenuItem asChild>
                 <NavLink
                   to=""
                   onClick={() => {

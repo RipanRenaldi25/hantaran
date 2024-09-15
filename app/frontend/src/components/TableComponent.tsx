@@ -73,7 +73,7 @@ const TableComponent = ({
   };
 
   return (
-    <Table className="overflow-x-scrol table-fixed">
+    <Table className="overflow-x-scroll table-fixed">
       {/* <TableCaption>A list of all boxes</TableCaption> */}
       <TableHeader>
         <TableRow>

@@ -1,9 +1,5 @@
 import LandingPage from '@/page/LandingPage';
 import { createBrowserRouter } from 'react-router-dom';
-import {
-  default as ActivatedEmail,
-  default as ActivateEmail,
-} from './components/ActivateEmail';
 import MainUser from './components/MainUser';
 import AboutPage from './page/AboutPage';
 import AdminDashboard from './page/AdminDashboard';
@@ -25,6 +21,8 @@ import Register from './page/Register';
 import TestimoniPage from './page/TestimoniPage';
 import UserDashboard from './page/UserDashboard';
 import UserTransactionPage from './page/UserTransactionPage';
+import ActivateEmail from './components/ActivateEmail';
+import ActivatedEmail from './components/ActivatedEmail';
 
 export const router = createBrowserRouter([
   {

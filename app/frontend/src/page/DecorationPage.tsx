@@ -63,11 +63,11 @@ const DecorationPage = () => {
         <h1 className="text-2xl font-bold">Boxes</h1>
         <Dialog>
           <DialogTrigger>
-            <Button>Tambah Warna</Button>
+            <Button>Tambah Dekorasi</Button>
           </DialogTrigger>
           <DialogContent className="min-w-[800px] py-10">
             <DialogHeader>
-              <DialogTitle>Tambah Warna</DialogTitle>
+              <DialogTitle>Tambah Dekorasi</DialogTitle>
             </DialogHeader>
             <div className="py-5 flex flex-col justify-center max-h-[80vh] overflow-hidden overflow-y-scroll shadow-lg rounded-xl">
               <div className="relative py-10 sm:max-w-xl sm:mx-auto w-full ">
@@ -80,13 +80,13 @@ const DecorationPage = () => {
                     >
                       <div className="mb-4 flex flex-col gap-2">
                         <label className="block text-sm font-medium text-gray-600">
-                          Nama warna
+                          Dekorasi
                         </label>
                         <Input
                           type="text"
                           name={'color'}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring focus:ring-teal-500 focus:outline-none"
-                          placeholder="Enter color name"
+                          placeholder="Enter decoration name"
                           value={newDecoration}
                           onChange={(e: any) =>
                             setNewDecoration(e.target.value)
