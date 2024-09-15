@@ -20,11 +20,13 @@ export class MysqlConnection {
     if (!!MysqlConnection.pool) {
       return MysqlConnection.pool;
     }
+    console.log(this.configService.get('MYSQL_HOST'));
+    console.log(process.env.MYSQL_HOST);
     MysqlConnection.pool = createPool({
-      host: 'mysql' || this.configService.get('MYSQL_HOST'),
-      user: this.configService.get('MYSQL_USER'),
-      password: this.configService.get('MYSQL_ROOT_PASSWORD'),
-      database: this.configService.get('MYSQL_DB'),
+      host: this.configService.get('MYSQL_HOST') || 'localhost',
+      user: this.configService.get('MYSQL_USER') || 'root',
+      password: this.configService.get('MYSQL_ROOT_PASSWORD') || 'root',
+      database: this.configService.get('MYSQL_DB') || 'hantaran',
     });
     return MysqlConnection.pool;
   }

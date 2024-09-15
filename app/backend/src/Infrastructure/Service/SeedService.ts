@@ -7,33 +7,40 @@ export class SeedService {
   }
 
   async initDB() {
-    console.log('Migrate DB');
-    await this.createRoleTable();
-    console.log('Role table created successfully');
-    await this.createUserTable();
-    console.log('Users table created successfully');
-    await this.createBoxTable();
-    console.log('Table boxes created successfully');
-    await this.createDecorationTable();
-    console.log('Table decorations created successfully');
-    await this.createColorTable();
-    console.log('Table colors created successfully');
-    await this.createBoxDecorationTable();
-    console.log('Table box_decorations created successfully');
-    await this.createBoxColorTable();
-    console.log('Table box_colors created successfully');
-    await this.createAddressTable();
-    console.log('Table address created successfully');
-    await this.createProfileTable();
-    console.log('Table profile created successfully');
-    await this.createCartTable();
-    console.log('Table cart created successfully');
-    await this.createCartItemsTable();
-    console.log('Table cart_items created successfully');
-    await this.createOrderTable();
-    console.log('Table orders created successfully');
-    await this.createOrderItemsTable();
-    console.log('Table order_items created successfully');
+    try {
+      await this.dbConnection.on('connection', (conn) =>
+        console.log('Connected')
+      );
+      console.log('Migrate DB');
+      await this.createRoleTable();
+      console.log('Role table created successfully');
+      await this.createUserTable();
+      console.log('Users table created successfully');
+      await this.createBoxTable();
+      console.log('Table boxes created successfully');
+      await this.createDecorationTable();
+      console.log('Table decorations created successfully');
+      await this.createColorTable();
+      console.log('Table colors created successfully');
+      await this.createBoxDecorationTable();
+      console.log('Table box_decorations created successfully');
+      await this.createBoxColorTable();
+      console.log('Table box_colors created successfully');
+      await this.createAddressTable();
+      console.log('Table address created successfully');
+      await this.createProfileTable();
+      console.log('Table profile created successfully');
+      await this.createCartTable();
+      console.log('Table cart created successfully');
+      await this.createCartItemsTable();
+      console.log('Table cart_items created successfully');
+      await this.createOrderTable();
+      console.log('Table orders created successfully');
+      await this.createOrderItemsTable();
+      console.log('Table order_items created successfully');
+    } catch (err: any) {
+      console.log(`Cant connect DB: ${err.message}`);
+    }
   }
 
   async createRoleTable() {
