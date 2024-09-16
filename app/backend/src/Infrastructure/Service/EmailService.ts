@@ -25,7 +25,6 @@ export class EmailService implements IEmailService {
   async sendEmail(options: ISendEmailOption): Promise<void> {
     try {
       const { from, subject, to, payloadDataToSend, html } = options;
-      console.log({ options });
       await this.transporter.sendMail({
         from,
         to: to,
@@ -39,7 +38,6 @@ export class EmailService implements IEmailService {
   async sendEmailVerification(options: ISendEmailOption): Promise<void> {
     try {
       const { from, subject, to, payloadDataToSend } = options;
-      console.log({ options });
       await this.sendEmail({
         from,
         to: to,

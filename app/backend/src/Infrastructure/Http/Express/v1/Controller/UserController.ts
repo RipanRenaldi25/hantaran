@@ -88,15 +88,10 @@ export class UserController {
           );
           return;
         }
-        res.status(err.statusCode).json({
-          status: 'Fail',
-          message: `Client Error: ${err.message}`,
-        });
+      } else if (err.name === 'TokenExpiredError') {
+        res.redirect(`${this.configService.get('FRONTEND_URL')}/expired/token`);
       } else {
-        res.status(500).json({
-          status: 'Fail',
-          message: `Server error: ${err.message}`,
-        });
+        res.redirect(`${this.configService.get('FRONTEND_URL')}/verify/error`);
       }
     }
   }
