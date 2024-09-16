@@ -70,17 +70,12 @@
 // export default LandingPage;
 
 import logo from '@/assets/Logo.png';
-import buket from '@/assets/bouquet.jpg';
-import flower from '@/assets/flower.jpg';
-import hand from '@/assets/hand.jpg';
-import weddingBg from '@/assets/wedding-bg.jpg';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 const LandingPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  console.log({ isOpen });
   return (
     <article className="bg-gradient-to-r from-[#FFF7E7] to-white overflow-x-hidden">
       <header className="justify-between items-center md:px-16 md:py-8 px-5 py-2">
@@ -152,39 +147,7 @@ const LandingPage = () => {
           </div>
         </section>
       </header>
-      <section className="px-10 flex justify-between gap-10">
-        <div className="flex-1">
-          <div className="mb-5 text-5xl font-thin">
-            <h1>Hi There</h1>
-            <h1>This is</h1>
-            <h1>~ Hantaran By Joo</h1>
-          </div>
-          <p className="text-sm mb-10">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla
-            corporis repudiandae harum nemo, accusamus consequuntur eius
-            laudantium, explicabo enim ducimus eum repellendus vero suscipit ex
-            provident saepe expedita aliquam labore!
-          </p>
-          <button className="bg-red-700 text-white font-semibold px-6 py-2 rounded-md">
-            Get in touch
-          </button>
-        </div>
-        <div className="relative flex-1 flex">
-          <img src={buket} alt="hero" className="w-[500px] h-[600px] z-40" />
-          <img
-            src={hand}
-            className="absolute z-20 rotate-3 w-[500px] h-[600px]"
-          />
-          <img
-            src={weddingBg}
-            className="w-[500px] h-[600px] absolute z-10 rotate-6"
-          />
-          <img
-            src={flower}
-            className="absolute z-40 size-40 rounded-t-full left-0 -translate-x-1/2 bottom-5 shadow-md "
-          />
-        </div>
-      </section>
+      <Outlet />
     </article>
   );
 };

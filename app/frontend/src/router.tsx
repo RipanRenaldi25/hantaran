@@ -29,11 +29,11 @@ import UserTransactionPage from './page/UserTransactionPage';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />, // LandingPage sebagai parent route
+    element: <LandingPage />,
     children: [
       {
-        path: '', // Path kosong untuk menandakan route default di bawah LandingPage
-        element: <MainPage />, // Halaman utama untuk LandingPage
+        path: '',
+        element: <MainPage />,
       },
       {
         path: 'about',
