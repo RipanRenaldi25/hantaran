@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { CarouselWithHero } from '@/HOC/Carousel/WithHero';
 import { useNavigate } from 'react-router-dom';
 import Love from '@/components/Love';
+import FotoCard from '@/components/FotoCard';
 
 const contents: { src: string; alt: string }[] = [
   {
@@ -83,9 +84,10 @@ export const MainPage = () => {
 
         <CarouselWithHero contents={contents} />
       </section>
-      <section className="flex flex-col gap-2 py-2 items-center bg-white">
-        <h1 className="text-xl font-semibold">Box design</h1>
+      <section className="flex flex-col gap-2 py-2 px-5 items-center bg-white">
+        <h1 className="text-xl font-semibold">Our Teams</h1>
         <Love />
+        <FotoCard image={buket} name="" position="" />
       </section>
     </article>
     // <div className="mainpage relative">

@@ -54,6 +54,7 @@ module.exports = {
         primary2: '#fff',
         secondary2: '#EDDED3',
         buttonColor: '#972628',
+        bluethin: '#EEF3F9',
         cardColor: {
           DEFAULT: '#1B3303',
           button: '#B7F446',
