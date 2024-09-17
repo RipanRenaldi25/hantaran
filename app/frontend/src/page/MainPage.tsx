@@ -72,14 +72,14 @@ export const MainPage = () => {
         </div>
       </section>
       <section
-        className="px-10 flex justify-between gap-10 flex-col sm:flex-row py-5 sm:py-10"
+        className="px-6 flex justify-between gap-10 flex-col sm:flex-row py-5 sm:py-10 "
         id="first"
       >
         <div className="flex-1">
-          <div className="mb-5 text-5xl font-thin md:text-6xl">
-            <h1>Hi There</h1>
+          <div className="mb-5 text-4xl font-thin md:text-6xl ">
+            <h1>Hi There!</h1>
             <h1>This is</h1>
-            <h1>~ Hantaran By Joo</h1>
+            <h1>Hantaran ByJoo~</h1>
           </div>
           <p className="text-sm mb-10 md:text-xl">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla
