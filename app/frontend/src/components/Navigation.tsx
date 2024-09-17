@@ -32,13 +32,15 @@ export const Navigation = ({ navItems }: INavigationProps) => {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem className="flex gap-5">
-                {navItems.map((item: { title: string; href: string }) => (
-                  <NavigationMenuLink asChild key={item?.href}>
-                    <NavLink to={item?.href} className="text-xl">
-                      {item.title}
-                    </NavLink>
-                  </NavigationMenuLink>
-                ))}
+                {navItems.map(
+                  (item: { title: string; href: string }, i: number) => (
+                    <NavigationMenuLink asChild key={`${i}-${item.href}`}>
+                      <NavLink to={item?.href} className="text-xl ">
+                        {item.title}
+                      </NavLink>
+                    </NavigationMenuLink>
+                  )
+                )}
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

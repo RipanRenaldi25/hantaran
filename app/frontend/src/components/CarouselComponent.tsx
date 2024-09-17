@@ -32,11 +32,11 @@ const CarouselComponent = ({ children, plugins }: ICarouselComponentProps) => {
   return (
     <Carousel plugins={plugins} className="mx-10" setApi={setApi}>
       <CarouselContent>{children}</CarouselContent>
-      <div className="flex justify-center gap-1 mt-1 md:hidden">
+      <div className="flex justify-center gap-1 mt-1 md:gap-3 md:mt-3 lg:hidden">
         {Array.from({ length: count }).map((_, i) => (
           <Button
             variant={'ghost'}
-            className={`bg-slate-200 size-2 p-0 rounded-full overflow-hidden ${
+            className={`bg-slate-200 size-2 md:size-4 p-0 rounded-full overflow-hidden ${
               i + 1 === current && 'bg-slate-400'
             }`}
             onClick={() => {
@@ -48,6 +48,10 @@ const CarouselComponent = ({ children, plugins }: ICarouselComponentProps) => {
             }}
           ></Button>
         ))}
+      </div>
+      <div className="hidden lg:block">
+        <CarouselPrevious />
+        <CarouselNext />
       </div>
     </Carousel>
   );
