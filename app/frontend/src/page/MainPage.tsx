@@ -11,6 +11,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import vid1 from '@/assets/vid.mov';
 import weddingSea from '@/assets/wedding-sea.jpg';
 import { cn } from '@/lib/utils';
+import FotoCardv2 from '@/components/FotoCardv2';
+import FotoCardListV2 from '@/components/FotoCardListv2';
 
 const contents: { src: string; alt: string }[] = [
   {
@@ -122,7 +124,48 @@ export const MainPage = () => {
         <h1 className="text-xl font-semibold md:text-3xl">Our Expert Teams</h1>
         <Love />
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:place-items-center md:place-contents-center">
-          <FotoCardList
+          <FotoCardListV2
+            fotoCards={[
+              {
+                image: buket,
+                name: 'John Doe',
+                position: 'Member',
+                description: 'Best worker',
+                instagram: 'www.instagram.com',
+              },
+              {
+                image: hand,
+                name: 'John Doe2',
+                position: 'Member',
+                description: 'Best worker',
+                instagram: 'www.instagram.com',
+                place: 'right',
+              },
+              {
+                image: hand,
+                name: 'John Doe2',
+                position: 'Member',
+                description: 'Best worker',
+                instagram: 'www.instagram.com',
+              },
+              {
+                image: hand,
+                name: 'John Doe2',
+                position: 'Member',
+                description: 'Best worker',
+                instagram: 'www.instagram.com',
+                place: 'right',
+              },
+              {
+                image: hand,
+                name: 'John Doe2',
+                position: 'Member',
+                description: 'Best worker',
+                instagram: 'www.instagram.com',
+              },
+            ]}
+          />
+          {/* <FotoCardList
             fotoCards={[
               { image: buket, name: 'John Doe', position: 'Member' },
               { image: hand, name: 'John Doe2', position: 'Member' },
@@ -130,7 +173,7 @@ export const MainPage = () => {
               { image: hand, name: 'John Doe2', position: 'Member' },
               { image: hand, name: 'John Doe2', position: 'Member' },
             ]}
-          />
+          /> */}
         </div>
       </section>
       <section className="bg-white py-3 px-5 flex flex-col gap-2 items-center md:gap-3">
