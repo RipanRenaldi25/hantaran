@@ -95,7 +95,6 @@ userRouter.post(
   authMiddleware.applyWithRole(['admin', 'user']),
   (req, res) => userController.changeUserPassword(req, res)
 );
-userRouter.get('/:userId', (req, res) => userController.getUserById(req, res));
 userRouter.get(
   '/self/profile',
   authMiddleware.applyWithRole(['user', 'admin']),
@@ -106,6 +105,7 @@ userRouter.get(
   authMiddleware.applyWithRole(['user', 'admin']),
   (req, res) => userController.getUserWithProfile(req, res)
 );
+userRouter.get('/:userId', (req, res) => userController.getUserById(req, res));
 userRouter.get('/:userId/profiles/addresses/', (req, res) =>
   userController.getUserWithProfileAndAddresses(req, res)
 );

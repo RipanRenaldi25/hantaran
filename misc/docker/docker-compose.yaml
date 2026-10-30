@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:8.0
@@ -8,13 +6,15 @@ services:
       - ./volumes:/var/lib/mysql
     env_file:
       - .env.development
+    ports:
+      - 3306:3306
 
-  mysql_prod:
-    image: mysql:8.0
-    container_name: mysql_prod
-    restart: always
-    env_file:
-      - .env.production
+  # mysql_prod:
+  #   image: mysql:8.0
+  #   container_name: mysql_prod
+  #   restart: always
+  #   env_file:
+  #     - .env.production
 
   be_dev:
     build:
@@ -26,26 +26,26 @@ services:
       - mysql
     volumes:
       - ../../app/backend:/app
-      - ../../app/backend/node_modules:/app/node_modules
+      - /app/node_modules
     ports:
       - 5001:5001
     command: npm run start:dev
     env_file:
       - .env.development
 
-  be_prod:
-    build:
-      context: ../../
-      dockerfile: ./misc/docker/Dockerfile
-      target: BE_PROD
-    container_name: be_prod
-    ports:
-      - 5000:5000
-    env_file:
-      - .env.production
-    command: npm run start
-    depends_on:
-      - mysql_prod
+  # be_prod:
+  #   build:
+  #     context: ../../
+  #     dockerfile: ./misc/docker/Dockerfile
+  #     target: BE_PROD
+  #   container_name: be_prod
+  #   ports:
+  #     - 5000:5000
+  #   env_file:
+  #     - .env.production
+  #   command: npm run start
+  #   depends_on:
+  #     - mysql_prod
 
   fe_dev:
     build:
@@ -54,7 +54,7 @@ services:
       target: FE_DEV
     volumes:
       - ../../app/frontend:/app
-      - ../../app/frontend/node_modules:/app/node_modules
+      - /app/node_modules
     command: npm run dev
     env_file:
       - .env.development
@@ -63,17 +63,17 @@ services:
     depends_on:
       - be_dev
 
-  fe_prod:
-    build:
-      context: ../../
-      dockerfile: ./misc/docker/Dockerfile
-      target: FE_PROD
-    depends_on:
-      - be_prod
-    ports:
-      - 8080:80
-    env_file:
-      - .env.production
+  # fe_prod:
+  #   build:
+  #     context: ../../
+  #     dockerfile: ./misc/docker/Dockerfile
+  #     target: FE_PROD
+  #   depends_on:
+  #     - be_prod
+  #   ports:
+  #     - 8080:80
+  #   env_file:
+  #     - .env.production
 
   # ngrok:
   #   image: ngrok/ngrok

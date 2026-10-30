@@ -26,6 +26,21 @@ export class MysqlConnection {
       password: this.configService.get('MYSQL_ROOT_PASSWORD') || 'root',
       database: this.configService.get('MYSQL_DB') || 'hantaran',
     });
+
+    this.checkConnection().then(conn => console.log(conn)).catch(err => console.log(err));
+
     return MysqlConnection.pool;
+  }
+
+  async checkConnection() {
+    try{
+      const conn = await this.getPool().getConnection();
+      await conn.ping();
+      conn.release();
+      console.log("Database connection successful");
+    }catch(err) {
+      console.log("Database connection failed");
+      console.log(err);
+    }
   }
 }

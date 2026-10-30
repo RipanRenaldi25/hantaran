@@ -18,7 +18,7 @@ const Register = () => {
   }>({ username: '', email: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-  const [isEmailsend, setIsEmailSend] = useState<boolean>(true);
+  const [isEmailsend, setIsEmailSend] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const validatePassword = (password: string) => {

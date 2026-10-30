@@ -1,4 +1,5 @@
-import { Pool } from 'mysql2/promise';
+import { Pool, RowDataPacket } from 'mysql2/promise';
+import bcrypt from "bcryptjs"
 
 export class SeedService {
   private readonly dbConnection;
@@ -38,8 +39,12 @@ export class SeedService {
       console.log('Table orders created successfully');
       await this.createOrderItemsTable();
       console.log('Table order_items created successfully');
+      await this.initRoles();
+      console.log('Roles initialized successfully');
+      await this.initAdminUser();
+      console.log('Admin user initialized successfully');
     } catch (err: any) {
-      console.log(`Cant connect DB: ${err.message}`);
+      console.log(`Cant connect DB: ${err}`);
     }
   }
 
@@ -238,5 +243,50 @@ export class SeedService {
       CONSTRAINT order_items_quantity_check CHECK(quantity > 0)
   )`;
     await this.dbConnection.query(query);
+  }
+
+  async initRoles() {
+    interface roleRow extends RowDataPacket {
+      id: string;
+      role: string;
+    }
+    const [allRoles] = await this.dbConnection.query<roleRow[]>("SELECT * FROM roles");
+    if(allRoles.length > 0) {
+      console.log("Roles Already Exists");
+      return;
+    }
+    const roles = ["admin", "user"];
+    let id = '1';
+    for(const role of roles) {
+      const query = `INSERT INTO roles (id, name) VALUES (?, ?)`;
+      await this.dbConnection.query(query, [id, role]);
+      id = '2';
+    }
+  }
+
+  async initAdminUser() {
+    interface userRow extends RowDataPacket {
+      id: string;
+      username: string;
+      email: string;
+      password: string;
+      role: string;
+      is_verified: boolean;
+      created_at: Date;
+      updated_at: Date
+    }
+    const id = crypto.randomUUID();
+    const username = "admin";
+    const email = "admin@example.com";
+    const password = await bcrypt.hash(process.env.ADMIN_PASSWORD || "admin123", 10);
+    const role = "1";
+    const [result] = await this.dbConnection.query<userRow[]>("SELECT * FROM users WHERE username = ?", [username]);
+    if(result.length > 0){
+      console.log("admin already exists");
+      return;
+    }
+    const is_verified = true;
+    const query = `INSERT INTO users (id, username, email, password, role, is_verified) VALUES (?, ?, ?, ?, ?, ?)`;
+    await this.dbConnection.query(query, [id, username, email, password, role, is_verified]);
   }
 }

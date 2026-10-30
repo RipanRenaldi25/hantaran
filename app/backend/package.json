@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:watch": "jest --watchAll",
-    "start:dev": "nodemon",
+    "start:dev": "nodemon -L ./src/index.ts",
     "start": "node ./index.js",
     "test:cov:": "jest --coverage",
     "build": "tsc",
@@ -41,7 +41,7 @@
     "@types/cors": "^2.8.17",
     "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
+    "cors": "^2.8.5", 
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "joi": "^17.13.3",

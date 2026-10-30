@@ -17,8 +17,9 @@ import profileRouter from './Infrastructure/Http/Express/v1/Router/ProfileRouter
 import cartRouter from './Infrastructure/Http/Express/v1/Router/CartRouter';
 import orderRouter from './Infrastructure/Http/Express/v1/Router/OrderRouter';
 
+const configService = ConfigService.getInstance();
 const mysqlConnection = MysqlConnection.getInstance(
-  ConfigService.getInstance()
+  configService
 );
 const seedService = new SeedService(mysqlConnection.getPool());
 
@@ -28,7 +29,7 @@ const init = async () => {
       ? require('./swagger.json')
       : require('../swagger.json');
   const port =
-    process.env.NODE_ENV === 'production' ? 5000 : +process.env.BE_PORT!;
+    process.env.NODE_ENV === 'production' ? 5000 : Number(configService.get("BE_PORT"));
   await seedService.initDB();
 
   const app = express();
