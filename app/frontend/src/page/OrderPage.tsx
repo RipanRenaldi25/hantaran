@@ -81,8 +81,8 @@ const OrderPage = () => {
       setBillerKey(order.billerKey);
     }
     if (order?.vaNumbers?.length > 0) {
-      const [vaNumber] = order?.vaNumbers;
-      setVaNumber(vaNumber.va_number);
+      const [vaNumber] = order?.vaNumbers || [];
+      setVaNumber(vaNumber?.va_number);
     }
     const payloadToSend = {
       orderId: order.id,

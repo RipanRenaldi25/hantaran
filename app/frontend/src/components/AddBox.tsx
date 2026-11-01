@@ -10,8 +10,6 @@ import { CloudUpload } from 'lucide-react';
 import ButtonLoading from './ButtonLoading';
 import { Input } from './ui/input';
 import { useToast } from './ui/use-toast';
-import { useAppDispatch } from '@/states';
-import { addOnlyBoxes, setBox } from '@/states/BoxState';
 export interface IAddBox {
   handleAddProduct: any;
   colors: IColor[];
@@ -121,63 +119,60 @@ const AddBox = ({
                   className="hidden"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-600">
-                  Nama Box
-                </label>
-                <input
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-bold mb-2">Nama Box</label>
+                <Input
                   type="text"
+                  name="name"
+                  placeholder="Nama Box"
                   value={newBox.name}
-                  name={'name'}
                   onChange={(e) =>
                     setNewBox((prevValue) => ({
                       ...prevValue,
                       [e.target.name]: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring focus:ring-teal-500 focus:outline-none"
-                  placeholder="Enter product name"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-600">
-                  Harga Box
-                </label>
-                <input
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-bold mb-2">Harga</label>
+                <Input
                   type="number"
-                  value={newBox.price === 0 ? '' : newBox.price}
-                  name={'price'}
+                  name="price"
+                  placeholder="Harga"
+                  value={newBox.price}
                   onChange={(e) =>
                     setNewBox((prevValue) => ({
                       ...prevValue,
-                      [e.target.name]: +e.target.value,
+                      [e.target.name]: Number(e.target.value),
                     }))
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring focus:ring-teal-500 focus:outline-none"
-                  placeholder="Enter product name"
                 />
               </div>
-              <ColorPicker
-                colors={colors}
-                setColors={setColors}
-                availableColors={availableColors}
-                setAvailableColors={setAvailableColors}
-              />
-              <DecorationSelector
-                decorations={decorations}
-                setDecorations={setDecorations}
-                availableDecorations={availableDecorations}
-                setAvailableDecorations={setAvailableDecorations}
-              />
-              <Button
-                type="submit"
-                className={`mt-5 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition duration-300 flex gap-2 ${
-                  isLoading && 'bg-green-300'
-                }`}
-                disabled={isLoading}
-              >
-                {<ButtonLoading isLoading={isLoading} />}Tambah
-              </Button>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-bold mb-2">Warna</label>
+                <ColorPicker
+                  availableColors={availableColors}
+                  colors={colors}
+                  setColors={setColors}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-bold mb-2">Dekorasi</label>
+                <DecorationSelector
+                  decorations={decorations}
+                  setDecorations={setDecorations}
+                  availableDecorations={availableDecorations}
+                />
+              </div>
+
+              {isLoading ? (
+                <ButtonLoading isLoading={true} />
+              ) : (
+                <Button className="mt-5 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                  Tambah Box
+                </Button>
+              )}
             </form>
           </div>
         </div>

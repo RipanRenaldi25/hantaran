@@ -4,11 +4,7 @@ import axios from 'axios';
 export const getBoxes = async (
   page?: number,
   size?: number
-): Promise<{
-  boxes: IBox[];
-  page: number;
-  total: number;
-}> => {
+): Promise<IBoxesResponse> => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_API_BASE_URL}/boxes?page=${page || 1}&size=${
@@ -17,7 +13,7 @@ export const getBoxes = async (
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-        },
+        }
       }
     );
     const { data } = response.data;
@@ -40,7 +36,7 @@ export const getBoxesWithColorAndDecoration = async () => {
     const { data } = response.data;
     return data;
   } catch (err) {
-    return { boxes: [], page: 0, total: 0 } as IBoxesResponse;
+    return { boxes: [], page: 0, total: 0 };
   }
 };
 

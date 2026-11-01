@@ -5,7 +5,7 @@ export interface IColorPicker {
   colors: IColor[];
   setColors: any;
   availableColors: IColor[];
-  setAvailableColors: any;
+  setAvailableColors?: any;
   setDeletedColors?: any;
   deletedColors?: IColor[];
 }

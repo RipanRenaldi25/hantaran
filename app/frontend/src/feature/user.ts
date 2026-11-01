@@ -60,7 +60,7 @@ export const register = async (payload: {
     } = response;
     return data as { registeredUserId: { id: string } };
   } catch (err) {
-    console.log({ err });
+    console.log({ errFromAPI: err });
     throw new Error(
       (err as { response: { data: { message: string } } }).response.data.message
     );

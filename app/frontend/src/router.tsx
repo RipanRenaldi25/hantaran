@@ -23,15 +23,20 @@ import UserDashboard from './page/UserDashboard';
 import UserTransactionPage from './page/UserTransactionPage';
 import ActivateEmail from './components/ActivateEmail';
 import ActivatedEmail from './components/ActivatedEmail';
+import EmailVerificationPage from './page/EmailVerificationPage';
 
 export const router = createBrowserRouter([
+  {
+    path: "/verify-email",
+    element: <EmailVerificationPage />
+  },
   {
     path: '/',
     element: <LandingPage />, // LandingPage sebagai parent route
     children: [
       {
-        path: '', // Path kosong untuk menandakan route default di bawah LandingPage
-        element: <MainPage />, // Halaman utama untuk LandingPage
+        path: '', 
+        element: <MainPage />, 
       },
       {
         path: 'about',

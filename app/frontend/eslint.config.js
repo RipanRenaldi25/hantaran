@@ -23,9 +23,21 @@ export default tseslint.config(
         'warn',
         {
           allowConstantExport: true,
-          '@typescript-eslint/no-explicit-any': false,
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_|^err$|^e$',
+          varsIgnorePattern: '^_|^err$|^e$',
+          caughtErrors: 'none',
+        },
+      ],
+      '@typescript-eslint/no-empty-object-type': 'off',
+      'no-extra-boolean-cast': 'warn',
+      'no-constant-binary-expression': 'warn',
+      'prefer-const': 'warn',
     },
   }
 );

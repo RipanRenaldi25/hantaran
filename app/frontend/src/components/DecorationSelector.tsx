@@ -1,11 +1,11 @@
 import { IDecoration } from '@/states/interface';
 import { Button } from './ui/button';
 
-export interface IColorPicker {
+export interface IDecorationSelector {
   decorations: IDecoration[];
   setDecorations: any;
   availableDecorations: IDecoration[];
-  setAvailableDecorations: any;
+  setAvailableDecorations?: any;
   deletedDecoration?: IDecoration[];
   setDeletedDecoration?: any;
 }
@@ -16,7 +16,7 @@ const DecorationSelector = ({
   availableDecorations,
   setDeletedDecoration,
   deletedDecoration = [],
-}: IColorPicker) => {
+}: IDecorationSelector) => {
   const handleDecorationChange = (decoration: IDecoration) => {
     console.log({ decoration });
     const isDecorationExists = decorations.some(
@@ -99,7 +99,7 @@ const DecorationSelector = ({
               key={decoration.id}
               onClick={() => handleDecorationChange(decoration)}
               className={`px-4 py-2 rounded-lg text-sm border ${
-                decorations.some((decor) => decor.name === decoration.name)
+                decorations.some((decor: IDecoration) => decor.name === decoration.name)
                   ? 'bg-teal-500 text-white'
                   : 'bg-white text-teal-500 border-teal-500'
               } hover:bg-teal-600 hover:text-white`}

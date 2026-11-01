@@ -57,6 +57,7 @@ export class UserController {
           message: `Client Error ${err.message}`,
         });
       } else {
+        console.log({err});
         res.status(500).json({
           status: 'Fail',
           message: `Server error ${err.message}`,
@@ -75,11 +76,7 @@ export class UserController {
         token as string
       );
       console.log({ verifiedUser });
-      res.status(200).json({
-        status: 'Success',
-        message: `User verified`,
-        data: verifiedUser,
-      });
+      res.redirect(`${this.configService.get('FE_BASE_URL')}/verify-email?status=success`);
     } catch (err: any) {
       if (err instanceof ClientError) {
         if (err.message.toLowerCase().includes('verified')) {

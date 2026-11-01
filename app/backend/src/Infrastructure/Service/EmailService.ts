@@ -35,6 +35,7 @@ export class EmailService implements IEmailService {
       console.log({ err });
     }
   }
+  
   async sendEmailVerification(options: ISendEmailOption): Promise<void> {
     try {
       const { from, subject, to, payloadDataToSend } = options;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '../components/ui/button';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Check, CircleX, Eye, MailCheck } from 'lucide-react';
 
 import { useToast } from '@/components/ui/use-toast';
@@ -20,6 +20,8 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const [isEmailsend, setIsEmailSend] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const validatePassword = (password: string) => {
     let isValid = true;
@@ -62,14 +64,25 @@ const Register = () => {
       return;
     }
     setIsLoading(true);
-    await register({ ...registerField });
-    setIsEmailSend(true);
-    setRegisterField(() => ({
+    try{
+      await register({ ...registerField });
+      setIsEmailSend(true);
+      setRegisterField(() => ({
       email: '',
       password: '',
       username: '',
-    }));
-    setIsLoading(false);
+      }));
+      navigate("/")
+    }catch(err) {
+      console.log({err});
+      toast({
+        title: "Register Error",
+        description: `Failed to register, please try again: ${(err as Error).message}`,
+        variant: "destructive",
+      })
+    }finally {
+      setIsLoading(false)
+    }
   };
 
   const onInputChangeHandler = (

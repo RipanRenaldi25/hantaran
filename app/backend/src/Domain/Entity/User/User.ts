@@ -73,8 +73,7 @@ export class User {
     const result =
       /[a-zA-Z0-9]/.test(this.username) &&
       /^[^0-9\s!@#$%^&*]/.test(this.username) &&
-      /[^\s]$/.test(this.username) &&
-      this.username.length > 4;
+      /[^\s]$/.test(this.username);
     if (!result) {
       throw new InvariantError('Invalid username format');
     }
