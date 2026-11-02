@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '../components/ui/button';
+import { ArrowRight, Check, Eye, EyeOff, IdCard, Mail } from 'lucide-react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Check, CircleX, Eye, MailCheck } from 'lucide-react';
+import { Button } from '../components/ui/button';
 
-import { useToast } from '@/components/ui/use-toast';
-import InputField from '../components/InputField';
-import { register } from '@/feature/user';
 import ButtonLoading from '@/components/ButtonLoading';
+import { useToast } from '@/components/ui/use-toast';
+import { register } from '@/feature/user';
+import InputField from '../components/InputField';
+import { PasswordHint } from '@/components/PasswordHint';
 
 const Register = () => {
   const { toast } = useToast();
@@ -18,28 +19,9 @@ const Register = () => {
   }>({ username: '', email: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-  const [isEmailsend, setIsEmailSend] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
-
-  const validatePassword = (password: string) => {
-    let isValid = true;
-
-    if (password.length < 8) {
-      isValid = false;
-    }
-    if (
-      !/(?=.*[0-9])/.test(password) ||
-      !/(?=.*[!@#$%^&*])/.test(password) ||
-      !/(?=.*[a-z])/.test(password) ||
-      !/(?=.*[A-Z])/.test(password)
-    ) {
-      isValid = false;
-    }
-
-    setIsPasswordValid(isValid);
-  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +34,7 @@ const Register = () => {
         title: 'Register Error',
         description: 'username, email, and password is required',
         variant: 'destructive',
+        duration: 2000,
       });
       return;
     }
@@ -66,7 +49,6 @@ const Register = () => {
     setIsLoading(true);
     try {
       await register({ ...registerField });
-      setIsEmailSend(true);
       const email = registerField.email;
       setRegisterField(() => ({
         email: '',
@@ -93,70 +75,20 @@ const Register = () => {
     setRegisterField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
   return (
-    <article>
-      {isEmailsend && (
-        <>
-          <div
-            className='fixed inset-0 bg-black bg-opacity-60 z-10 hover:cursor-pointer'
-            onClick={() => setIsEmailSend(false)}
-          ></div>
-          <section
-            className={`bg-slate-800 min-h-80 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10 rounded-lg flex items-center px-5 py-10 flex-col text-white justify-evenly ${
-              isEmailsend ? 'scale-100' : 'scale-0'
-            } transition-transform transform duration-300`}
-          >
-            <header className='text-center'>
-              <div>
-                <MailCheck size={48} />
-              </div>
-              <Button
-                className='absolute right-8 top-7 bg-transparent'
-                onClick={() => setIsEmailSend(false)}
-              >
-                <CircleX size={28} />
-              </Button>
-            </header>
-            <div className='text-center flex flex-col gap-2'>
-              <h1 className='text-2xl'>Please verify your email</h1>
-              <p className='font-thin text-gray-200'>
-                If your email is valid, we just send an email verification to
-                your email
-              </p>
-            </div>
-            <footer className='flex gap-5 w-full justify-center'>
-              <div>
-                <Button
-                  className='bg-white text-black w-40 hover:bg-black hover:text-white font-bold'
-                  asChild
-                >
-                  <NavLink to='https://www.gmail.com' target='_blank'>
-                    Check Email
-                  </NavLink>
-                </Button>
-              </div>
-              <div>
-                <Button
-                  className='w-40 bg-transparent border hover:text-black font-bold'
-                  asChild
-                >
-                  <NavLink to='/login'>Login</NavLink>
-                </Button>
-              </div>
-            </footer>
-          </section>
-        </>
-      )}
+    <article className='mt-8'>
       <section>
         <form
           className='flex justify-center items-center flex-col relative'
           onSubmit={handleRegister}
         >
           {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
-          <article className='flex flex-col gap-5 shadow-lg border w-1/3 py-12 px-8 rounded-lg'>
-            <h1 className='text-center font-bold text-2xl'>
+          <article className='flex flex-col space-y-4 shadow-lg border w-[90%] md:w-1/3 py-12 px-8 rounded-lg'>
+            <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
               Create an account
             </h1>
-            <p>Enter your information below to create your account</p>
+            <p className='text-center'>
+              Enter your information below to create your account
+            </p>
             <section className='flex flex-col gap-5'>
               <InputField
                 name='username'
@@ -165,7 +97,13 @@ const Register = () => {
                 title='Username'
                 type='text'
                 value={registerField.username}
-              />
+                subtitle='unique'
+              >
+                <span className='absolute right-4 top-1/2 -translate-y-1/2'>
+                  <IdCard className='size-5 opacity-50' />
+                </span>
+              </InputField>
+
               <InputField
                 onInputChangeHandler={onInputChangeHandler}
                 placeholder='doe@gmail.com'
@@ -173,115 +111,81 @@ const Register = () => {
                 type='email'
                 name='email'
                 value={registerField.email}
-              />
-              <div className='flex flex-col gap-2'>
-                <label>Password</label>
-                <div className='relative'>
-                  <Input
-                    type={isShowPassword ? 'text' : 'password'}
-                    placeholder='*********'
-                    onChange={(e) => {
-                      onInputChangeHandler('password', e);
-                      validatePassword(e.target.value);
-                    }}
-                    value={registerField.password}
-                  />
-                  <span className='absolute top-1/2 right-0 -translate-y-1/2'>
-                    <Button
-                      type='button'
-                      className='bg-transparent text-black hover:text-white'
-                      onClick={() => setIsShowPassword(!isShowPassword)}
-                    >
-                      <Eye />
-                    </Button>
-                  </span>
-                </div>
-                <div className={`relative flex justify-between text-slate-400`}>
-                  <span
-                    className={`before:rounded-full before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-3 before:h-2 before:w-2 ${
-                      registerField.password.length < 8
-                        ? 'before:bg-slate-400'
-                        : 'before:bg-black text-black'
-                    }`}
-                  >
-                    Password need to be at least 8 characters
-                  </span>
-                  <Check
-                    className={
-                      registerField.password.length < 8
-                        ? 'text-slate-400'
-                        : 'text-green-600 font-bold'
-                    }
-                  />
-                </div>
-                <div className={`relative flex justify-between text-slate-400`}>
-                  <span
-                    className={`before:rounded-full before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-3 before:h-2 before:w-2 ${
-                      !/(?=.*[0-9])/.test(registerField.password)
-                        ? 'before:bg-slate-400'
-                        : 'before:bg-black text-black'
-                    }`}
-                  >
-                    Password need to be at least has 1 number
-                  </span>
-                  <Check
-                    className={
-                      !/(?=.*[0-9])/.test(registerField.password)
-                        ? 'text-slate-400'
-                        : 'text-green-600 font-bold'
-                    }
-                  />
-                </div>
-                <div className={`relative flex justify-between text-slate-400`}>
-                  <span
-                    className={`before:rounded-full before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-3 before:h-2 before:w-2 ${
-                      !/[!@#$%^&*]+/.test(registerField.password)
-                        ? 'before:bg-slate-400'
-                        : 'before:bg-black text-black'
-                    }`}
-                  >
-                    Password need to be at least has 1 symbol
-                  </span>
-                  <Check
-                    className={
-                      /[!@#$%^&*]+/.test(registerField.password)
-                        ? 'text-green-600 font-bold'
-                        : 'text-slate-400'
-                    }
-                  />
-                </div>
-                <div className={`relative flex justify-between text-slate-400`}>
-                  <span
-                    className={`before:rounded-full before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-3 before:h-2 before:w-2 ${
-                      /(?=.*[A-Z])/.test(registerField.password)
-                        ? 'before:bg-black text-black'
-                        : 'before:bg-slate-400'
-                    }`}
-                  >
-                    Password at least has 1 capital letter
-                  </span>
-                  <Check
-                    className={
-                      !/(?=.*[A-Z])/.test(registerField.password)
-                        ? 'text-slate-400'
-                        : 'text-green-600 font-bold'
-                    }
-                  />
-                </div>
+              >
+                <span className='absolute right-4 top-1/2 -translate-y-1/2'>
+                  <Mail className='size-5 opacity-50' />
+                </span>
+              </InputField>
+
+              <InputField
+                onInputChangeHandler={onInputChangeHandler}
+                placeholder='********'
+                title='Password'
+                type={isShowPassword ? 'text' : 'password'}
+                name='password'
+                value={registerField.password}
+              >
+                <button
+                  type='button'
+                  className='absolute right-4 top-1/2 -translate-y-1/2'
+                  onClick={() => setIsShowPassword((prev) => !prev)}
+                >
+                  {isShowPassword ? (
+                    <EyeOff className='size-5 opacity-80' />
+                  ) : (
+                    <Eye className='size-5 opacity-80' />
+                  )}
+                </button>
+              </InputField>
+
+              <div className='border py-3 px-4 space-y-1.5 rounded-lg border-secondary bg-secondary'>
+                <PasswordHint
+                  title='Password at least 8 characters'
+                  isValid={registerField.password.length >= 8}
+                />
+                <PasswordHint
+                  title='Password contain number'
+                  isValid={/[0-9]/.test(registerField.password)}
+                />
+                <PasswordHint
+                  title='Password contain symbol'
+                  isValid={/[!@#$%^&*(),.?":{}|<>]/.test(
+                    registerField.password,
+                  )}
+                />
+                <PasswordHint
+                  title='Password contain uppercase letter'
+                  isValid={/[A-Z]/.test(registerField.password)}
+                />
               </div>
+
               <div className='flex flex-col gap-2 '>
-                <Button className='flex gap-2' disabled={isLoading}>
+                <Button
+                  className='flex gap-2 rounded-full bg-prime font-semibold '
+                  disabled={isLoading}
+                >
                   <span>
                     <ButtonLoading isLoading={isLoading} />
                   </span>
-                  Register
+                  <span className='tracking-widest'>Register</span>
+                  <span>
+                    <ArrowRight className='size-4' />
+                  </span>
                 </Button>
-                <p>
-                  Already have an account?{' '}
-                  <NavLink to='/login' className='font-bold'>
-                    Login
-                  </NavLink>
-                </p>
+
+                <div className='flex justify-center items-center mt-5'>
+                  <p className='flex items-center justify-center gap-1'>
+                    <span className='flex-1 text-sm'>
+                      Already have an account?
+                    </span>
+                    <NavLink
+                      to='/login'
+                      className='font-bold text-prime border-b border-second hover:border-prime transition-colors duration-300'
+                    >
+                      Login
+                    </NavLink>
+                  </p>
+                </div>
               </div>
             </section>
           </article>

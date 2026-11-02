@@ -6,7 +6,7 @@ export interface IInputField {
   title: string;
   onInputChangeHandler: (
     key: string,
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => void;
   type: string;
   placeholder: string;
@@ -15,6 +15,8 @@ export interface IInputField {
   value: string;
   required?: boolean;
   autoComplete?: string;
+  Icon?: React.ComponentType | null;
+  subtitle?: string;
 }
 
 const InputField = ({
@@ -27,26 +29,40 @@ const InputField = ({
   value = '',
   required = false,
   autoComplete,
+  Icon,
+  subtitle,
 }: IInputField) => {
   const inputId = `input-${name}`;
 
   return (
-    <div className="flex flex-col gap-1.5 w-full">
-      <Label htmlFor={inputId} className="text-xs font-semibold text-foreground">
-        {title} {required && <span className="text-destructive">*</span>}
-      </Label>
-      <Input
-        id={inputId}
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        onChange={(e) => onInputChangeHandler(e.target.name, e)}
-        value={value}
-        required={required}
-        autoComplete={autoComplete}
-        className="min-h-[44px] rounded-xl border-border bg-white text-foreground focus-visible:ring-primary focus-visible:border-primary transition-all text-sm px-3.5"
-      />
-      {children}
+    <div className='flex flex-col gap-1.5 w-full'>
+      <div className='flex items-center justify-between'>
+        <Label
+          htmlFor={inputId}
+          className='text-xs font-semibold text-foreground'
+        >
+          {title} {required && <span className='text-destructive'>*</span>}
+        </Label>
+        {subtitle && (
+          <p className='text-[0.7rem] text-prime opacity-80 tracking-widest'>
+            {subtitle}
+          </p>
+        )}
+      </div>
+      <div className='relative'>
+        <Input
+          id={inputId}
+          type={type}
+          placeholder={placeholder}
+          name={name}
+          onChange={(e) => onInputChangeHandler(e.target.name, e)}
+          value={value}
+          required={required}
+          autoComplete={autoComplete}
+          className={`min-h-[44px] rounded-xl border-border bg-white text-foreground focus-visible:ring-primary focus-visible:border-primary transition-all text-sm px-3.5 relative bg-secondary`}
+        />
+        {children}
+      </div>
     </div>
   );
 };

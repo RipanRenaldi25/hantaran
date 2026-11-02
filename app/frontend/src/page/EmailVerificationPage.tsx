@@ -45,14 +45,14 @@ export default function EmailVerificationPage() {
   const [remaining, setRemaining] = useState(() => getRemainingTime());
   const isDisabled = remaining > 0;
 
-  useEffect(() => {
-    if (!sessionStorage.getItem('expirationTime')) {
-      sessionStorage.setItem(
-        'expirationTime',
-        (+new Date() + 60 * 1000).toString(),
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem('expirationTime')) {
+  //     sessionStorage.setItem(
+  //       'expirationTime',
+  //       (+new Date() + 60 * 1000).toString(),
+  //     );
+  //   }
+  // }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
