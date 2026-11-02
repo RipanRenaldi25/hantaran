@@ -64,30 +64,31 @@ const Register = () => {
       return;
     }
     setIsLoading(true);
-    try{
+    try {
       await register({ ...registerField });
       setIsEmailSend(true);
+      const email = registerField.email;
       setRegisterField(() => ({
-      email: '',
-      password: '',
-      username: '',
+        email: '',
+        password: '',
+        username: '',
       }));
-      navigate("/")
-    }catch(err) {
-      console.log({err});
+      navigate(`/verify-email?progress=1&email=${email}`);
+    } catch (err) {
+      console.log({ err });
       toast({
-        title: "Register Error",
+        title: 'Register Error',
         description: `Failed to register, please try again: ${(err as Error).message}`,
-        variant: "destructive",
-      })
-    }finally {
-      setIsLoading(false)
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onInputChangeHandler = (
     key: string,
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRegisterField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
@@ -96,7 +97,7 @@ const Register = () => {
       {isEmailsend && (
         <>
           <div
-            className="fixed inset-0 bg-black bg-opacity-60 z-10 hover:cursor-pointer"
+            className='fixed inset-0 bg-black bg-opacity-60 z-10 hover:cursor-pointer'
             onClick={() => setIsEmailSend(false)}
           ></div>
           <section
@@ -104,41 +105,41 @@ const Register = () => {
               isEmailsend ? 'scale-100' : 'scale-0'
             } transition-transform transform duration-300`}
           >
-            <header className="text-center">
+            <header className='text-center'>
               <div>
                 <MailCheck size={48} />
               </div>
               <Button
-                className="absolute right-8 top-7 bg-transparent"
+                className='absolute right-8 top-7 bg-transparent'
                 onClick={() => setIsEmailSend(false)}
               >
                 <CircleX size={28} />
               </Button>
             </header>
-            <div className="text-center flex flex-col gap-2">
-              <h1 className="text-2xl">Please verify your email</h1>
-              <p className="font-thin text-gray-200">
+            <div className='text-center flex flex-col gap-2'>
+              <h1 className='text-2xl'>Please verify your email</h1>
+              <p className='font-thin text-gray-200'>
                 If your email is valid, we just send an email verification to
                 your email
               </p>
             </div>
-            <footer className="flex gap-5 w-full justify-center">
+            <footer className='flex gap-5 w-full justify-center'>
               <div>
                 <Button
-                  className="bg-white text-black w-40 hover:bg-black hover:text-white font-bold"
+                  className='bg-white text-black w-40 hover:bg-black hover:text-white font-bold'
                   asChild
                 >
-                  <NavLink to="https://www.gmail.com" target="_blank">
+                  <NavLink to='https://www.gmail.com' target='_blank'>
                     Check Email
                   </NavLink>
                 </Button>
               </div>
               <div>
                 <Button
-                  className="w-40 bg-transparent border hover:text-black font-bold"
+                  className='w-40 bg-transparent border hover:text-black font-bold'
                   asChild
                 >
-                  <NavLink to="/login">Login</NavLink>
+                  <NavLink to='/login'>Login</NavLink>
                 </Button>
               </div>
             </footer>
@@ -147,48 +148,48 @@ const Register = () => {
       )}
       <section>
         <form
-          className="flex justify-center items-center flex-col relative"
+          className='flex justify-center items-center flex-col relative'
           onSubmit={handleRegister}
         >
           {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
-          <article className="flex flex-col gap-5 shadow-lg border w-1/3 py-12 px-8 rounded-lg">
-            <h1 className="text-center font-bold text-2xl">
+          <article className='flex flex-col gap-5 shadow-lg border w-1/3 py-12 px-8 rounded-lg'>
+            <h1 className='text-center font-bold text-2xl'>
               Create an account
             </h1>
             <p>Enter your information below to create your account</p>
-            <section className="flex flex-col gap-5">
+            <section className='flex flex-col gap-5'>
               <InputField
-                name="username"
+                name='username'
                 onInputChangeHandler={onInputChangeHandler}
-                placeholder="John"
-                title="Username"
-                type="text"
+                placeholder='John'
+                title='Username'
+                type='text'
                 value={registerField.username}
               />
               <InputField
                 onInputChangeHandler={onInputChangeHandler}
-                placeholder="doe@gmail.com"
-                title="Email"
-                type="email"
-                name="email"
+                placeholder='doe@gmail.com'
+                title='Email'
+                type='email'
+                name='email'
                 value={registerField.email}
               />
-              <div className="flex flex-col gap-2">
+              <div className='flex flex-col gap-2'>
                 <label>Password</label>
-                <div className="relative">
+                <div className='relative'>
                   <Input
                     type={isShowPassword ? 'text' : 'password'}
-                    placeholder="*********"
+                    placeholder='*********'
                     onChange={(e) => {
                       onInputChangeHandler('password', e);
                       validatePassword(e.target.value);
                     }}
                     value={registerField.password}
                   />
-                  <span className="absolute top-1/2 right-0 -translate-y-1/2">
+                  <span className='absolute top-1/2 right-0 -translate-y-1/2'>
                     <Button
-                      type="button"
-                      className="bg-transparent text-black hover:text-white"
+                      type='button'
+                      className='bg-transparent text-black hover:text-white'
                       onClick={() => setIsShowPassword(!isShowPassword)}
                     >
                       <Eye />
@@ -268,8 +269,8 @@ const Register = () => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-2 ">
-                <Button className="flex gap-2" disabled={isLoading}>
+              <div className='flex flex-col gap-2 '>
+                <Button className='flex gap-2' disabled={isLoading}>
                   <span>
                     <ButtonLoading isLoading={isLoading} />
                   </span>
@@ -277,7 +278,7 @@ const Register = () => {
                 </Button>
                 <p>
                   Already have an account?{' '}
-                  <NavLink to="/login" className="font-bold">
+                  <NavLink to='/login' className='font-bold'>
                     Login
                   </NavLink>
                 </p>
