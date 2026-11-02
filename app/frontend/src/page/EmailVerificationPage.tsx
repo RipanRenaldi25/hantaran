@@ -43,15 +43,16 @@ export default function EmailVerificationPage() {
   };
 
   const [remaining, setRemaining] = useState(() => getRemainingTime());
+  const isDisabled = remaining > 0;
 
-  // useEffect(() => {
-  //   if (!sessionStorage.getItem('expirationTime')) {
-  //     sessionStorage.setItem(
-  //       'expirationTime',
-  //       (+new Date() + 60 * 1000).toString(),
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!sessionStorage.getItem('expirationTime')) {
+      sessionStorage.setItem(
+        'expirationTime',
+        (+new Date() + 60 * 1000).toString(),
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -137,8 +138,9 @@ export default function EmailVerificationPage() {
           </p>
           <div className='border-t-2 mt-2'>
             <button
-              className='w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full'
+              className={`w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full ${isDisabled && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
               type='button'
+              disabled={isDisabled}
             >
               <RefreshCcw />
               <h1 className='text-sm tracking-widest'>Kirim Ulang Tautan</h1>
