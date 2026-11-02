@@ -39,7 +39,7 @@ const InputField = ({
       <div className='flex items-center justify-between'>
         <Label
           htmlFor={inputId}
-          className='text-xs font-semibold text-foreground'
+          className='text-xs font-semibold text-foreground md:text-base'
         >
           {title} {required && <span className='text-destructive'>*</span>}
         </Label>

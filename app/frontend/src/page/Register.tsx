@@ -1,5 +1,13 @@
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Check, Eye, EyeOff, IdCard, Mail } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  Eye,
+  EyeOff,
+  IdCard,
+  Mail,
+  Sparkles,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -82,7 +90,8 @@ const Register = () => {
           onSubmit={handleRegister}
         >
           {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
-          <article className='flex flex-col space-y-4 shadow-lg border w-[90%] md:w-1/3 py-12 px-8 rounded-lg'>
+          <article className='flex flex-col space-y-4 shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-screen-sm'>
+            <Sparkles className='mx-auto text-prime' />
             <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
               Create an account
             </h1>
@@ -97,7 +106,6 @@ const Register = () => {
                 title='Username'
                 type='text'
                 value={registerField.username}
-                subtitle='unique'
               >
                 <span className='absolute right-4 top-1/2 -translate-y-1/2'>
                   <IdCard className='size-5 opacity-50' />
