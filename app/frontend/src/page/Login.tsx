@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import InputField from '@/components/InputField';
 import { getUserLogedin, login } from '@/feature/user';
@@ -65,15 +65,17 @@ const Login = () => {
         className='flex items-center flex-col relative'
         onSubmit={handleLogin}
       >
-        <article className='flex flex-col shadow-lg w-[90%] md:w-[75%] py-12 px-6 border rounded-lg'>
+        <article className='flex flex-col shadow-lg w-[90%] sm:w-[70%] lg:max-w-screen-sm py-12 px-6 border rounded-lg'>
           <div className='space-y-3'>
             <div className='text-center h-0.5 w-10 bg-tertiary mx-auto'></div>
-            <p className='text-sm text-center m-0 p-0 text-prime'>
+            <p className='text-sm text-center m-0 p-0 text-prime lg:text-lg'>
               CEREMONIAL TRAY
             </p>
           </div>
-          <h1 className='text-center font-bold text-2xl'>Masuk ke Akun</h1>
-          <p className='text-center text-[0.7rem] text-black/50 mt-2 mb-3'>
+          <h1 className='text-center font-bold text-2xl lg:text-3xl'>
+            Masuk ke Akun
+          </h1>
+          <p className='text-center text-[0.7rem] text-black/50 mt-2 mb-3 lg:text-base'>
             Masukkan username atau email dan kata sandi Anda untuk melanjutkan
             kurasi seserahan.
           </p>
@@ -96,7 +98,7 @@ const Login = () => {
               subtitle={
                 <button
                   type='button'
-                  className='text-prime text-[0.55rem] border-b border-primary font-semibold'
+                  className='text-prime text-[0.55rem] lg:text-sm border-b border-primary font-semibold'
                   onClick={() => navigate('/forgot-password')}
                 >
                   Lupa Sandi?
@@ -120,11 +122,14 @@ const Login = () => {
 
             <Button
               type='submit'
-              className='rounded-full bg-prime hover:bg-primary'
+              className='rounded-full bg-prime hover:bg-primary lg:text-lg tracking-widest'
             >
               Masuk
+              <span>
+                <ArrowRight className='size-4 ml-2 lg:size-5' />
+              </span>
             </Button>
-            <p className='text-sm text-center '>
+            <p className='text-sm text-center lg:text-base'>
               Belum Punya Akun?{' '}
               <NavLink to='/register' className='font-bold text-prime '>
                 Daftar Sekarang
