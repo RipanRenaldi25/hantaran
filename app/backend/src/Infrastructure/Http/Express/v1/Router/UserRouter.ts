@@ -20,10 +20,11 @@ import { GetUserByIdUsecase } from '../../../../../Application/Usecase/User/GetU
 import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/GetUserLoginUsecase';
 import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetUserWithProfileUsecase';
 import { GetUserWithProfileAndAddressUsecase } from '../../../../../Application/Usecase/User/GetUserWithProfileAndAddressUsecase';
+import { ResendEmailVerificationUsecase } from '../../../../../Application/Usecase/User/ResendEmailVerificationUsecase';
 
 // REPOSITORY
 const userRepository = new UserRepository(
-  MysqlConnection.getInstance(ConfigService.getInstance()).getPool()
+  MysqlConnection.getInstance(ConfigService.getInstance()).getPool(),
 );
 
 // SERVICES
@@ -39,25 +40,25 @@ const registerUsecase = new CreateUserUsecase(
   ConfigService.getInstance(),
   passwordHashService,
   jwtService,
-  v4
+  v4,
 );
 
 const verifyUsecase = new VerifyUsecase(
   userRepository,
   jwtService,
-  ConfigService.getInstance()
+  ConfigService.getInstance(),
 );
 
 const loginUsecase = new LoginUsecase(
   userRepository,
   passwordHashService,
   jwtService,
-  ConfigService.getInstance()
+  ConfigService.getInstance(),
 );
 
 const updatePasswordUsecase = new UpdatePasswordUsecase(
   userRepository,
-  passwordHashService
+  passwordHashService,
 );
 
 const getUserByIdUsecase = new GetUserByIdUsecase(userRepository);
@@ -65,6 +66,12 @@ const getUserLoginUsecase = new GetUserLoginUsecase(userRepository);
 const getUserWithProfileUsecase = new getUserWithProfile(userRepository);
 const getUserWithProfileAndAddressUsecase =
   new GetUserWithProfileAndAddressUsecase(userRepository);
+
+const resendEmailVerificationUsecase = new ResendEmailVerificationUsecase(
+  emailService,
+  ConfigService.getInstance(),
+  jwtService,
+);
 
 // CONTROLLER
 const userController = new UserController(
@@ -76,13 +83,14 @@ const userController = new UserController(
   getUserLoginUsecase,
   ConfigService.getInstance(),
   getUserWithProfileUsecase,
-  getUserWithProfileAndAddressUsecase
+  getUserWithProfileAndAddressUsecase,
+  resendEmailVerificationUsecase,
 );
 
 // MIDLEWARE
 const authMiddleware = AuthMiddleware.getInstance(
   jwtService,
-  ConfigService.getInstance()
+  ConfigService.getInstance(),
 );
 
 const userRouter = express.Router();
@@ -90,24 +98,27 @@ userRouter.get('/', (req, res) => res.send('ok'));
 userRouter.post('/register', (req, res) => userController.register(req, res));
 userRouter.get('/verify', (req, res) => userController.verify(req, res));
 userRouter.post('/login', (req, res) => userController.login(req, res));
+userRouter.post('/resend-verification', (req, res) =>
+  userController.resendEmailVerification(req, res),
+);
 userRouter.post(
   '/password/',
   authMiddleware.applyWithRole(['admin', 'user']),
-  (req, res) => userController.changeUserPassword(req, res)
+  (req, res) => userController.changeUserPassword(req, res),
 );
 userRouter.get(
   '/self/profile',
   authMiddleware.applyWithRole(['user', 'admin']),
-  (req, res) => userController.getUserLogin(req, res)
+  (req, res) => userController.getUserLogin(req, res),
 );
 userRouter.get(
   '/self/profiles/',
   authMiddleware.applyWithRole(['user', 'admin']),
-  (req, res) => userController.getUserWithProfile(req, res)
+  (req, res) => userController.getUserWithProfile(req, res),
 );
 userRouter.get('/:userId', (req, res) => userController.getUserById(req, res));
 userRouter.get('/:userId/profiles/addresses/', (req, res) =>
-  userController.getUserWithProfileAndAddresses(req, res)
+  userController.getUserWithProfileAndAddresses(req, res),
 );
 
 export default userRouter;

@@ -37,28 +37,31 @@ export default function EmailVerificationPage() {
     const currentTime = +new Date();
     const remainingTime = Math.floor((expirationTime - currentTime) / 1000);
     if (remainingTime <= 0) {
-      sessionStorage.removeItem('expirationTime');
+      return 0;
     }
     return remainingTime;
   };
 
   const [remaining, setRemaining] = useState(() => getRemainingTime());
   const isDisabled = remaining > 0;
+  function initTimer() {
+    sessionStorage.setItem(
+      'expirationTime',
+      (+new Date() + 60 * 1000).toString(),
+    );
+    setRemaining(60);
+  }
 
-  // useEffect(() => {
-  //   if (!sessionStorage.getItem('expirationTime')) {
-  //     sessionStorage.setItem(
-  //       'expirationTime',
-  //       (+new Date() + 60 * 1000).toString(),
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!sessionStorage.getItem('expirationTime')) {
+      initTimer();
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
       const remainingTime = getRemainingTime();
       setRemaining(remainingTime);
-      sessionStorage.setItem('remainingTime', remainingTime.toString());
       if (remainingTime <= 0) {
         clearInterval(timer);
       }
@@ -66,6 +69,15 @@ export default function EmailVerificationPage() {
 
     return () => clearInterval(timer);
   }, []);
+
+  const resendVerificationEmail = () => {
+    console.log('test');
+    const remainingTime = getRemainingTime();
+    if (remainingTime > 0) {
+      return;
+    }
+    initTimer();
+  };
 
   return (
     <article className='bg-gradient-to-b from-secondary via-white to-secondary  min-h-screen relative'>
@@ -141,8 +153,9 @@ export default function EmailVerificationPage() {
               className={`w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full ${isDisabled && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
               type='button'
               disabled={isDisabled}
+              onClick={resendVerificationEmail}
             >
-              <RefreshCcw />
+              <RefreshCcw className={`${isDisabled && 'animate-spin-slow'}`} />
               <h1 className='text-sm tracking-widest'>Kirim Ulang Tautan</h1>
             </button>
           </div>

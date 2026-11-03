@@ -22,6 +22,26 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  const validatePassword = (password: string) => {
+    const isValid =
+      /[0-9]/.test(password) &&
+      /!@#$%^&*()/.test(password) &&
+      /[A-Z]/.test(password) &&
+      password.length >= 8;
+    const isContainNumber = /[0-9]/.test(password);
+    const isContainSymbol = /[!@#$%^&*()]/.test(password);
+    const isContainUppercase = /[A-Z]/.test(password);
+    const isContainLowercase = /[a-z]/.test(password);
+    console.log({
+      isValid,
+      isContainNumber,
+      isContainSymbol,
+      isContainUppercase,
+      isContainLowercase,
+    });
+    return isValid;
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
@@ -37,7 +57,7 @@ const Register = () => {
       });
       return;
     }
-    if (!isPasswordValid) {
+    if (validatePassword(registerField.password)) {
       toast({
         title: 'Password Error',
         description: 'Please make sure your password is correct',

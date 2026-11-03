@@ -11,24 +11,20 @@ import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/Get
 import { IConfigService } from '../../../../../Application/Service';
 import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetUserWithProfileUsecase';
 import { GetUserWithProfileAndAddressUsecase } from '../../../../../Application/Usecase/User/GetUserWithProfileAndAddressUsecase';
+import { ResendEmailVerificationUsecase } from '../../../../../Application/Usecase/User/ResendEmailVerificationUsecase';
 
 export class UserController {
-  private readonly registerUsecase: CreateUserUsecase;
-  private readonly verifyUsecase: VerifyUsecase;
-  private readonly loginUsecase: LoginUsecase;
-  private readonly updateUserUsecase: UpdatePasswordUsecase;
-  private readonly getUserByIdUsecase: GetUserByIdUsecase;
-  private readonly getUserLoginUsecase: GetUserLoginUsecase;
   constructor(
-    registerUsecase: CreateUserUsecase,
-    verifyUsecase: VerifyUsecase,
-    loginUsecase: LoginUsecase,
-    updateUserUsecase: UpdatePasswordUsecase,
-    getUserByIdUsecase: GetUserByIdUsecase,
-    getUserLoginUsecase: GetUserLoginUsecase,
+    private readonly registerUsecase: CreateUserUsecase,
+    private readonly verifyUsecase: VerifyUsecase,
+    private readonly loginUsecase: LoginUsecase,
+    private readonly updateUserUsecase: UpdatePasswordUsecase,
+    private readonly getUserByIdUsecase: GetUserByIdUsecase,
+    private readonly getUserLoginUsecase: GetUserLoginUsecase,
     private readonly configService: IConfigService,
     private readonly getUserWithProfileUsecase: getUserWithProfile,
-    private readonly getUserWithProfileAndAddressUsecase: GetUserWithProfileAndAddressUsecase
+    private readonly getUserWithProfileAndAddressUsecase: GetUserWithProfileAndAddressUsecase,
+    private readonly resendEmailVerificationUsecase: ResendEmailVerificationUsecase,
   ) {
     this.registerUsecase = registerUsecase;
     this.verifyUsecase = verifyUsecase;
@@ -36,6 +32,11 @@ export class UserController {
     this.updateUserUsecase = updateUserUsecase;
     this.getUserByIdUsecase = getUserByIdUsecase;
     this.getUserLoginUsecase = getUserLoginUsecase;
+    this.configService = configService;
+    this.getUserWithProfileUsecase = getUserWithProfileUsecase;
+    this.getUserWithProfileAndAddressUsecase =
+      getUserWithProfileAndAddressUsecase;
+    this.resendEmailVerificationUsecase = resendEmailVerificationUsecase;
   }
   async register(req: Request, res: Response) {
     try {
@@ -57,7 +58,7 @@ export class UserController {
           message: `Client Error ${err.message}`,
         });
       } else {
-        console.log({err});
+        console.log({ err });
         res.status(500).json({
           status: 'Fail',
           message: `Server error ${err.message}`,
@@ -73,15 +74,17 @@ export class UserController {
         throw new AuthorizationError('Token not found');
       }
       const { verifiedUser } = await this.verifyUsecase.execute(
-        token as string
+        token as string,
       );
       console.log({ verifiedUser });
-      res.redirect(`${this.configService.get('FE_BASE_URL')}/verify-email?status=success`);
+      res.redirect(
+        `${this.configService.get('FE_BASE_URL')}/verify-email?status=success`,
+      );
     } catch (err: any) {
       if (err instanceof ClientError) {
         if (err.message.toLowerCase().includes('verified')) {
           res.redirect(
-            `${this.configService.get('FRONTEND_URL')}/activated/email`
+            `${this.configService.get('FRONTEND_URL')}/activated/email`,
           );
           return;
         }
@@ -239,9 +242,8 @@ export class UserController {
       if (!userId) {
         throw new InvariantError('User Id cannot be empty');
       }
-      const user = await this.getUserWithProfileAndAddressUsecase.execute(
-        userId
-      );
+      const user =
+        await this.getUserWithProfileAndAddressUsecase.execute(userId);
       res.status(200).json({
         status: 'Success',
         message: 'User fetched successfully',
@@ -259,6 +261,22 @@ export class UserController {
           message: `Server error: ${err.message}`,
         });
       }
+    }
+  }
+
+  async resendEmailVerification(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      await this.resendEmailVerificationUsecase.execute(email);
+      res.status(200).json({
+        status: 'success',
+        message: 'Email verification sent successfully',
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'Fail',
+        message: `Server error: ${(err as Error).message}`,
+      });
     }
   }
 }

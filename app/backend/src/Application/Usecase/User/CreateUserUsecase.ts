@@ -24,7 +24,7 @@ export class CreateUserUsecase {
     configService: IConfigService,
     passwordHashService: IPasswordHashService,
     jwtService: IJwtService,
-    idGenerator: () => string
+    idGenerator: () => string,
   ) {
     this.userRepository = userRepository;
     this.emailService = emailService;
@@ -36,7 +36,7 @@ export class CreateUserUsecase {
 
   async execute(payload: any) {
     const isEmailAvailable = await this.userRepository.checkAvailableEmail(
-      payload.email
+      payload.email,
     );
     const isUsernameAvailable =
       await this.userRepository.checkAvailableUsername(payload.username);
@@ -54,10 +54,10 @@ export class CreateUserUsecase {
       payload.email,
       payload.password,
       userRole,
-      false
+      false,
     );
     const hashedPassword = await this.passwordHashService.hash(
-      user.getPassword()
+      user.getPassword(),
     );
     user.setPassword(hashedPassword);
     const registeredUserId = await this.userRepository.create(user);
@@ -67,7 +67,7 @@ export class CreateUserUsecase {
         username: user.getUsername(),
       },
       this.configService.get('SECRET_EMAIL_TOKEN') || 'emailtokenrahasia',
-      { expiresIn: 3600 * 8 }
+      { expiresIn: 3600 * 24 },
     );
     await this.emailService.sendEmailVerification({
       to: user.getEmail(),

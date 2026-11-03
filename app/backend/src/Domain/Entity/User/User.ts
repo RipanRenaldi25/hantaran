@@ -9,8 +9,8 @@ export class User {
   private password: string;
   private role: Role;
   private isVerified: boolean;
-  private readonly createdAt: string = new Date().toISOString();
-  private updatedAt: string = new Date().toISOString();
+  private readonly createdAt?: string = new Date().toISOString();
+  private readonly updatedAt?: string = new Date().toISOString();
 
   constructor(
     id: UserId,
@@ -20,7 +20,7 @@ export class User {
     role: Role,
     isVerified: boolean = false,
     createdAt?: string,
-    updatedAt?: string
+    updatedAt?: string,
   ) {
     this.username = username;
     this.email = email;

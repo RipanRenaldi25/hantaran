@@ -10,7 +10,7 @@ export class EmailService implements IEmailService {
   private readonly nodemailModule: typeof nodemailer;
   constructor(
     nodemailModule: typeof nodemailer,
-    configService: IConfigService
+    configService: IConfigService,
   ) {
     this.nodemailModule = nodemailer;
     this.transporter = this.nodemailModule.createTransport({
@@ -35,7 +35,7 @@ export class EmailService implements IEmailService {
       console.log({ err });
     }
   }
-  
+
   async sendEmailVerification(options: ISendEmailOption): Promise<void> {
     try {
       const { from, subject, to, payloadDataToSend } = options;
