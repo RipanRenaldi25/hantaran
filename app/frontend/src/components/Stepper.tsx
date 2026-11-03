@@ -50,7 +50,9 @@ const Stepper = ({ current, steps = defaultSteps }: IStepperProps) => {
                 <div className='size-3 lg:size-5 bg-prime animate-pulse duration-1500 rounded-full'></div>
               )}
               {status === 'upcoming' && step.icon && (
-                <step.icon className='text-white size-4 lg:size-5' />
+                <span className='text-white size-4 lg:size-5'>
+                  <step.icon />
+                </span>
               )}
             </div>
             <p className='text-center text-prime font-semibold tracking-wide text-[0.75rem] mt-1'>

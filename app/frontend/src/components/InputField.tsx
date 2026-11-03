@@ -16,7 +16,7 @@ export interface IInputField {
   required?: boolean;
   autoComplete?: string;
   Icon?: React.ComponentType | null;
-  subtitle?: string;
+  subtitle?: string | null | React.ReactNode;
 }
 
 const InputField = ({

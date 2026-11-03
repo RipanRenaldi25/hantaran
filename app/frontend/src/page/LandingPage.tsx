@@ -60,7 +60,6 @@ function LandingPage() {
       <Toaster />
       <div className='flex flex-col min-h-screen bg-background text-foreground'>
         <Navigation navItems={navItems} />
-
         <div className='flex-1'>
           <Outlet />
         </div>

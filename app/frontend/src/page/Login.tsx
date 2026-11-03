@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { Eye } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import InputField from '@/components/InputField';
 import { getUserLogedin, login } from '@/feature/user';
@@ -55,60 +55,81 @@ const Login = () => {
 
   const onInputChangeHandler = (
     key: string,
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setLoginField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
   return (
-    <div>
+    <div className='mt-4 '>
       <form
-        className="flex items-center flex-col relative"
+        className='flex items-center flex-col relative'
         onSubmit={handleLogin}
       >
-        {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
-        <article className="flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8 min-h-[70vh] border">
-          <h1 className="text-center font-bold text-2xl">Login</h1>
-          <p>Please field information below to login</p>
-          <section className="flex flex-col gap-5">
+        <article className='flex flex-col shadow-lg w-[90%] md:w-[75%] py-12 px-6 border rounded-lg'>
+          <div className='space-y-3'>
+            <div className='text-center h-0.5 w-10 bg-tertiary mx-auto'></div>
+            <p className='text-sm text-center m-0 p-0 text-prime'>
+              CEREMONIAL TRAY
+            </p>
+          </div>
+          <h1 className='text-center font-bold text-2xl'>Masuk ke Akun</h1>
+          <p className='text-center text-[0.7rem] text-black/50 mt-2 mb-3'>
+            Masukkan username atau email dan kata sandi Anda untuk melanjutkan
+            kurasi seserahan.
+          </p>
+          <section className='flex flex-col gap-5'>
             <InputField
-              type="text"
-              name="uniqueIdentity"
-              title="Username or Email"
-              placeholder="Enter your username or email"
+              type='text'
+              name='uniqueIdentity'
+              title='Username / Email'
+              placeholder='Enter your username or email'
               onInputChangeHandler={onInputChangeHandler}
               value={loginField.uniqueIdentity}
             />
-            <div className="flex flex-col gap-2">
-              <label>Password</label>
-              <div className="relative">
-                <Input
-                  type={isShowPassword ? 'text' : 'password'}
-                  placeholder="*********"
-                  onChange={(e) => {
-                    onInputChangeHandler('password', e);
-                  }}
-                />
-                <span className="absolute top-1/2 right-0 -translate-y-1/2">
-                  <Button
-                    type="button"
-                    className="bg-transparent text-black hover:text-white"
-                    onClick={() => setIsShowPassword(!isShowPassword)}
-                  >
-                    <Eye />
-                  </Button>
-                </span>
-              </div>
-            </div>
+            <InputField
+              type={isShowPassword ? 'text' : 'password'}
+              name='password'
+              title='Password'
+              placeholder='Enter your password'
+              onInputChangeHandler={onInputChangeHandler}
+              value={loginField.password}
+              subtitle={
+                <button
+                  type='button'
+                  className='text-prime text-[0.55rem] border-b border-primary font-semibold'
+                  onClick={() => navigate('/forgot-password')}
+                >
+                  Lupa Sandi?
+                </button>
+              }
+            >
+              <span className='absolute top-1/2 right-0 -translate-y-1/2'>
+                <Button
+                  type='button'
+                  className='bg-transparent text-black hover:text-white'
+                  onClick={() => setIsShowPassword((prev) => !prev)}
+                >
+                  {isShowPassword ? (
+                    <EyeOff className='size-5' />
+                  ) : (
+                    <Eye className='size-5' />
+                  )}
+                </Button>
+              </span>
+            </InputField>
 
-            <div className="flex flex-col gap-2 ">
-              <Button>Login</Button>
-              <p>
-                Doesnt have an account?{' '}
-                <NavLink to="/register" className="font-bold">
-                  Register
-                </NavLink>
-              </p>
-            </div>
+            <Button
+              type='submit'
+              className='rounded-full bg-prime hover:bg-primary'
+            >
+              Masuk
+            </Button>
+            <p className='text-sm text-center '>
+              Belum Punya Akun?{' '}
+              <NavLink to='/register' className='font-bold text-prime '>
+                Daftar Sekarang
+              </NavLink>
+            </p>
           </section>
         </article>
       </form>

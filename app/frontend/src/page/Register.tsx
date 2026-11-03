@@ -1,22 +1,13 @@
-import { Input } from '@/components/ui/input';
-import {
-  ArrowRight,
-  Check,
-  Eye,
-  EyeOff,
-  IdCard,
-  Mail,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, IdCard, Mail, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 
 import ButtonLoading from '@/components/ButtonLoading';
+import { PasswordHint } from '@/components/PasswordHint';
 import { useToast } from '@/components/ui/use-toast';
 import { register } from '@/feature/user';
 import InputField from '../components/InputField';
-import { PasswordHint } from '@/components/PasswordHint';
 
 const Register = () => {
   const { toast } = useToast();
@@ -89,8 +80,7 @@ const Register = () => {
           className='flex justify-center items-center flex-col relative'
           onSubmit={handleRegister}
         >
-          {/* <article className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-5 shadow-lg w-1/3 py-12 px-8"> */}
-          <article className='flex flex-col space-y-4 shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-screen-sm'>
+          <article className='flex flex-col space-y-4  shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-screen-sm'>
             <Sparkles className='mx-auto text-prime' />
             <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
               Create an account
