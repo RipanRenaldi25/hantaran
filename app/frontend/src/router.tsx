@@ -24,19 +24,24 @@ import UserTransactionPage from './page/UserTransactionPage';
 import ActivateEmail from './components/ActivateEmail';
 import ActivatedEmail from './components/ActivatedEmail';
 import EmailVerificationPage from './page/EmailVerificationPage';
+import { VerifiedEmailPage } from './page/VerifiedEmailPage';
 
 export const router = createBrowserRouter([
   {
-    path: "/verify-email",
-    element: <EmailVerificationPage />
+    path: '/verify-email',
+    element: <EmailVerificationPage />,
+  },
+  {
+    path: '/verified-email',
+    element: <VerifiedEmailPage />,
   },
   {
     path: '/',
     element: <LandingPage />, // LandingPage sebagai parent route
     children: [
       {
-        path: '', 
-        element: <MainPage />, 
+        path: '',
+        element: <MainPage />,
       },
       {
         path: 'about',

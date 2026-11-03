@@ -1,5 +1,7 @@
 import Stepper from '@/components/Stepper';
+import { useToast } from '@/components/ui/use-toast';
 import { VerifyEmail } from '@/components/VerifyEmail';
+import { resendEmailVerification } from '@/feature/user';
 import {
   ChevronLeft,
   Clock,
@@ -18,9 +20,11 @@ export default function EmailVerificationPage() {
   const navigate = useNavigate();
 
   const progress = Number(searchParams.get('progress')) || 0;
+  const status = searchParams.get('status') || 'pending';
   const email = searchParams.get('email') || '';
 
   const [scrolled, setScrolled] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100);
@@ -40,6 +44,11 @@ export default function EmailVerificationPage() {
       return 0;
     }
     return remainingTime;
+  };
+
+  const resetTimer = () => {
+    sessionStorage.setItem('expirationTime', '0');
+    setRemaining(0);
   };
 
   const [remaining, setRemaining] = useState(() => getRemainingTime());
@@ -68,15 +77,36 @@ export default function EmailVerificationPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [remaining > 0]);
 
-  const resendVerificationEmail = () => {
-    console.log('test');
-    const remainingTime = getRemainingTime();
-    if (remainingTime > 0) {
-      return;
+  const [isResending, setIsResending] = useState(false);
+
+  const resendHandler = async () => {
+    setIsResending(true);
+    try {
+      await resendEmailVerification(email);
+      const remainingTime = getRemainingTime();
+      if (remainingTime > 0) {
+        return;
+      }
+      initTimer();
+      toast({
+        title: 'Verification sent',
+        description: "We've sent a new verification email to your inbox.",
+        duration: 2000,
+      });
+    } catch (err) {
+      toast({
+        title: 'Resend Email Failed',
+        description:
+          'Failed to resend verification email, please try again later.',
+        variant: 'destructive',
+        duration: 2000,
+      });
+      resetTimer();
+    } finally {
+      setIsResending(false);
     }
-    initTimer();
   };
 
   return (
@@ -101,6 +131,7 @@ export default function EmailVerificationPage() {
           <UserRound className='size-4' />
         </button>
       </header>
+
       <div className='md:max-w-screen-sm lg:max-w-screen-lg space-y-4 mx-auto mt-4'>
         <VerifyEmail email={email} />
 
@@ -150,13 +181,15 @@ export default function EmailVerificationPage() {
           </p>
           <div className='border-t-2 mt-2'>
             <button
-              className={`w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full ${isDisabled && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
+              className={`w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full ${(isDisabled || isResending) && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
               type='button'
-              disabled={isDisabled}
-              onClick={resendVerificationEmail}
+              disabled={isDisabled || isResending}
+              onClick={resendHandler}
             >
               <RefreshCcw className={`${isDisabled && 'animate-spin-slow'}`} />
-              <h1 className='text-sm tracking-widest'>Kirim Ulang Tautan</h1>
+              <h1 className='text-sm tracking-widest'>
+                {isResending ? 'Sedang mengirim ulang' : 'Kirim Ulang Tautan'}
+              </h1>
             </button>
           </div>
         </section>

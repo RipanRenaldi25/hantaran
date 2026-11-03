@@ -7,7 +7,7 @@ export const login = async (uniqueIdentity: string, password: string) => {
       {
         uniqueIdentity,
         password,
-      }
+      },
     );
     const {
       data: { data },
@@ -17,7 +17,8 @@ export const login = async (uniqueIdentity: string, password: string) => {
     return data;
   } catch (err) {
     throw new Error(
-      (err as { response: { data: { message: string } } }).response.data.message
+      (err as { response: { data: { message: string } } }).response.data
+        .message,
     );
   }
 };
@@ -30,7 +31,7 @@ export const getUserLogedin = async () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
-      }
+      },
     );
     const {
       data: { data },
@@ -40,7 +41,8 @@ export const getUserLogedin = async () => {
     localStorage.removeItem('ROLE');
     localStorage.removeItem('ACCESS_TOKEN');
     throw new Error(
-      (err as { response: { data: { message: string } } }).response.data.message
+      (err as { response: { data: { message: string } } }).response.data
+        .message,
     );
   }
 };
@@ -53,7 +55,7 @@ export const register = async (payload: {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/users/register`,
-      { ...payload, role: 'user' }
+      { ...payload, role: 'user' },
     );
     const {
       data: { data },
@@ -62,7 +64,8 @@ export const register = async (payload: {
   } catch (err) {
     console.log({ errFromAPI: err });
     throw new Error(
-      (err as { response: { data: { message: string } } }).response.data.message
+      (err as { response: { data: { message: string } } }).response.data
+        .message,
     );
   }
 };
@@ -75,7 +78,7 @@ export const getUserWithProfile = async () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
-      }
+      },
     );
     const { data } = response.data;
     return data;
@@ -112,7 +115,7 @@ export const createProfileWithAddress = async (payload: {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
-      }
+      },
     );
     const { createdProfile } = response.data;
     return createdProfile;
@@ -130,7 +133,7 @@ export const getUserWithProfileAndAddress = async (userId: string) => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
-      }
+      },
     );
     const { data } = response.data;
     return data;
@@ -149,7 +152,7 @@ export const editProfile = async (
     street: string;
     details: string;
     avatar: string;
-  }>
+  }>,
 ) => {
   try {
     const response = await axios.patch(
@@ -159,11 +162,26 @@ export const editProfile = async (
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
-      }
+      },
     );
     const { data } = response.data;
     return data;
   } catch (err) {
     return null;
+  }
+};
+
+export const resendEmailVerification = async (email: string) => {
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/users/resend-verification`,
+      {
+        email,
+      },
+    );
+    return true;
+  } catch (err) {
+    console.log({ err });
+    throw new Error('Failed to resend verification email');
   }
 };

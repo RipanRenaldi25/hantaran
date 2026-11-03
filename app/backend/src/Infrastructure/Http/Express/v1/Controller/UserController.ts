@@ -78,20 +78,20 @@ export class UserController {
       );
       console.log({ verifiedUser });
       res.redirect(
-        `${this.configService.get('FE_BASE_URL')}/verify-email?status=success`,
+        `${this.configService.get('FE_BASE_URL')}/verify-email?status=success&progress=2&email=${verifiedUser.getEmail()}`,
       );
     } catch (err: any) {
       if (err instanceof ClientError) {
         if (err.message.toLowerCase().includes('verified')) {
           res.redirect(
-            `${this.configService.get('FRONTEND_URL')}/activated/email`,
+            `${this.configService.get('FE_BASE_URL')}/verified-email?status=verified&progress=2`,
           );
           return;
         }
       } else if (err.name === 'TokenExpiredError') {
-        res.redirect(`${this.configService.get('FRONTEND_URL')}/expired/token`);
+        res.redirect(`${this.configService.get('FE_BASE_URL')}/expired/token`);
       } else {
-        res.redirect(`${this.configService.get('FRONTEND_URL')}/verify/error`);
+        res.redirect(`${this.configService.get('FE_BASE_URL')}/verify/error`);
       }
     }
   }

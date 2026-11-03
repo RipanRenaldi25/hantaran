@@ -9,7 +9,7 @@ export class VerifyUsecase {
   constructor(
     userRepository: IUserRepository,
     jwtService: IJwtService,
-    configService: IConfigService
+    configService: IConfigService,
   ) {
     this.userRepository = userRepository;
     this.jwtService = jwtService;
@@ -20,15 +20,16 @@ export class VerifyUsecase {
     const { email, username }: { email: string; username: string } =
       await this.jwtService.verifyToken(
         token,
-        this.configService.get('SECRET_EMAIL_TOKEN')
+        this.configService.get('SECRET_EMAIL_TOKEN'),
       );
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {
       throw new NotFoundError('User not found');
     }
     if (user.getIsVerified()) {
+      console.log('User already verified');
       throw new AuthorizationError(
-        'User already verified, please login to proceed'
+        'User already verified, please login to proceed',
       );
     }
     user.setIsVerified(true);
