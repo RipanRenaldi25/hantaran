@@ -208,7 +208,7 @@ export default function EmailVerificationPage() {
               </div>
             </div>
             <div className='p-2 bg-prime text-white rounded-full flex items-center justify-center'>
-              <a href='https://wa.me/628123456789' target='_blank'>
+              <a href='https://wa.me/6282121087879' target='_blank'>
                 <MessageSquareMore className='size-4' />
               </a>
             </div>
