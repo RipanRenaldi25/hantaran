@@ -1,4 +1,7 @@
+import csImage from '@/assets/cs.png';
 import InputField from '@/components/InputField';
+import { INavItems, Navigation } from '@/components/Navigation';
+import { useToast } from '@/components/ui/use-toast';
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,8 +14,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import csImage from '@/assets/cs.png';
-import { useToast } from '@/components/ui/use-toast';
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -58,30 +59,56 @@ export const ForgotPassword = () => {
   };
 
   useEffect(() => {}, []);
+  const [navItems] = useState<INavItems[]>([
+    {
+      title: 'Beranda',
+      href: '/',
+    },
+    {
+      title: 'Koleksi',
+      href: '/collection',
+    },
+    {
+      title: 'Harga',
+      href: '/prices',
+    },
+    {
+      title: 'Tentang Kami',
+      href: '/about',
+    },
+    {
+      title: 'Kontak',
+      href: '/contact',
+    },
+  ]);
+  const isLaptop = window.innerWidth > 860;
   return (
-    <div className='space-y-4 bg-gradient-to-b from-secondary via-white to-secondary  relative h-screen'>
-      <header
-        className={`py-4 px-6 flex items-center justify-between bg-white/70 sticky top-0 backdrop:blur-sm z-10 transition-colors duration-300 `}
-      >
-        <button
-          onClick={() => navigate(-1)}
-          type='button'
-          className='shadow-sm shadow-gray-400 p-1 rounded-full'
+    <div className='space-y-4 bg-gradient-to-b from-secondary via-white to-secondary  relative md:bg-blue-500 h-screen'>
+      {isLaptop ? (
+        <Navigation navItems={navItems} />
+      ) : (
+        <header
+          className={`py-4 px-6 flex items-center justify-between bg-white/70 sticky top-0 backdrop:blur-sm z-10 transition-colors duration-300 `}
         >
-          <ChevronLeft className='size-8 font-bold' />
-        </button>
-        <h1 className='text-primary font-semibold tracking-wider text-lg'>
-          HantaranByJoo
-        </h1>
-        <button
-          onClick={() => navigate('/profile')}
-          className='rounded-full bg-[#6C363F] text-white p-2'
-        >
-          <UserRound className='size-4' />
-        </button>
-      </header>
-
-      <div className='w-[90%] mx-auto space-y-4 md:bg-white md:w-6/12 md:rounded-2xl md:flex md:flex-col md:items-center md:justify-center md:py-6 md:px-8'>
+          <button
+            onClick={() => navigate(-1)}
+            type='button'
+            className='shadow-sm shadow-gray-400 p-1 rounded-full'
+          >
+            <ChevronLeft className='size-8 font-bold' />
+          </button>
+          <h1 className='text-primary font-semibold tracking-wider text-lg'>
+            HantaranByJoo
+          </h1>
+          <button
+            onClick={() => navigate('/profile')}
+            className='rounded-full bg-[#6C363F] text-white p-2'
+          >
+            <UserRound className='size-4' />
+          </button>
+        </header>
+      )}
+      <div className='w-[90%] mx-auto space-y-4 md:bg-white md:w-6/12 md:rounded-2xl md:flex md:flex-col md:items-center md:justify-center md:py-6 md:px-8 '>
         <section className=''>
           <h1 className='text-2xl text-primary font-[400] text-center tracking-wide'>
             Lupa Kata Sandi?
@@ -109,7 +136,7 @@ export const ForgotPassword = () => {
               onInputChangeHandler={onEmailChangeHandler}
               value={email}
             />
-            <p className='text-xs  mt-3 text-prime'>
+            <p className='text-xs mt-3 text-prime lg:text-sm'>
               Petunjuk reset kata sandi akan dikirim ke email tersebut. Mohon
               cek email secara berkala
             </p>
@@ -124,18 +151,18 @@ export const ForgotPassword = () => {
                   <h1>Sedang mengirim tautan</h1>
                 </div>
               ) : (
-                <>
+                <h1 className='flex items-center gap-2 lg:text-base'>
                   Kirim Tautan Pemulihan
                   <span>
                     <ArrowRight className='size-4' />
                   </span>
-                </>
+                </h1>
               )}
             </button>
           </form>
           <section className='flex items-center justify-center text-xs gap-1 mt-3'>
             <ArrowLeft className='size-4' />
-            <div className='flex items-center gap-1'>
+            <div className='flex items-center gap-1 lg:text-sm'>
               <p>Ingat kata sandi anda?</p>
               <Link
                 to='/login'
