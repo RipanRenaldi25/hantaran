@@ -10,128 +10,145 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { createDecoration, getDecorations } from '@/feature/box';
 import { useAppDispatch, useAppSelector } from '@/states';
 import { setAllDecorations, setDecoration } from '@/states/DecorationState';
+import { Ribbon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
 const DecorationPage = () => {
   const { decorations: allDecorations } = useAppSelector(
     (state) => state.decoration
   );
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const [newDecoration, setNewDecoration] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const getAllDecoration = async () => {
     const responseData = await getDecorations();
-    if (!responseData) {
-      return;
+    if (responseData) {
+      dispatch(setAllDecorations(responseData));
     }
-    dispatch(setAllDecorations(responseData));
   };
+
   useEffect(() => {
     getAllDecoration();
   }, []);
-  const [newDecoration, setNewDecoration] = useState<string>('');
-
-  const [isLoading] = useState<boolean>(false);
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
-    const data = await createDecoration(newDecoration);
-    if (!data) {
+    if (!newDecoration.trim()) {
       toast({
-        title: 'Failed',
-        description: 'Dekorasi gagal ditambahkan / dekorasi sudah ada',
+        title: 'Nama Dekorasi Kosong',
+        description: 'Silakan ketik nama dekorasi terlebih dahulu',
         variant: 'destructive',
       });
       return;
     }
+
+    setIsLoading(true);
+    const data = await createDecoration(newDecoration.trim());
+    setIsLoading(false);
+
+    if (!data) {
+      toast({
+        title: 'Gagal Menambah Dekorasi',
+        description: 'Dekorasi sudah terdaftar atau terjadi gangguan koneksi',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     dispatch(setDecoration({ id: data.id, name: data.name }));
     toast({
-      title: 'Success',
-      description: 'Dekorasi baru ditambahkan',
+      title: 'Berhasil',
+      description: `Dekorasi "${data.name}" berhasil ditambahkan ke daftar master`,
     });
     setNewDecoration('');
+    setIsDialogOpen(false);
   };
 
   return (
-    <div className="p-4 rounded-lg flex flex-col gap-3">
+    <div className="flex flex-col gap-8">
       <Toaster />
-      <header className="flex justify-between">
-        <h1 className="text-2xl font-bold">Boxes</h1>
-        <Dialog>
-          <DialogTrigger>
-            <Button>Tambah Dekorasi</Button>
+
+      {/* Header and Stat Card */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div className="w-full sm:w-72">
+          <DashboardCard
+            title="Total Pilihan Dekorasi"
+            value={allDecorations.length || 0}
+            description="Ornamen floral & aksesoris aktif"
+            variant="default"
+            icon={<Ribbon className="w-5 h-5" />}
+          />
+        </div>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="min-h-[46px] rounded-xl px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold flex items-center justify-center gap-2 shadow-xs transition-all self-start sm:self-auto">
+              <Plus className="w-4 h-4" />
+              <span>Tambah Dekorasi Baru</span>
+            </Button>
           </DialogTrigger>
-          <DialogContent className="min-w-[800px] py-10">
-            <DialogHeader>
-              <DialogTitle>Tambah Dekorasi</DialogTitle>
+          <DialogContent className="sm:max-w-md max-w-[95vw] rounded-2xl p-6 sm:p-8">
+            <DialogHeader className="pb-4 border-b border-border text-left">
+              <DialogTitle className="font-serif text-xl font-bold text-foreground">
+                Tambah Pilihan Dekorasi Baru
+              </DialogTitle>
+              <span className="text-xs text-muted-foreground mt-0.5">
+                Masukkan nama ornamen bunga, pita, atau aksesoris seserahan
+              </span>
             </DialogHeader>
-            <div className="py-5 flex flex-col justify-center max-h-[80vh] overflow-hidden overflow-y-scroll shadow-lg rounded-xl">
-              <div className="relative py-10 sm:max-w-xl sm:mx-auto w-full ">
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-blue-500 shadow-lg transform -skew-y-3 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-                <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-                  <div className="max-w-md mx-auto max-h-full">
-                    <form
-                      onSubmit={onSubmitHandler}
-                      className="flex flex-col gap-2"
-                    >
-                      <div className="mb-4 flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-600">
-                          Dekorasi
-                        </label>
-                        <Input
-                          type="text"
-                          name={'color'}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring focus:ring-teal-500 focus:outline-none"
-                          placeholder="Enter decoration name"
-                          value={newDecoration}
-                          onChange={(e: any) =>
-                            setNewDecoration(e.target.value)
-                          }
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        className={`mt-5 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition duration-300 flex gap-2 ${
-                          isLoading && 'bg-green-300'
-                        }`}
-                        disabled={isLoading}
-                      >
-                        {<ButtonLoading isLoading={isLoading} />}Tambah
-                      </Button>
-                    </form>
-                  </div>
-                </div>
+
+            <form onSubmit={onSubmitHandler} className="flex flex-col gap-5 pt-2">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-xs font-semibold text-foreground">
+                  Nama Dekorasi <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  name="decoration"
+                  placeholder="Contoh: Rangkaian Bunga Rose & Baby Breath"
+                  value={newDecoration}
+                  onChange={(e: any) => setNewDecoration(e.target.value)}
+                  className="min-h-[44px] rounded-xl border-border focus-visible:ring-primary"
+                  required
+                />
               </div>
-            </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full min-h-[46px] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold flex items-center justify-center gap-2 shadow-xs transition-all mt-2"
+              >
+                {isLoading ? (
+                  <ButtonLoading isLoading={true} />
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    <span>Simpan Dekorasi</span>
+                  </>
+                )}
+              </Button>
+            </form>
           </DialogContent>
         </Dialog>
-      </header>
-      <div className="grid grid-cols-3 gap-3">
-        <DashboardCard
-          title="Total Decoration"
-          value={allDecorations.length || 0}
-          description={`Total Decorations`}
-        />
       </div>
-      <div className="bg-white rounded-xl">
-        <TableComponent
-          tableData={allDecorations.length ? allDecorations : []}
-          tableHeader={[
-            {
-              as: 'Id',
-              name: 'id',
-            },
-            {
-              as: 'Dekorasi',
-              name: 'name',
-            },
-          ]}
-        />
-      </div>
+
+      {/* Decorations Data Table */}
+      <TableComponent
+        tableData={allDecorations || []}
+        tableHeader={[
+          { as: 'ID Dekorasi', name: 'id' },
+          { as: 'Nama Dekorasi', name: 'name' },
+        ]}
+      />
     </div>
   );
 };

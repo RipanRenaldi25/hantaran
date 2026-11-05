@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Heart, Award, ShieldCheck, Clock, Users, ArrowRight } from 'lucide-react';
+import { Sparkles, Heart, Award, ShieldCheck, Clock, ArrowRight } from 'lucide-react';
 import logo from '@/assets/Logo.png';
 
 const AboutPage = () => {

@@ -2,7 +2,6 @@ import Stepper from '@/components/Stepper';
 import {
   ArrowRight,
   Check,
-  CheckCircle2,
   ChevronLeft,
   UserRound,
 } from 'lucide-react';

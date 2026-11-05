@@ -20,7 +20,6 @@ export default function EmailVerificationPage() {
   const navigate = useNavigate();
 
   const progress = Number(searchParams.get('progress')) || 0;
-  const status = searchParams.get('status') || 'pending';
   const email = searchParams.get('email') || '';
 
   const [scrolled, setScrolled] = useState(false);

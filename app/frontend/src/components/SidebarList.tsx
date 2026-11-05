@@ -1,6 +1,7 @@
 import { LucideProps } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 import SidebarItem from './SidebarItem';
+
 export interface ISidebarListComponent {
   sidebarItems: {
     title: string;
@@ -15,7 +16,7 @@ export interface ISidebarListComponent {
 
 const SidebarList = (props: ISidebarListComponent) => {
   return (
-    <ul className="flex flex-col">
+    <ul className="flex flex-col gap-1.5 px-3 py-4">
       {props.sidebarItems.map((item) => (
         <SidebarItem
           key={item.path}

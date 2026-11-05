@@ -1,4 +1,4 @@
-import { IBox, IBoxesResponse, IColor, IDecoration } from '@/states/interface';
+import { IBoxesResponse, IColor, IDecoration } from '@/states/interface';
 import axios from 'axios';
 
 export const getBoxes = async (

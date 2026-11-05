@@ -17,7 +17,6 @@ const Register = () => {
     password: string;
   }>({ username: '', email: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();

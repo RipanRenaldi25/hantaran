@@ -23,11 +23,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatDate } from '@/lib/utils';
-import { MoreHorizontal, Pen, Trash2 } from 'lucide-react';
+import { formatDate, formatCurrency } from '@/lib/utils';
+import { MoreHorizontal, Pen, Trash2, CheckCircle2, Clock, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 export interface ITableComponent<T> {
   tableData: T[];
@@ -73,189 +74,296 @@ const TableComponent = ({
   };
 
   return (
-    <Table className="overflow-x-scroll table-fixed">
-      {/* <TableCaption>A list of all boxes</TableCaption> */}
-      <TableHeader>
-        <TableRow>
-          {tableHeader.map((header) => (
-            <TableHead>{header.as}</TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {tableData.map((data) => (
-          <TableRow>
-            {tableHeader.map((header) => {
-              if (
-                header.name === 'createdAt' ||
-                header.name === 'updatedAt' ||
-                header.name === 'date' ||
-                header.name === 'created_at' ||
-                header.name === 'updated_at'
-              ) {
-                return (
-                  <TableCell>
-                    {formatDate(new Date(data[header.name]))}
-                  </TableCell>
-                );
-              }
-              if (header.name === 'status') {
-                return (
-                  <TableCell className="text-center  font-bold">
-                    {data[header.name] === 'pending' && (
-                      <Badge className="bg-yellow-400 text-black">
-                        {data[header.name]}
-                      </Badge>
-                    )}
-                    {data[header.name] === 'expire' && (
-                      <Badge variant={'destructive'}>{data[header.name]}</Badge>
-                    )}
-                    {data[header.name] === 'settlement' && (
-                      <Badge className="bg-green-500 font-bold">
-                        {data[header.name]}
-                      </Badge>
-                    )}
-                  </TableCell>
-                );
-              }
-              if (header.name === 'manageStatus') {
-                return (
-                  <TableCell className="text-center font-bold ">
-                    {data[header.name] === 'unprocessed' && (
-                      <Badge variant={'secondary'}>{data[header.name]}</Badge>
-                    )}
-                    {data[header.name] === 'expire' && (
-                      <Badge variant={'secondary'}>{data[header.name]}</Badge>
-                    )}
-                    {data[header.name] === 'processed' && (
-                      <Badge className="font-bold">{data[header.name]}</Badge>
-                    )}
-                    {data[header.name] === 'completed' && (
-                      <Badge className="bg-green-500 font-bold">
-                        {data[header.name]}
-                      </Badge>
-                    )}
-                  </TableCell>
-                );
-              }
-              return <TableCell>{data[header.name]}</TableCell>;
-            })}
-            {isEditAction || isDeleteAction || isRadioAction ? (
-              <TableCell
-                className="h-full"
-                colSpan={isEditAction && isDeleteAction ? 2 : 0}
-              >
-                <div className="flex gap-2">
-                  {isEditAction && (
-                    <NavLink
-                      className="flex items-center gap-2 justify-center relative"
-                      to={`edit/${data.id}`}
-                    >
-                      <Pen className="size-5" />
-                      <h1>Edit</h1>
-                    </NavLink>
-                  )}
-                  {isDeleteAction && (
-                    <NavLink
-                      className="flex items-center gap-2 justify-center relative"
-                      to={`edit/${data.id}`}
-                      onClick={() => handleDelete(data.id)}
-                    >
-                      <Trash2 className="size-5" />
-                      <h1>Delete</h1>
-                    </NavLink>
-                  )}
-                  {isRadioAction && (
-                    <div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                          <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuRadioGroup
-                            value={data.manageStatus || (process as any)}
-                            onValueChange={(e: any) =>
-                              handleProcessChange(data.id, e)
-                            }
-                          >
-                            <DropdownMenuRadioItem value="unprocessed">
-                              Unprocessed
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="processed">
-                              Processed
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="completed">
-                              Completed
-                            </DropdownMenuRadioItem>
-                          </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  )}
-                </div>
-              </TableCell>
-            ) : null}
-          </TableRow>
-        ))}
-      </TableBody>
-      {!!totalPage ? (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                aria-disabled={!isPrevious}
-                onClick={() => {
-                  if (!isPrevious || !currentPage) {
-                    return;
-                  }
+    <div className="w-full overflow-hidden border border-border rounded-2xl bg-white shadow-xs">
+      <div className="overflow-x-auto">
+        <Table className="w-full text-sm">
+          <TableHeader className="bg-stone-50/80 border-b border-border">
+            <TableRow className="hover:bg-transparent">
+              {tableHeader.map((header) => (
+                <TableHead
+                  key={header.name}
+                  className="font-bold text-xs uppercase tracking-wider text-muted-foreground py-4 px-4 whitespace-nowrap"
+                >
+                  {header.as}
+                </TableHead>
+              ))}
+              {(isEditAction || isDeleteAction || isRadioAction) && (
+                <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground py-4 px-4 text-center">
+                  Aksi
+                </TableHead>
+              )}
+            </TableRow>
+          </TableHeader>
 
-                  setSearchParam((prevParam) => ({
-                    ...prevParam,
-                    page: currentPage - 1,
-                  }));
-                  setCurrentPage(currentPage - 1);
-                }}
-                className={`${
-                  !isPrevious && 'text-gray-400 cursor-not-allowed'
-                } cursor-pointer`}
-              />
-            </PaginationItem>
-            {Array.from({ length: totalPage }).map((_, index) => {
-              return (
-                <PaginationItem id={`${index}`}>
-                  <NavLink to=""> {index + 1} </NavLink>
-                </PaginationItem>
-              );
-            })}
-            {/* <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem> */}
-            <PaginationItem
-              onClick={() => {
-                if (!isNext || !currentPage) {
-                  return;
-                }
-                setSearchParam((prevParam) => ({
-                  ...prevParam,
-                  page: currentPage + 1,
-                }));
-                setCurrentPage(currentPage + 1);
-              }}
-              aria-disabled={!isNext}
-              className={`${
-                !isNext && 'text-gray-400 cursor-not-allowed'
-              } cursor-pointer`}
-            >
-              <PaginationNext />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      ) : null}
-    </Table>
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={tableHeader.length + (isEditAction || isDeleteAction || isRadioAction ? 1 : 0)}
+                  className="h-32 text-center text-muted-foreground font-medium"
+                >
+                  Tidak ada data yang tersedia saat ini.
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((data: any, idx: number) => (
+                <TableRow
+                  key={data.id || idx}
+                  className="hover:bg-secondary/40 transition-colors border-b border-border/70"
+                >
+                  {tableHeader.map((header) => {
+                    const value = data[header.name];
+
+                    // Date formatting
+                    if (
+                      header.name === 'createdAt' ||
+                      header.name === 'updatedAt' ||
+                      header.name === 'date' ||
+                      header.name === 'created_at' ||
+                      header.name === 'updated_at'
+                    ) {
+                      return (
+                        <TableCell key={header.name} className="py-4 px-4 text-muted-foreground whitespace-nowrap font-medium text-xs">
+                          {value ? formatDate(new Date(value)) : '-'}
+                        </TableCell>
+                      );
+                    }
+
+                    // Price formatting
+                    if (header.name === 'price') {
+                      return (
+                        <TableCell key={header.name} className="py-4 px-4 font-bold text-foreground whitespace-nowrap">
+                          {formatCurrency(Number(value) || 0)}
+                        </TableCell>
+                      );
+                    }
+
+                    // Payment status badge
+                    if (header.name === 'status') {
+                      return (
+                        <TableCell key={header.name} className="py-4 px-4 whitespace-nowrap">
+                          {value === 'pending' && (
+                            <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-300 font-semibold gap-1 px-2.5 py-1">
+                              <Clock className="w-3 h-3" />
+                              <span>Menunggu Bayar</span>
+                            </Badge>
+                          )}
+                          {value === 'settlement' && (
+                            <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-300 font-semibold gap-1 px-2.5 py-1">
+                              <CheckCircle2 className="w-3 h-3" />
+                              <span>Lunas</span>
+                            </Badge>
+                          )}
+                          {(value === 'expire' || value === 'expired' || value === 'cancelled') && (
+                            <Badge variant="destructive" className="font-semibold gap-1 px-2.5 py-1">
+                              <XCircle className="w-3 h-3" />
+                              <span>Batal/Kadaluarsa</span>
+                            </Badge>
+                          )}
+                          {!['pending', 'settlement', 'expire', 'expired', 'cancelled'].includes(value) && (
+                            <Badge variant="outline" className="font-semibold">
+                              {value}
+                            </Badge>
+                          )}
+                        </TableCell>
+                      );
+                    }
+
+                    // Manage Process status badge
+                    if (header.name === 'manageStatus') {
+                      return (
+                        <TableCell key={header.name} className="py-4 px-4 whitespace-nowrap">
+                          {value === 'unprocessed' && (
+                            <Badge className="bg-stone-100 text-stone-700 hover:bg-stone-100 border-stone-300 font-semibold px-2.5 py-1">
+                              Belum Diproses
+                            </Badge>
+                          )}
+                          {value === 'processed' && (
+                            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-300 font-semibold px-2.5 py-1">
+                              Sedang Dikerjakan
+                            </Badge>
+                          )}
+                          {value === 'completed' && (
+                            <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-300 font-semibold px-2.5 py-1">
+                              Selesai Siap Ambil
+                            </Badge>
+                          )}
+                          {!['unprocessed', 'processed', 'completed'].includes(value) && (
+                            <Badge variant="secondary">{value || '-'}</Badge>
+                          )}
+                        </TableCell>
+                      );
+                    }
+
+                    // Default cell
+                    return (
+                      <TableCell key={header.name} className="py-4 px-4 text-foreground font-medium">
+                        {value !== undefined && value !== null ? String(value) : '-'}
+                      </TableCell>
+                    );
+                  })}
+
+                  {/* Actions Column */}
+                  {(isEditAction || isDeleteAction || isRadioAction) && (
+                    <TableCell className="py-4 px-4 whitespace-nowrap text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        {isEditAction && (
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="rounded-lg h-8 px-2.5 text-xs font-semibold gap-1.5 border-border hover:bg-secondary"
+                          >
+                            <NavLink to={`edit/${data.id}`}>
+                              <Pen className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </NavLink>
+                          </Button>
+                        )}
+
+                        {isDeleteAction && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-lg h-8 px-2.5 text-xs font-semibold gap-1.5 border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => handleDelete(data.id)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Hapus</span>
+                          </Button>
+                        )}
+
+                        {isRadioAction && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8 rounded-lg border-border hover:bg-secondary"
+                                aria-label="Ubah status proses"
+                              >
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
+                              <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase px-2 py-1.5">
+                                Update Status Proses
+                              </DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuRadioGroup
+                                value={data.manageStatus || (process as any)}
+                                onValueChange={(e: any) =>
+                                  handleProcessChange(data.id, e)
+                                }
+                              >
+                                <DropdownMenuRadioItem
+                                  value="unprocessed"
+                                  className="cursor-pointer rounded-lg text-xs font-medium py-2"
+                                >
+                                  Belum Diproses
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem
+                                  value="processed"
+                                  className="cursor-pointer rounded-lg text-xs font-medium py-2"
+                                >
+                                  Sedang Diproses
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem
+                                  value="completed"
+                                  className="cursor-pointer rounded-lg text-xs font-medium py-2"
+                                >
+                                  Selesai
+                                </DropdownMenuRadioItem>
+                              </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination Footer */}
+      {Boolean(totalPage && totalPage > 1) && (
+        <div className="p-4 border-t border-border bg-stone-50/50 flex items-center justify-between">
+          <span className="text-xs text-muted-foreground font-medium">
+            Halaman {currentPage || 1} dari {totalPage}
+          </span>
+          <Pagination className="justify-end w-auto mx-0">
+            <PaginationContent className="gap-1">
+              <PaginationItem>
+                <PaginationPrevious
+                  aria-disabled={!isPrevious}
+                  onClick={() => {
+                    if (!isPrevious || !currentPage) return;
+                    setSearchParam((prevParam) => ({
+                      ...prevParam,
+                      page: String(currentPage - 1),
+                    }));
+                    setCurrentPage(currentPage - 1);
+                  }}
+                  className={cn(
+                    'min-h-[36px] rounded-lg text-xs font-semibold cursor-pointer border border-border',
+                    !isPrevious && 'pointer-events-none opacity-40'
+                  )}
+                />
+              </PaginationItem>
+
+              {Array.from({ length: totalPage || 0 }).map((_, index) => {
+                const pageNum = index + 1;
+                const isActive = (currentPage || 1) === pageNum;
+                return (
+                  <PaginationItem key={pageNum}>
+                    <Button
+                      variant={isActive ? 'default' : 'outline'}
+                      size="sm"
+                      className={cn(
+                        'min-w-[36px] h-9 rounded-lg text-xs font-semibold p-0',
+                        isActive
+                          ? 'bg-primary text-primary-foreground shadow-xs'
+                          : 'border-border text-foreground hover:bg-secondary'
+                      )}
+                      onClick={() => {
+                        setSearchParam((prevParam) => ({
+                          ...prevParam,
+                          page: String(pageNum),
+                        }));
+                        setCurrentPage(pageNum);
+                      }}
+                    >
+                      {pageNum}
+                    </Button>
+                  </PaginationItem>
+                );
+              })}
+
+              <PaginationItem>
+                <PaginationNext
+                  aria-disabled={!isNext}
+                  onClick={() => {
+                    if (!isNext || !currentPage) return;
+                    setSearchParam((prevParam) => ({
+                      ...prevParam,
+                      page: String(currentPage + 1),
+                    }));
+                    setCurrentPage(currentPage + 1);
+                  }}
+                  className={cn(
+                    'min-h-[36px] rounded-lg text-xs font-semibold cursor-pointer border border-border',
+                    !isNext && 'pointer-events-none opacity-40'
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+    </div>
   );
 };
 

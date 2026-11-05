@@ -22,7 +22,7 @@ export const ForgotPassword = () => {
   const { toast } = useToast();
 
   const onEmailChangeHandler = (
-    key: string,
+    _key: string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setEmail(e.target.value);
@@ -42,7 +42,7 @@ export const ForgotPassword = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await new Promise((resolve, reject) => setTimeout(reject, 2000));
+      await new Promise((_resolve, reject) => setTimeout(reject, 2000));
       setIsLoading(false);
       navigate(`/forgot-password/success?email=${email}`);
     } catch (err) {

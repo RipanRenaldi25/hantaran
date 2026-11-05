@@ -49,7 +49,12 @@ const InputField = ({
           </p>
         )}
       </div>
-      <div className='relative'>
+      <div className='relative flex items-center'>
+        {Icon && (
+          <span className='absolute left-3 text-muted-foreground pointer-events-none z-10'>
+            <Icon />
+          </span>
+        )}
         <Input
           id={inputId}
           type={type}
@@ -59,7 +64,9 @@ const InputField = ({
           value={value}
           required={required}
           autoComplete={autoComplete}
-          className={`min-h-[44px] rounded-xl border-border bg-white text-foreground focus-visible:ring-primary focus-visible:border-primary transition-all text-sm px-3.5 relative bg-secondary`}
+          className={`min-h-[44px] rounded-xl border-border bg-white text-foreground focus-visible:ring-primary focus-visible:border-primary transition-all text-sm ${
+            Icon ? 'pl-9 pr-3.5' : 'px-3.5'
+          } relative`}
         />
         {children}
       </div>
