@@ -21,6 +21,7 @@ import { GetUserLoginUsecase } from '../../../../../Application/Usecase/User/Get
 import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetUserWithProfileUsecase';
 import { GetUserWithProfileAndAddressUsecase } from '../../../../../Application/Usecase/User/GetUserWithProfileAndAddressUsecase';
 import { ResendEmailVerificationUsecase } from '../../../../../Application/Usecase/User/ResendEmailVerificationUsecase';
+import { ForgotPasswordUsecase } from '../../../../../Application/Usecase/User/ForgotPasswordUsecase';
 
 // REPOSITORY
 const userRepository = new UserRepository(
@@ -73,6 +74,13 @@ const resendEmailVerificationUsecase = new ResendEmailVerificationUsecase(
   jwtService,
 );
 
+const forgotPasswordUsecase = new ForgotPasswordUsecase(
+  userService,
+  jwtService,
+  ConfigService.getInstance(),
+  emailService,
+);
+
 // CONTROLLER
 const userController = new UserController(
   registerUsecase,
@@ -85,6 +93,7 @@ const userController = new UserController(
   getUserWithProfileUsecase,
   getUserWithProfileAndAddressUsecase,
   resendEmailVerificationUsecase,
+  forgotPasswordUsecase,
 );
 
 // MIDLEWARE
@@ -98,6 +107,9 @@ userRouter.get('/', (req, res) => res.send('ok'));
 userRouter.post('/register', (req, res) => userController.register(req, res));
 userRouter.get('/verify', (req, res) => userController.verify(req, res));
 userRouter.post('/login', (req, res) => userController.login(req, res));
+userRouter.post('/forgot-password', (req, res) =>
+  userController.sendLinkForgotPassword(req, res),
+);
 userRouter.post('/resend-verification', (req, res) =>
   userController.resendEmailVerification(req, res),
 );

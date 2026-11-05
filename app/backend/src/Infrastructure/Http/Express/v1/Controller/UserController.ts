@@ -12,6 +12,7 @@ import { IConfigService } from '../../../../../Application/Service';
 import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetUserWithProfileUsecase';
 import { GetUserWithProfileAndAddressUsecase } from '../../../../../Application/Usecase/User/GetUserWithProfileAndAddressUsecase';
 import { ResendEmailVerificationUsecase } from '../../../../../Application/Usecase/User/ResendEmailVerificationUsecase';
+import { ForgotPasswordUsecase } from '../../../../../Application/Usecase/User/ForgotPasswordUsecase';
 
 export class UserController {
   constructor(
@@ -25,6 +26,7 @@ export class UserController {
     private readonly getUserWithProfileUsecase: getUserWithProfile,
     private readonly getUserWithProfileAndAddressUsecase: GetUserWithProfileAndAddressUsecase,
     private readonly resendEmailVerificationUsecase: ResendEmailVerificationUsecase,
+    private readonly ForgotPasswordUsecase: ForgotPasswordUsecase,
   ) {
     this.registerUsecase = registerUsecase;
     this.verifyUsecase = verifyUsecase;
@@ -37,6 +39,7 @@ export class UserController {
     this.getUserWithProfileAndAddressUsecase =
       getUserWithProfileAndAddressUsecase;
     this.resendEmailVerificationUsecase = resendEmailVerificationUsecase;
+    this.ForgotPasswordUsecase = ForgotPasswordUsecase;
   }
   async register(req: Request, res: Response) {
     try {
@@ -273,6 +276,29 @@ export class UserController {
         message: 'Email verification sent successfully',
       });
     } catch (err) {
+      res.status(500).json({
+        status: 'Fail',
+        message: `Server error: ${(err as Error).message}`,
+      });
+    }
+  }
+
+  async sendLinkForgotPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      await this.ForgotPasswordUsecase.execute(email);
+      res.status(200).json({
+        status: 'success',
+        message: 'Email verification sent successfully',
+      });
+    } catch (err) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+        return;
+      }
       res.status(500).json({
         status: 'Fail',
         message: `Server error: ${(err as Error).message}`,
