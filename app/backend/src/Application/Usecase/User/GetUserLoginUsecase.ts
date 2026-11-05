@@ -7,14 +7,13 @@ export class GetUserLoginUsecase {
 
   async execute(userId: string) {
     const user = await this.userRepository.getUserWithProfileAndAddress(
-      new UserId(userId)
+      new UserId(userId),
     );
     const userWithRole = await this.userRepository.getUserById(
-      new UserId(userId)
+      new UserId(userId),
     );
-    console.log({ user, userWithRole });
     if (!userWithRole) {
-      throw new NotFoundError('$User not found');
+      throw new NotFoundError('User not found');
     }
     return {
       id: user?.userId,

@@ -62,8 +62,7 @@ export class User {
       /[0-9]/.test(this.password) &&
       /[!@#$%^&*]/.test(this.password) &&
       this.password.length >= 8 &&
-      /^[^\s]/.test(this.password) &&
-      /[^\s]$/.test(this.password);
+      this.password === this.password.trim();
     if (!result) {
       throw new InvariantError('Invalid password format');
     }

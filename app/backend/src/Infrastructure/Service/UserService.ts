@@ -1,5 +1,6 @@
 import { IUserService } from '../../Application/Service';
 import { User, UserId } from '../../Domain/Entity/User';
+import { NotFoundError } from '../../Domain/Exception/NotFoundError';
 import { IUserRepository } from '../../Domain/Repository/IUserRepository';
 
 export class UserService implements IUserService {
@@ -12,7 +13,11 @@ export class UserService implements IUserService {
     return userId;
   }
   async getUserByEmail(email: string): Promise<User> {
-    return {} as User;
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User> {

@@ -42,7 +42,6 @@ export const ForgotPassword = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // Simulate an API call
       await new Promise((resolve, reject) => setTimeout(reject, 2000));
       setIsLoading(false);
       navigate(`/forgot-password/success?email=${email}`);
