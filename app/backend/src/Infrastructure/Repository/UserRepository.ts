@@ -56,10 +56,10 @@ export class UserRepository implements IUserRepository {
       result[0].password,
       new Role(
         new RoleId(result[0].role),
-        result[0].role === '1' ? new RoleType('admin') : new RoleType('user')
+        result[0].role === '1' ? new RoleType('admin') : new RoleType('user'),
       ),
       result[0].is_verified,
-      result[0].created_at
+      result[0].created_at,
     );
   }
 
@@ -79,7 +79,7 @@ export class UserRepository implements IUserRepository {
       result[0].password,
       result[0].role,
       result[0].is_verified,
-      result[0].created_at
+      result[0].created_at,
     );
   }
 
@@ -90,6 +90,7 @@ export class UserRepository implements IUserRepository {
     }
     return false;
   }
+
   async checkAvailableUsername(username: string): Promise<boolean> {
     const user = await this.getUserByUsername(username);
     if (!user) {
@@ -115,10 +116,10 @@ export class UserRepository implements IUserRepository {
       result[0].password,
       new Role(
         result[0].role,
-        new RoleType(result[0].role === '1' ? 'admin' : 'user')
+        new RoleType(result[0].role === '1' ? 'admin' : 'user'),
       ),
       result[0].is_verified,
-      result[0].created_at
+      result[0].created_at,
     );
   }
 
@@ -143,8 +144,8 @@ export class UserRepository implements IUserRepository {
         result[0].password,
         new Role(
           new RoleId(result[0].role),
-          new RoleType(result[0].role === '1' ? 'admin' : 'user')
-        )
+          new RoleType(result[0].role === '1' ? 'admin' : 'user'),
+        ),
       );
     } catch (err) {
       return null;

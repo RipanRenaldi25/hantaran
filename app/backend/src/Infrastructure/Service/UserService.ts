@@ -12,6 +12,7 @@ export class UserService implements IUserService {
     const userId = await this.userRepository.create(user);
     return userId;
   }
+
   async getUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.getUserByEmail(email);
     if (!user) {

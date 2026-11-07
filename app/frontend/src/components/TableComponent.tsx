@@ -24,11 +24,109 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatDate, formatCurrency } from '@/lib/utils';
-import { MoreHorizontal, Pen, Trash2, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Pen,
+  Trash2,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  MapPin,
+  Copy,
+  ExternalLink,
+  Check,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+const AddressCell = ({ address }: { address?: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  if (!address || address.trim() === '') {
+    return (
+      <span className="text-muted-foreground italic text-xs">-</span>
+    );
+  }
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="group flex items-start gap-1.5 text-left max-w-[200px] hover:text-primary transition-colors focus:outline-hidden cursor-pointer"
+          title="Klik untuk melihat detail alamat & tracking"
+        >
+          <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+          <span className="line-clamp-2 leading-relaxed text-xs font-medium text-stone-700 group-hover:text-primary underline-offset-2 group-hover:underline">
+            {address}
+          </span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-3.5 rounded-xl shadow-lg border-border bg-white" align="start">
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <MapPin className="w-3.5 h-3.5 text-primary" />
+            <span>Alamat Pengiriman Pembeli</span>
+          </div>
+          <p className="text-xs text-stone-700 leading-relaxed bg-stone-50 p-2.5 rounded-lg border border-border/60 select-all">
+            {address}
+          </p>
+          <div className="flex items-center gap-2 pt-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="flex-1 h-8 text-xs font-medium gap-1 rounded-lg border-border hover:bg-secondary cursor-pointer"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700">Tersalin!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Salin Alamat</span>
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              asChild
+              variant="default"
+              size="sm"
+              className="flex-1 h-8 text-xs font-medium gap-1 rounded-lg"
+            >
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Buka Maps</span>
+              </a>
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 export interface ITableComponent<T> {
   tableData: T[];
@@ -191,6 +289,15 @@ const TableComponent = ({
                           {!['unprocessed', 'processed', 'completed'].includes(value) && (
                             <Badge variant="secondary">{value || '-'}</Badge>
                           )}
+                        </TableCell>
+                      );
+                    }
+
+                    // Address formatting with popover & maps action
+                    if (header.name === 'address') {
+                      return (
+                        <TableCell key={header.name} className="py-4 px-4 whitespace-normal">
+                          <AddressCell address={value} />
                         </TableCell>
                       );
                     }

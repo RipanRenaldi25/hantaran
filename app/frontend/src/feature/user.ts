@@ -185,3 +185,17 @@ export const resendEmailVerification = async (email: string) => {
     throw new Error('Failed to resend verification email');
   }
 };
+
+export const sendForgotPasswordLink = async (email: string): Promise<void> => {
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/users/forgot-password`,
+      {
+        email,
+      },
+    );
+  } catch (err) {
+    console.log({ err });
+    throw new Error('Ooppss, something is error');
+  }
+};

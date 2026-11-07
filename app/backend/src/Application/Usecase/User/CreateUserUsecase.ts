@@ -3,12 +3,7 @@ import { User, UserId } from '../../../Domain/Entity/User';
 import { InvariantError } from '../../../Domain/Exception/InvariantError';
 import { IUserRepository } from '../../../Domain/Repository/IUserRepository';
 import { RoleType } from '../../../Domain/ValueObject/RoleType';
-import {
-  IConfigService,
-  IEmailService,
-  IJwtService,
-  IUserService,
-} from '../../Service';
+import { IConfigService, IEmailService, IJwtService } from '../../Service';
 import { IPasswordHashService } from '../../Service/IPasswordHashService';
 
 export class CreateUserUsecase {

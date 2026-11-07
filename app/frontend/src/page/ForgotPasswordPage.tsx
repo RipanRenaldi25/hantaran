@@ -2,6 +2,7 @@ import csImage from '@/assets/cs.png';
 import InputField from '@/components/InputField';
 import { INavItems, Navigation } from '@/components/Navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { sendForgotPasswordLink } from '@/feature/user';
 import {
   ArrowLeft,
   ArrowRight,
@@ -42,9 +43,9 @@ export const ForgotPassword = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await new Promise((_resolve, reject) => setTimeout(reject, 2000));
+      await sendForgotPasswordLink(email);
       setIsLoading(false);
-      navigate(`/forgot-password/success?email=${email}`);
+      navigate('/forgot-password/success');
     } catch (err) {
       toast({
         title: 'Error',
@@ -142,7 +143,8 @@ export const ForgotPassword = () => {
 
             <button
               type='submit'
-              className='bg-prime flex text-white py-2 px-4 rounded-full items-center w-full justify-center hover:bg-primary/90 text-sm gap-1 mt-6'
+              className={`bg-prime flex text-white py-2 px-4 rounded-full items-center w-full justify-center hover:bg-primary/90 text-sm gap-1 mt-6 ${isLoading && 'bg-prime'} transition-colors duration-300`}
+              disabled={isLoading}
             >
               {isLoading ? (
                 <div className='flex items-center gap-2'>

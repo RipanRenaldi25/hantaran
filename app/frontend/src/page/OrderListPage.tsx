@@ -115,7 +115,9 @@ const OrderListPage = () => {
       setFilteredOrder(
         order?.filter((o) =>
           String(o.id).toLowerCase().includes(String(inputDebounce).toLowerCase()) ||
-          String(o.fullName || '').toLowerCase().includes(String(inputDebounce).toLowerCase())
+          String(o.fullName || '').toLowerCase().includes(String(inputDebounce).toLowerCase()) ||
+          String(o.address || '').toLowerCase().includes(String(inputDebounce).toLowerCase()) ||
+          String(o.phoneNumber || '').toLowerCase().includes(String(inputDebounce).toLowerCase())
         )
       );
     }
@@ -204,7 +206,7 @@ const OrderListPage = () => {
             <Input
               type="text"
               className="pl-10 min-h-[44px] rounded-xl border-border bg-stone-50/50 text-sm focus-visible:ring-primary"
-              placeholder="Cari berdasarkan nomor pesanan / nama..."
+              placeholder="Cari pesanan, nama, alamat, nomor telepon..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
@@ -318,6 +320,7 @@ const OrderListPage = () => {
           { name: 'id', as: 'Nomor Pesanan' },
           { name: 'fullName', as: 'Pemesan' },
           { name: 'phoneNumber', as: 'Telepon' },
+          { name: 'address', as: 'Alamat Pengiriman' },
           { name: 'price', as: 'Total Biaya' },
           { name: 'paymentMethod', as: 'Metode Bayar' },
           { name: 'createdAt', as: 'Tgl Transaksi' },
