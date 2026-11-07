@@ -26,6 +26,7 @@ import ActivatedEmail from './components/ActivatedEmail';
 import EmailVerificationPage from './page/EmailVerificationPage';
 import { VerifiedEmailPage } from './page/VerifiedEmailPage';
 import { ForgotPassword } from './page/ForgotPasswordPage';
+import { ForgotPasswordSuccess } from './page/ForgotPasswordSuccess';
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
   {
     path: '/forgot-password',
     element: <ForgotPassword />,
+  },
+  {
+    path: '/forgot-password/success',
+    element: <ForgotPasswordSuccess />,
   },
   {
     path: '/',

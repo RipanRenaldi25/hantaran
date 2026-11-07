@@ -44,12 +44,14 @@ export const ForgotPassword = () => {
     setIsLoading(true);
     try {
       await sendForgotPasswordLink(email);
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsLoading(false);
-      navigate('/forgot-password/success');
+      navigate(`/forgot-password/success?email=${email}`);
     } catch (err) {
+      console.log({ err });
       toast({
         title: 'Error',
-        description: 'An error occurred while processing your request.',
+        description: (err as Error).message || 'Something error occured',
         variant: 'destructive',
         duration: 2000,
       });
@@ -83,7 +85,7 @@ export const ForgotPassword = () => {
   ]);
   const isLaptop = window.innerWidth > 860;
   return (
-    <div className='space-y-4 bg-gradient-to-b from-secondary via-white to-secondary  relative md:bg-blue-500 h-screen'>
+    <div className='space-y-4 bg-gradient-to-b from-secondary via-white to-secondary  relative md:bg-blue-500 min-h-screen'>
       {isLaptop ? (
         <Navigation navItems={navItems} />
       ) : (
