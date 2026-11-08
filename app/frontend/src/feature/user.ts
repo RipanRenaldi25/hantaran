@@ -199,3 +199,20 @@ export const sendForgotPasswordLink = async (email: string): Promise<void> => {
     throw new Error('Ooppss, something is error');
   }
 };
+
+export const resetPassword = async (
+  password: string,
+  token: string,
+): Promise<void> => {
+  try {
+    await axios.patch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/reset-password?token=Bearer ${token}`,
+      {
+        password,
+      },
+    );
+  } catch (err) {
+    console.log({ err });
+    throw new Error('Cannot change password due to an error');
+  }
+};

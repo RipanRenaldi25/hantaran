@@ -1,14 +1,6 @@
-/* ==========================================================================
-   HantaranByJoo - Modern Bridal Theme Styles
-   ========================================================================== */
-
 .mainpage {
   background-color: transparent;
 }
-
-/* --------------------------------------------------------------------------
-   Legacy Explore Grid (Mapped to Warm Design Tokens)
-   -------------------------------------------------------------------------- */
 .jelajahi-grid {
   display: flex;
   justify-content: space-around;
@@ -67,10 +59,6 @@
     flex-basis: 100%;
   }
 }
-
-/* --------------------------------------------------------------------------
-   Checkout & Orders (Modernized)
-   -------------------------------------------------------------------------- */
 .section {
   margin-bottom: 2rem;
 }
@@ -186,7 +174,9 @@
   font-weight: 600;
   margin-top: 1.5rem;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.1s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.1s ease;
   min-height: 44px;
 }
 
@@ -197,10 +187,6 @@
 .checkout-btn:active {
   transform: scale(0.99);
 }
-
-/* --------------------------------------------------------------------------
-   Email & Notification Containers
-   -------------------------------------------------------------------------- */
 .email-container {
   background-color: #ffffff;
   border: 1px solid hsl(var(--border));
@@ -264,10 +250,6 @@
   color: hsl(var(--muted-foreground));
   border-top: 1px solid hsl(var(--border));
 }
-
-/* --------------------------------------------------------------------------
-   Activate Container
-   -------------------------------------------------------------------------- */
 .activate-container {
   text-align: center;
   background-color: #ffffff;
@@ -307,10 +289,6 @@
   display: inline-block;
   min-height: 44px;
 }
-
-/* --------------------------------------------------------------------------
-   Form Container (Profile / Settings)
-   -------------------------------------------------------------------------- */
 .form-container {
   max-width: 600px;
   margin: 2.5rem auto;
@@ -390,10 +368,6 @@
   border: 3px solid hsl(var(--secondary));
   box-shadow: 0 4px 12px rgba(43, 36, 33, 0.08);
 }
-
-/* --------------------------------------------------------------------------
-   Collection Gallery
-   -------------------------------------------------------------------------- */
 .collection .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -428,10 +402,6 @@
   color: hsl(var(--foreground));
   text-align: center;
 }
-
-/* --------------------------------------------------------------------------
-   Testimoni Chat Container
-   -------------------------------------------------------------------------- */
 .testimoni .chat-container {
   width: 100%;
   max-width: 600px;
