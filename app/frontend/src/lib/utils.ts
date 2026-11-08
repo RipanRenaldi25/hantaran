@@ -35,7 +35,7 @@ export const formatTimer = (timer: number): string => {
   if (seconds === 0) {
     returnedTimer += ':00';
   } else if (seconds < 10) {
-    returnedTimer += `:${seconds.toFixed(0)}`;
+    returnedTimer += `:0${seconds.toFixed(0)}`;
   } else {
     returnedTimer += `:${seconds.toFixed(0)}`;
   }
