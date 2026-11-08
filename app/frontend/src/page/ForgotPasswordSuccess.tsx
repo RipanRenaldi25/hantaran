@@ -9,6 +9,9 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import csImage from '@/assets/cs.png';
+import { useEffect, useState } from 'react';
+import { formatTimer } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
 
 const navItems: INavItems[] = [
   {
@@ -38,6 +41,96 @@ export const ForgotPasswordSuccess = () => {
   const isLaptop = window.innerWidth > 860;
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || '';
+  const getCurrentTime = () => {
+    const targetTimer = Number(
+      sessionStorage.getItem('forgotPasswordSuccessTime'),
+    );
+    if (!targetTimer) {
+      return 0;
+    }
+    const currentTime = Date.now();
+    const remainingTime = Math.floor((targetTimer - currentTime) / 1000);
+    if (remainingTime < 0) {
+      return 0;
+    }
+    return remainingTime;
+  };
+  const [timer, setTimer] = useState<number>(() => getCurrentTime());
+  const [isForgotPasswordSent, setIsForgotPasswordSent] =
+    useState<boolean>(true);
+
+  const initTimer = () => {
+    const currentTime = Number(
+      sessionStorage.getItem('forgotPasswordSuccessTime'),
+    );
+    if (currentTime <= 0) {
+      const targetTimer = Date.now() + 60 * 1000;
+      sessionStorage.setItem('forgotPasswordSuccessTime', `${targetTimer}`);
+      setTimer(60);
+    }
+  };
+
+  const resetTimer = () => {
+    const currentTime = getCurrentTime();
+    if (currentTime > 0) {
+      return;
+    }
+    sessionStorage.removeItem('forgotPasswordSuccessTime');
+    setTimer(0);
+    initTimer();
+  };
+
+  useEffect(() => {
+    if (!Number(sessionStorage.getItem('forgotPasswordSuccessTime'))) {
+      initTimer();
+    }
+  }, []);
+
+  const isRerendered = timer > 0;
+
+  useEffect(() => {
+    if (Number(sessionStorage.getItem('forgotPasswordSuccessTime'))) {
+      const interval = setInterval(() => {
+        const remainingTime = getCurrentTime();
+        if (remainingTime < 0) {
+          clearInterval(interval);
+        }
+        setTimer(remainingTime);
+      }, 1000);
+    }
+  }, [isRerendered]);
+  const { toast } = useToast();
+
+  const onResendForgotPasswordHandler = async (email: string) => {
+    if (!email) {
+      toast({
+        title: 'Email not found',
+        description: 'Email not found, please try again',
+        variant: 'destructive',
+        duration: 2000,
+      });
+      return;
+    }
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      resetTimer();
+      toast({
+        title: 'Success',
+        description: 'Forgot password link has been sent to your email',
+        variant: 'default',
+        duration: 2000,
+      });
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: (err as Error).message || 'Something error occured',
+        variant: 'destructive',
+        duration: 2000,
+      });
+      setTimer(0);
+    }
+  };
+
   return (
     <div className='space-y-4 bg-gradient-to-b from-secondary via-white to-secondary relative md:bg-blue-500 min-h-screen'>
       {isLaptop ? (
@@ -98,13 +191,19 @@ export const ForgotPasswordSuccess = () => {
 
         <div className='flex flex-col items-center justify-center bg-primary/10 py-2 px-4 rounded-lg gap-1'>
           <p className='text-[0.7rem]'>
-            Belum menerima email dari HantaranByJoo?
+            Belum menerima email dari{' '}
+            <span className='text-prime font-semibold'>HantaranByJoo?</span>
           </p>
-          <button className='flex items-center gap-1 bg-prime px-2 py-2 rounded-full text-white  tracking-wider'>
+          <button
+            className={`flex items-center gap-1 px-2 py-2 rounded-full text-white tracking-wider ${timer > 0 ? 'bg-gray-400' : 'bg-prime '}`}
+            disabled={timer > 0}
+            onClick={() => onResendForgotPasswordHandler(email)}
+          >
             <Clock className='size-3' />
             <p className='text-[0.7rem] font-semibold'>
-              {' '}
-              Kirim Ulang Tautan Pemulihan
+              {timer > 0
+                ? `Tautan Baru Terkirim ${formatTimer(timer)}`
+                : 'Kirim Ulang Tautan Pemulihan'}
             </p>
           </button>
           <p className='text-[0.7rem]'>Periksa juga folder spam atau promosi</p>

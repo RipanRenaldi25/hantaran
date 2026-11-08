@@ -21,3 +21,26 @@ export const formatDate = (date: Date) => {
     minute: 'numeric',
   }).format(date);
 };
+
+export const formatTimer = (timer: number): string => {
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer - minutes * 60;
+  let returnedTimer = '';
+  if (minutes === 0) {
+    returnedTimer += '00';
+  } else {
+    returnedTimer += `0${minutes}`;
+  }
+
+  if (seconds === 0) {
+    returnedTimer += ':00';
+  } else if (seconds < 10) {
+    returnedTimer += `:${seconds.toFixed(0)}`;
+  } else {
+    returnedTimer += `:${seconds.toFixed(0)}`;
+  }
+
+  console.log({ timer, minutes, seconds });
+
+  return returnedTimer;
+};

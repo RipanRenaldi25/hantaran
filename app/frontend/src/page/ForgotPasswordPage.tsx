@@ -13,7 +13,7 @@ import {
   MessageCircle,
   UserRound,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const ForgotPassword = () => {
@@ -60,7 +60,6 @@ export const ForgotPassword = () => {
     }
   };
 
-  useEffect(() => {}, []);
   const [navItems] = useState<INavItems[]>([
     {
       title: 'Beranda',
