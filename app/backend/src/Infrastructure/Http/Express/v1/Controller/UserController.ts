@@ -305,4 +305,37 @@ export class UserController {
       });
     }
   }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const user = (req as any).user;
+      const { password } = req.body;
+      if (!password) {
+        throw new InvariantError('Password is required');
+      }
+      await this.updateUserUsecase.execute({
+        userId: user.userId,
+        password: password,
+      });
+      res.status(200).json({
+        status: 'success',
+        message: 'Password reset successfully',
+        body: {
+          userId: user.userId,
+        },
+      });
+    } catch (err) {
+      if (err instanceof ClientError) {
+        res.status(err.statusCode).json({
+          status: 'Fail',
+          message: `Client Error: ${err.message}`,
+        });
+        return;
+      }
+      res.status(500).json({
+        status: 'Fail',
+        message: `Server error: ${(err as Error).message}`,
+      });
+    }
+  }
 }

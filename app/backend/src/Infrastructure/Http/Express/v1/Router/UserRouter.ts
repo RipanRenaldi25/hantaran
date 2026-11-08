@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { UserController } from '../Controller/UserController';
 import { MysqlConnection } from '../../../../DB/MysqlConnection';
 import { CreateUserUsecase } from '../../../../../Application/Usecase/User/CreateUserUsecase';
@@ -22,6 +22,7 @@ import { getUserWithProfile } from '../../../../../Application/Usecase/User/GetU
 import { GetUserWithProfileAndAddressUsecase } from '../../../../../Application/Usecase/User/GetUserWithProfileAndAddressUsecase';
 import { ResendEmailVerificationUsecase } from '../../../../../Application/Usecase/User/ResendEmailVerificationUsecase';
 import { ForgotPasswordUsecase } from '../../../../../Application/Usecase/User/ForgotPasswordUsecase';
+import { tokenMiddleware } from '../Middleware/Token';
 
 // REPOSITORY
 const userRepository = new UserRepository(
@@ -131,6 +132,12 @@ userRouter.get(
 userRouter.get('/:userId', (req, res) => userController.getUserById(req, res));
 userRouter.get('/:userId/profiles/addresses/', (req, res) =>
   userController.getUserWithProfileAndAddresses(req, res),
+);
+
+userRouter.patch(
+  '/reset-password',
+  tokenMiddleware(jwtService),
+  (req: Request, res: Response) => userController.resetPassword(req, res),
 );
 
 export default userRouter;
