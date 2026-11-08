@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { IJwtService } from '../../../../../Application/Service';
+import {
+  IConfigService,
+  IJwtService,
+} from '../../../../../Application/Service';
 
 interface ITokenPayload {
   userId: string;
@@ -7,7 +10,7 @@ interface ITokenPayload {
 }
 
 export const tokenMiddleware =
-  (jwtService: IJwtService) =>
+  (jwtService: IJwtService, configService: IConfigService) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       const { token } = req.query;
@@ -16,7 +19,7 @@ export const tokenMiddleware =
       const [bearer, jwtToken] = token.split(' ');
       const payload: ITokenPayload = jwtService.verifyToken(
         jwtToken,
-        process.env.SECRET_ACCESS_TOKEN as string,
+        configService.get('SECRET_EMAIL_TOKEN') as string,
       );
       (req as any).user = {
         userId: payload.userId,

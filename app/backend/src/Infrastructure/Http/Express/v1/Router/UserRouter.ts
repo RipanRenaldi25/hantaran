@@ -136,7 +136,7 @@ userRouter.get('/:userId/profiles/addresses/', (req, res) =>
 
 userRouter.patch(
   '/reset-password',
-  tokenMiddleware(jwtService),
+  tokenMiddleware(jwtService, ConfigService.getInstance()),
   (req: Request, res: Response) => userController.resetPassword(req, res),
 );
 
