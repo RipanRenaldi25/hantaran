@@ -11,6 +11,7 @@ import CollectionPage from './page/CollectionPage';
 import Login from './page/Login';
 import Register from './page/Register';
 import PricesPage from './page/PricesPage';
+import { AuthLayout } from './components/layouts/AuthLayout';
 
 const navItems = [
   {
@@ -46,8 +47,20 @@ function App() {
           <Route path='/contact' element={<ContactPage />} />
           <Route path='/collection' element={<CollectionPage />} />
           <Route path='/prices' element={<PricesPage />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login />} />
+
+          <Route element={<AuthLayout />}>
+            <Route path='/register' element={<Register />} />
+            {/* <Route
+              path='/register'
+              element={
+                <div>
+                  <h1>Register</h1>
+                  <h1>Register2</h1>
+                </div>
+              }
+            /> */}
+            <Route path='/login' element={<Login />} />
+          </Route>
         </Route>
       </Routes>
     </Provider>

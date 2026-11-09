@@ -93,123 +93,114 @@ const Register = () => {
     setRegisterField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
   return (
-    <article>
-      <section>
-        <form
-          className='flex justify-center items-center flex-col relative'
-          onSubmit={handleRegister}
-        >
-          <article className='flex flex-col gap-1 md:gap-3 shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-[500px] lg:rounded-3xl'>
-            <Sparkles className='mx-auto text-prime' />
-            <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
-              Create an account
-            </h1>
-            <p className='text-center text-xs md:text-base'>
-              Enter your information below to begin crafting your ceremonial
-              tray
-            </p>
-            <section className='flex flex-col gap-5 mt-4'>
-              <InputField
-                name='username'
-                onInputChangeHandler={onInputChangeHandler}
-                placeholder='John'
-                title='Username'
-                type='text'
-                value={registerField.username}
-              >
-                <span className='absolute right-4 top-1/2 -translate-y-1/2'>
-                  <IdCard className='size-5 opacity-50' />
-                </span>
-              </InputField>
+    <section>
+      <form
+        className=' relative gap-1 md:gap-3 shadow-lg border py-12 px-8 rounded-lg lg:rounded-3xl'
+        onSubmit={handleRegister}
+      >
+        <Sparkles className='mx-auto text-prime' />
+        <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
+          Create an account
+        </h1>
+        <p className='text-center text-xs md:text-base'>
+          Enter your information below to begin crafting your ceremonial tray
+        </p>
+        <section className='flex flex-col gap-5 mt-4'>
+          <InputField
+            name='username'
+            onInputChangeHandler={onInputChangeHandler}
+            placeholder='John'
+            title='Username'
+            type='text'
+            value={registerField.username}
+          >
+            <span className='absolute right-4 top-1/2 -translate-y-1/2'>
+              <IdCard className='size-5 opacity-50' />
+            </span>
+          </InputField>
 
-              <InputField
-                onInputChangeHandler={onInputChangeHandler}
-                placeholder='doe@gmail.com'
-                title='Email'
-                type='email'
-                name='email'
-                value={registerField.email}
-              >
-                <span className='absolute right-4 top-1/2 -translate-y-1/2'>
-                  <Mail className='size-5 opacity-50' />
-                </span>
-              </InputField>
+          <InputField
+            onInputChangeHandler={onInputChangeHandler}
+            placeholder='doe@gmail.com'
+            title='Email'
+            type='email'
+            name='email'
+            value={registerField.email}
+          >
+            <span className='absolute right-4 top-1/2 -translate-y-1/2'>
+              <Mail className='size-5 opacity-50' />
+            </span>
+          </InputField>
 
-              <InputField
-                onInputChangeHandler={onInputChangeHandler}
-                placeholder='********'
-                title='Password'
-                type={isShowPassword ? 'text' : 'password'}
-                name='password'
-                value={registerField.password}
-              >
-                <button
-                  type='button'
-                  className='absolute right-4 top-1/2 -translate-y-1/2'
-                  onClick={() => setIsShowPassword((prev) => !prev)}
+          <InputField
+            onInputChangeHandler={onInputChangeHandler}
+            placeholder='********'
+            title='Password'
+            type={isShowPassword ? 'text' : 'password'}
+            name='password'
+            value={registerField.password}
+          >
+            <button
+              type='button'
+              className='absolute right-4 top-1/2 -translate-y-1/2'
+              onClick={() => setIsShowPassword((prev) => !prev)}
+            >
+              {isShowPassword ? (
+                <EyeOff className='size-5 opacity-80' />
+              ) : (
+                <Eye className='size-5 opacity-80' />
+              )}
+            </button>
+          </InputField>
+
+          <div className='border py-3 px-4 space-y-1.5 rounded-lg border-secondary bg-secondary'>
+            <PasswordHint
+              title='Password at least 8 characters'
+              isValid={registerField.password.length >= 8}
+            />
+            <PasswordHint
+              title='Password contain number'
+              isValid={/[0-9]/.test(registerField.password)}
+            />
+            <PasswordHint
+              title='Password contain symbol'
+              isValid={/[!@#$%^&*(),.?":{}|<>]/.test(registerField.password)}
+            />
+            <PasswordHint
+              title='Password contain uppercase letter'
+              isValid={/[A-Z]/.test(registerField.password)}
+            />
+          </div>
+
+          <div className='flex flex-col gap-2 '>
+            <Button
+              className='flex gap-2 rounded-full bg-prime font-semibold '
+              disabled={isLoading}
+            >
+              <span>
+                <ButtonLoading isLoading={isLoading} />
+              </span>
+              <span className='tracking-widest'>Register</span>
+              <span>
+                <ArrowRight className='size-4' />
+              </span>
+            </Button>
+
+            <div className='flex justify-center items-center mt-5'>
+              <p className='flex items-center justify-center gap-1'>
+                <span className='flex-1 text-sm'>Already have an account?</span>
+                <NavLink
+                  to='/login'
+                  className='font-bold text-prime border-b border-second hover:border-prime transition-colors duration-300'
                 >
-                  {isShowPassword ? (
-                    <EyeOff className='size-5 opacity-80' />
-                  ) : (
-                    <Eye className='size-5 opacity-80' />
-                  )}
-                </button>
-              </InputField>
-
-              <div className='border py-3 px-4 space-y-1.5 rounded-lg border-secondary bg-secondary'>
-                <PasswordHint
-                  title='Password at least 8 characters'
-                  isValid={registerField.password.length >= 8}
-                />
-                <PasswordHint
-                  title='Password contain number'
-                  isValid={/[0-9]/.test(registerField.password)}
-                />
-                <PasswordHint
-                  title='Password contain symbol'
-                  isValid={/[!@#$%^&*(),.?":{}|<>]/.test(
-                    registerField.password,
-                  )}
-                />
-                <PasswordHint
-                  title='Password contain uppercase letter'
-                  isValid={/[A-Z]/.test(registerField.password)}
-                />
-              </div>
-
-              <div className='flex flex-col gap-2 '>
-                <Button
-                  className='flex gap-2 rounded-full bg-prime font-semibold '
-                  disabled={isLoading}
-                >
-                  <span>
-                    <ButtonLoading isLoading={isLoading} />
-                  </span>
-                  <span className='tracking-widest'>Register</span>
-                  <span>
-                    <ArrowRight className='size-4' />
-                  </span>
-                </Button>
-
-                <div className='flex justify-center items-center mt-5'>
-                  <p className='flex items-center justify-center gap-1'>
-                    <span className='flex-1 text-sm'>
-                      Already have an account?
-                    </span>
-                    <NavLink
-                      to='/login'
-                      className='font-bold text-prime border-b border-second hover:border-prime transition-colors duration-300'
-                    >
-                      Login
-                    </NavLink>
-                  </p>
-                </div>
-              </div>
-            </section>
-          </article>
-        </form>
-      </section>
-    </article>
+                  Login
+                </NavLink>
+              </p>
+            </div>
+          </div>
+        </section>
+      </form>
+    </section>
   );
 };
 
