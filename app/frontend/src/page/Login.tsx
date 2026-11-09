@@ -64,7 +64,7 @@ const Login = () => {
         className='flex items-center flex-col relative'
         onSubmit={handleLogin}
       >
-        <article className='flex flex-col shadow-lg w-[90%] sm:w-[70%] lg:max-w-screen-sm py-12 px-6 border rounded-lg'>
+        <article className='flex flex-col shadow-lg w-[90%] sm:w-[70%] lg:max-w-[500px] py-12 px-6 border rounded-lg lg:rounded-3xl'>
           <div className='space-y-3'>
             <div className='text-center h-0.5 w-10 bg-tertiary mx-auto'></div>
             <p className='text-sm text-center m-0 p-0 text-prime lg:text-lg'>

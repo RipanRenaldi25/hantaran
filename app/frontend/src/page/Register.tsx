@@ -99,15 +99,16 @@ const Register = () => {
           className='flex justify-center items-center flex-col relative'
           onSubmit={handleRegister}
         >
-          <article className='flex flex-col space-y-4  shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-screen-sm'>
+          <article className='flex flex-col gap-1 md:gap-3 shadow-lg border w-[90%] md:w-2/3 py-12 px-8 rounded-lg lg:max-w-[500px] lg:rounded-3xl'>
             <Sparkles className='mx-auto text-prime' />
             <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
               Create an account
             </h1>
-            <p className='text-center'>
-              Enter your information below to create your account
+            <p className='text-center text-xs md:text-base'>
+              Enter your information below to begin crafting your ceremonial
+              tray
             </p>
-            <section className='flex flex-col gap-5'>
+            <section className='flex flex-col gap-5 mt-4'>
               <InputField
                 name='username'
                 onInputChangeHandler={onInputChangeHandler}
