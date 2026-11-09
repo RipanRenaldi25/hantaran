@@ -1,15 +1,55 @@
-import './App.css';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router';
 import { Provider } from 'react-redux';
-import store from './states';
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import { RootLayout } from './components/layouts/RootLayout';
 import { Toaster } from './components/ui/toaster';
+import store from './states';
+import { MainPage } from './page/MainPage';
+import AboutPage from './page/AboutPage';
+import ContactPage from './page/ContactPage';
+import CollectionPage from './page/CollectionPage';
+import Login from './page/Login';
+import Register from './page/Register';
+import PricesPage from './page/PricesPage';
+
+const navItems = [
+  {
+    title: 'Beranda',
+    href: '/',
+  },
+  {
+    title: 'Koleksi',
+    href: '/collection',
+  },
+  {
+    title: 'Harga',
+    href: '/prices',
+  },
+  {
+    title: 'Tentang Kami',
+    href: '/about',
+  },
+  {
+    title: 'Kontak',
+    href: '/contact',
+  },
+];
 
 function App() {
   return (
     <Provider store={store}>
-      <RouterProvider router={router}></RouterProvider>
       <Toaster />
+      <Routes>
+        <Route element={<RootLayout navItems={navItems} />}>
+          <Route path='/' element={<MainPage />} />
+          <Route path='/about' element={<AboutPage />} />
+          <Route path='/contact' element={<ContactPage />} />
+          <Route path='/collection' element={<CollectionPage />} />
+          <Route path='/prices' element={<PricesPage />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+        </Route>
+      </Routes>
     </Provider>
   );
 }

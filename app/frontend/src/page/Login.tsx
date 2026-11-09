@@ -59,24 +59,20 @@ const Login = () => {
     setLoginField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
   return (
-    <div className='mt-4 '>
+    <div className='flex flex-1 flex-col'>
       <form
-        className='flex items-center flex-col relative'
+        className='flex items-center flex-col relative m-auto w-full'
         onSubmit={handleLogin}
       >
         <article className='flex flex-col shadow-lg w-[90%] sm:w-[70%] lg:max-w-[500px] py-12 px-6 border rounded-lg lg:rounded-3xl'>
           <div className='space-y-3'>
             <div className='text-center h-0.5 w-10 bg-tertiary mx-auto'></div>
-            <p className='text-sm text-center m-0 p-0 text-prime lg:text-lg'>
-              CEREMONIAL TRAY
-            </p>
           </div>
-          <h1 className='text-center font-bold text-2xl lg:text-3xl'>
+          <h1 className='text-center font-bold text-2xl lg:text-3xl text-prime'>
             Masuk ke Akun
           </h1>
           <p className='text-center text-[0.7rem] text-black/50 mt-2 mb-3 lg:text-base'>
             Masukkan username atau email dan kata sandi Anda untuk melanjutkan
-            kurasi seserahan.
           </p>
           <section className='flex flex-col gap-5'>
             <InputField

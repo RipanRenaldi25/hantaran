@@ -93,7 +93,7 @@ const Register = () => {
     setRegisterField((prevValue) => ({ ...prevValue, [key]: e.target.value }));
   };
   return (
-    <article className='mt-8'>
+    <article>
       <section>
         <form
           className='flex justify-center items-center flex-col relative'

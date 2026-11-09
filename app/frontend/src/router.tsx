@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <LandingPage />, // LandingPage sebagai parent route
+    element: <LandingPage />,
     children: [
       {
         path: '',
