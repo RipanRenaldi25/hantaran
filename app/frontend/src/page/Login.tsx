@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../components/ui/button';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -6,7 +6,8 @@ import InputField from '@/components/InputField';
 import { getUserLogedin, login } from '@/feature/user';
 import { useToast } from '@/components/ui/use-toast';
 import { useAppDispatch } from '@/states';
-import { setUserLogedIn } from '@/states/UserLogedInState';
+import { asyncLoginUser, setUserLogedIn } from '@/states/UserLogedInState';
+import { useSelector } from 'react-redux';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +18,19 @@ const Login = () => {
     password: string;
   }>({ uniqueIdentity: '', password: '' });
   const [isShowPassword, setIsShowPassword] = useState<boolean>();
+  const userLogedIn = useSelector((states) => (states as any).userLogedIn);
+  console.log({ userLogeddddIn: userLogedIn });
+
+  useEffect(() => {
+    if (!userLogedIn) {
+      return;
+    }
+    if (userLogedIn.role === 'admin') {
+      navigate('/dashboard');
+    } else if (userLogedIn.role === 'user') {
+      navigate('/user');
+    }
+  }, [userLogedIn.role]);
 
   const handleLogin = async (e: React.FormEvent) => {
     try {
@@ -29,20 +43,7 @@ const Login = () => {
         });
         return;
       }
-      const data = await login(loginField.uniqueIdentity, loginField.password);
-
-      if (!data) {
-        throw new Error('User is not login');
-      }
-      const user = await getUserLogedin();
-      dispatch(setUserLogedIn(user));
-      localStorage.setItem('ROLE', user.role);
-      if (user.role === 'admin') {
-        navigate('/dashboard', { state: user });
-        return;
-      } else {
-        navigate('/user', { state: user });
-      }
+      dispatch(asyncLoginUser(loginField));
     } catch (err) {
       toast({
         title: 'Login error',

@@ -12,9 +12,11 @@ export const login = async (uniqueIdentity: string, password: string) => {
     const {
       data: { data },
     } = response;
-    const { accessToken } = data;
-    localStorage.setItem('ACCESS_TOKEN', accessToken);
-    return data;
+    const { accessToken, refreshToken } = data;
+    return {
+      accessToken,
+      refreshToken,
+    };
   } catch (err) {
     throw new Error(
       (err as { response: { data: { message: string } } }).response.data

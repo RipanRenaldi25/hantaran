@@ -1,4 +1,4 @@
-import { getUserLogedin } from '@/feature/user';
+import { getUserLogedin, login } from '@/feature/user';
 import { getAccessToken } from '@/lib/utils';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -18,8 +18,29 @@ export const asyncGetUserProfile = createAsyncThunk(
       if (!token) {
         throw new Error('User not login yet');
       }
-      const data = await getUserLogedin();
-      dispatch(setUserLogedIn(data));
+      const user = await getUserLogedin();
+      dispatch(setUserLogedIn(user));
+    } catch (err) {
+      return rejectWithValue(err as { message: string });
+    }
+  },
+);
+
+export const asyncLoginUser = createAsyncThunk(
+  'user/loginUser',
+  async (
+    payload: { uniqueIdentity: string; password: string },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const { password, uniqueIdentity } = payload;
+      const { accessToken, refreshToken } = await login(
+        uniqueIdentity,
+        password,
+      );
+      localStorage.setItem('ACCESS_TOKEN', accessToken);
+      const user = await getUserLogedin();
+      dispatch(setUserLogedIn(user));
     } catch (err) {
       return rejectWithValue(err as { message: string });
     }
