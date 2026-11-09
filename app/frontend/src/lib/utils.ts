@@ -44,3 +44,8 @@ export const formatTimer = (timer: number): string => {
 
   return returnedTimer;
 };
+
+export const getAccessToken = () => {
+  const accessToken = localStorage.getItem('ACCESS_TOKEN');
+  return accessToken;
+};

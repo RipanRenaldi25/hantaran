@@ -26,13 +26,13 @@ export const userSlice = createSlice({
   reducers: {
     setUserLoginWithProfile: (
       state,
-      action: PayloadAction<IUserWithProfileAndAddress>
+      action: PayloadAction<IUserWithProfileAndAddress>,
     ) => {
       state.userLoginWithProfile = action.payload;
     },
     setUserLoginProps: (
       state,
-      action: PayloadAction<{ key: string; value: string }>
+      action: PayloadAction<{ key: string; value: string }>,
     ) => {
       (state.userLoginWithProfile as any)[action.payload.key] =
         action.payload.value;

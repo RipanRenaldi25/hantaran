@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getUserLogedin } from '@/feature/user';
+import { getAccessToken } from '@/lib/utils';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type initStateType = {
   id: string;
@@ -7,6 +9,22 @@ type initStateType = {
 };
 
 const initialState: initStateType = { id: '', email: '', role: '' };
+
+export const asyncGetUserProfile = createAsyncThunk(
+  'user/getUserProfile',
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error('User not login yet');
+      }
+      const data = await getUserLogedin();
+      dispatch(setUserLogedIn(data));
+    } catch (err) {
+      return rejectWithValue(err as { message: string });
+    }
+  },
+);
 
 const userLogedInSlice = createSlice({
   name: 'userLogedIn',
@@ -18,7 +36,7 @@ const userLogedInSlice = createSlice({
         id: string;
         email: string;
         role: 'admin' | 'user' | '';
-      }>
+      }>,
     ) => {
       state = action.payload;
       return state;

@@ -30,7 +30,7 @@ const Login = () => {
         return;
       }
       const data = await login(loginField.uniqueIdentity, loginField.password);
-      console.log({ isLoginSucceed: data });
+
       if (!data) {
         throw new Error('User is not login');
       }
