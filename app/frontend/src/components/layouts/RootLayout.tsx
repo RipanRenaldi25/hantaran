@@ -13,7 +13,7 @@ export const RootLayout = ({ navItems }: IRootLayoutProps) => {
       <Toaster />
       <div className='flex flex-col min-h-screen bg-background text-foreground '>
         <Navigation navItems={navItems} />
-        <div className='flex flex-col flex-1'>
+        <div className='flex flex-col flex-1 bg-gradient-to-b from-secondary via-white to-secondary'>
           <Outlet />
         </div>
         <FooterComponent navItems={navItems} />

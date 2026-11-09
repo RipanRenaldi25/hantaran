@@ -110,27 +110,6 @@ export default function EmailVerificationPage() {
 
   return (
     <article className='bg-gradient-to-b from-secondary via-white to-secondary  min-h-screen relative'>
-      <header
-        className={`py-4 px-6 flex items-center justify-between bg-white/70 sticky top-0 backdrop:blur-sm z-10 ${scrolled && 'bg-white/95'} transition-colors duration-300 `}
-      >
-        <button
-          onClick={() => navigate(-1)}
-          type='button'
-          className='shadow-sm shadow-gray-400 p-1 rounded-full'
-        >
-          <ChevronLeft className='size-8 font-bold' />
-        </button>
-        <h1 className='text-primary font-semibold tracking-wider text-lg'>
-          HantaranByJoo
-        </h1>
-        <button
-          onClick={() => navigate('/profile')}
-          className='rounded-full bg-[#6C363F] text-white p-2'
-        >
-          <UserRound className='size-4' />
-        </button>
-      </header>
-
       <div className='md:max-w-screen-sm lg:max-w-screen-lg space-y-4 mx-auto mt-4'>
         <VerifyEmail email={email} />
 

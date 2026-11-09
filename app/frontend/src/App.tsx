@@ -12,6 +12,11 @@ import Login from './page/Login';
 import Register from './page/Register';
 import PricesPage from './page/PricesPage';
 import { AuthLayout } from './components/layouts/AuthLayout';
+import EmailVerificationPage from './page/EmailVerificationPage';
+import { VerifiedEmailPage } from './page/VerifiedEmailPage';
+import { ForgotPassword } from './page/ForgotPasswordPage';
+import { ForgotPasswordSuccess } from './page/ForgotPasswordSuccess';
+import { ResetPasswordPage } from './page/ResetPasswordPage';
 
 const navItems = [
   {
@@ -41,25 +46,24 @@ function App() {
     <Provider store={store}>
       <Toaster />
       <Routes>
-        <Route element={<RootLayout navItems={navItems} />}>
-          <Route path='/' element={<MainPage />} />
-          <Route path='/about' element={<AboutPage />} />
-          <Route path='/contact' element={<ContactPage />} />
-          <Route path='/collection' element={<CollectionPage />} />
-          <Route path='/prices' element={<PricesPage />} />
+        <Route path='/' element={<RootLayout navItems={navItems} />}>
+          <Route path='' element={<MainPage />} />
+          <Route path='about' element={<AboutPage />} />
+          <Route path='contact' element={<ContactPage />} />
+          <Route path='collection' element={<CollectionPage />} />
+          <Route path='prices' element={<PricesPage />} />
 
           <Route element={<AuthLayout />}>
-            <Route path='/register' element={<Register />} />
-            {/* <Route
-              path='/register'
-              element={
-                <div>
-                  <h1>Register</h1>
-                  <h1>Register2</h1>
-                </div>
-              }
-            /> */}
-            <Route path='/login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+            <Route path='login' element={<Login />} />
+            <Route path='verify-email' element={<EmailVerificationPage />} />
+            <Route path='verified-email' element={<VerifiedEmailPage />} />
+            <Route path='forgot-password' element={<ForgotPassword />} />
+            <Route
+              path='forgot-password/success'
+              element={<ForgotPasswordSuccess />}
+            />
+            <Route path='reset-password' element={<ResetPasswordPage />} />
           </Route>
         </Route>
       </Routes>
