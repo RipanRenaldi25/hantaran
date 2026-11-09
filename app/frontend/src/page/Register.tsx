@@ -95,14 +95,14 @@ const Register = () => {
   return (
     <section>
       <form
-        className=' relative gap-1 md:gap-3 shadow-lg border py-12 px-8 rounded-lg lg:rounded-3xl'
+        className='bg-white relative gap-1 md:gap-3 shadow-lg border py-12 px-8 rounded-lg lg:rounded-3xl'
         onSubmit={handleRegister}
       >
         <Sparkles className='mx-auto text-prime' />
-        <h1 className='text-center font-semibold text-2xl text-primary tracking-wide'>
+        <h1 className='text-center font-semibold text-xl lg:text-2xl text-primary tracking-wide'>
           Create an account
         </h1>
-        <p className='text-center text-xs md:text-base'>
+        <p className='text-center text-xs md:text-base text-black/50'>
           Enter your information below to begin crafting your ceremonial tray
         </p>
         <section className='flex flex-col gap-5 mt-4'>
@@ -188,10 +188,12 @@ const Register = () => {
 
             <div className='flex justify-center items-center mt-5'>
               <p className='flex items-center justify-center gap-1'>
-                <span className='flex-1 text-sm'>Already have an account?</span>
+                <span className='flex-1 text-sm lg:text-base'>
+                  Already have an account?
+                </span>
                 <NavLink
                   to='/login'
-                  className='font-bold text-prime border-b border-second hover:border-prime transition-colors duration-300'
+                  className='font-bold text-prime border-b border-second hover:border-prime transition-colors duration-300 text-sm lg:text-base'
                 >
                   Login
                 </NavLink>

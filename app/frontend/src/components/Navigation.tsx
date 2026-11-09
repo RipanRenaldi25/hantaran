@@ -26,21 +26,21 @@ export const Navigation = ({ navItems }: INavigationProps) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <header className='sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-border shadow-xs transition-all'>
+    <header className='sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-border shadow-xs transition-all box-border'>
       <nav
         aria-label='Navigasi Utama'
-        className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between'
+        className=' max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between'
       >
         <NavLink
           to='/'
-          className='flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl p-1.5 transition-all'
+          className='flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl p-1.5 transition-all whitespace-nowrap'
           aria-label='HantaranByJoo - Kembali ke Beranda'
         >
           <div className='w-11 h-11 rounded-full overflow-hidden border border-border shadow-xs group-hover:scale-105 transition-transform bg-white flex items-center justify-center'>
             <img
               src={logo}
               alt='Logo HantaranByJoo'
-              className='w-full h-full object-cover'
+              className='w-full h-full object-cover shrink-0'
               width={44}
               height={44}
             />

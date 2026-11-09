@@ -7,12 +7,12 @@ export const VerifiedEmailPage = () => {
   const [searchParams] = useSearchParams();
   const progress = Number(searchParams.get('progress')) || 2;
   return (
-    <article className='bg-gradient-to-b from-secondary via-white to-secondary  relative h-screen '>
+    <article className=' '>
       <section className='mt-4 p-4'>
         <Stepper current={progress} />
       </section>
 
-      <section className='rounded-xl px-8 py-6 border w-[90%] mx-auto flex flex-col lg:space-y-6'>
+      <section className='rounded-xl px-8 py-6 border w-[90%] mx-auto flex flex-col lg:space-y-6 bg-white'>
         <div className='size-28 border mx-auto rounded-full my-auto flex items-center justify-center bg-primary/5'>
           <div className='size-24 rounded-full border flex items-center justify-center bg-primary/10'>
             <div className='mx-auto rounded-full size-20 border flex items-center justify-center text-center bg-prime text-white relative shadow-[0_0_50px_0px] shadow-prime'>

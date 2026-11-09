@@ -1,3 +1,4 @@
+import { CustomerService } from '@/components/CustomerService';
 import Stepper from '@/components/Stepper';
 import { useToast } from '@/components/ui/use-toast';
 import { VerifyEmail } from '@/components/VerifyEmail';
@@ -17,7 +18,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function EmailVerificationPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const progress = Number(searchParams.get('progress')) || 0;
   const email = searchParams.get('email') || '';
@@ -109,42 +109,47 @@ export default function EmailVerificationPage() {
   };
 
   return (
-    <article className='bg-gradient-to-b from-secondary via-white to-secondary  min-h-screen relative'>
+    <article className='py-4 rounded-3xl  min-h-screen relative '>
       <div className='md:max-w-screen-sm lg:max-w-screen-lg space-y-4 mx-auto mt-4'>
         <VerifyEmail email={email} />
 
         <section className='mt-4 flex items-center justify-center'>
           <div className='w-[90%] rounded-2xl bg-white p-4 border '>
             <div className='flex justify-between items-center'>
-              <h1 className='text-[0.7rem] text-primary/80 tracking-wide font-semibold'>
-                MENUNGGU KONFIRMASI
-              </h1>
-              <div className='flex items-center justify-center gap-1 text-sm text-second'>
-                <ShieldAlert className='size-4' />
-                <h1 className='font-semibold'>Enkripsi 256-bit</h1>
+              <div className='flex items-center gap-0.5 bg-yellow-500/20 rounded-full py-1 px-2'>
+                <div className='size-2 rounded-full shrink-0 bg-orange-500'></div>
+                <h1 className='text-[0.65rem] text-prime tracking-wide font-semibold shrink-0'>
+                  MENUNGGU KONFIRMASI
+                </h1>
+              </div>
+              <div className='flex items-center justify-center gap-0.5 text-sm text-second'>
+                <ShieldAlert className='size-3 text-neutral opacity-50' />
+                <h1 className='font-semibold text-xs text-neutral opacity-50'>
+                  Enkripsi 256-bit
+                </h1>
               </div>
             </div>
-            <p className='text-center text-sm mt-4'>
-              Kami telah mengirimkan tautan verifikasi akun ke email Anda.
-              Silakan klik tombol di bawah untuk membuka Gmail atau aplikasi
-              email Anda dan konfirmasi akun dalam <strong>24 jam.</strong>
+            <p className='text-center text-xs mt-4'>
+              Kami telah mengirimkan tautan verifikasi akun ke email Anda. Klik
+              tombol di bawah untuk membuka Gmail untuk konfirmasi akun dalam{' '}
+              <strong>24 jam.</strong>
             </p>
             <a
               href='https://mail.google.com'
               target='_blank'
-              className='bg-prime w-full text-white py-2 px-4 rounded-full flex items-center justify-center gap-2 text-[0.75rem] mt-5 tracking-widest'
+              className='bg-prime w-full text-white py-2 px-3 rounded-full flex items-center justify-center gap-2 text-[0.75rem] mt-5 tracking-widest'
             >
-              <MailWarning />
-              <span>BUKA GMAIL & VERIFIKASI</span>
+              <MailWarning className='size-4' />
+              <span className='tracking-wider'>BUKA GMAIL</span>
             </a>
           </div>
         </section>
 
-        <section className='bg-primary/5 w-[90%] mx-auto rounded-2xl border px-4 py-4'>
+        <section className='bg-white w-[90%] mx-auto rounded-2xl border px-4 py-4'>
           <div className='flex items-center justify-between'>
-            <h1 className='font-semibold'>Belum Menerima Email?</h1>
-            <div className='flex gap-2 bg-gray-200 rounded-full py-1 px-3 items-center justify-center text-sm '>
-              <Clock className='size-4' />
+            <h1 className='font-semibold text-prime'>Belum Menerima Email?</h1>
+            <div className='flex gap-2 bg-black bg-opacity-5 rounded-full py-1 px-3 items-center justify-center text-sm '>
+              <Clock className='size-3' />
               <span>
                 {remaining >= 60
                   ? `0${Math.floor(remaining / 60)}:${remaining - 60}`
@@ -157,41 +162,25 @@ export default function EmailVerificationPage() {
             Periksa folder Spam atau Promosi, atau kirim ulang tautan setelah
             penghitung waktu berakhir.
           </p>
-          <div className='border-t-2 mt-2'>
+          <div className='mt-2'>
             <button
-              className={`w-full bg-prime text-white flex items-center justify-center gap-2 py-2 rounded-full ${(isDisabled || isResending) && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
+              className={`w-full bg-primary  text-white flex items-center justify-center gap-2 py-2 rounded-full ${(isDisabled || isResending) && 'opacity-70 cursor-not-allowed transition-colors duration-300 ease-linear'}`}
               type='button'
               disabled={isDisabled || isResending}
               onClick={resendHandler}
             >
-              <RefreshCcw className={`${isDisabled && 'animate-spin-slow'}`} />
-              <h1 className='text-sm tracking-widest'>
+              <RefreshCcw
+                className={`${isDisabled && 'animate-spin-slow'} size-4`}
+              />
+              <h1 className='text-xs tracking-widest'>
                 {isResending ? 'Sedang mengirim ulang' : 'Kirim Ulang Tautan'}
               </h1>
             </button>
           </div>
         </section>
-
-        <section className='rounded-2xl w-[90%] mx-auto border bg-white px-4 py-2'>
-          <div className='flex gap-3 justify-between items-center'>
-            <div className='flex gap-2 md:gap-3 items-center'>
-              <div className='p-2 rounded-full bg-primary'>
-                <Info className='bg-primary text-white size-4' />
-              </div>
-              <div>
-                <h1 className='font-semibold text-md'>Butuh bantuan?</h1>
-                <p className='text-sm tracking-wide'>
-                  Hubungi tim kami (09.00 - 21.00 WIB)
-                </p>
-              </div>
-            </div>
-            <div className='p-2 bg-prime text-white rounded-full flex items-center justify-center'>
-              <a href='https://wa.me/6282121087879' target='_blank'>
-                <MessageSquareMore className='size-4' />
-              </a>
-            </div>
-          </div>
-        </section>
+        <div className='w-[90%] mx-auto'>
+          <CustomerService />
+        </div>
 
         <section>
           <Stepper current={progress} />

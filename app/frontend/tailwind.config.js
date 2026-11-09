@@ -76,6 +76,11 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'spin-slow': 'spin 2s linear infinite',
       },
+      theme: {
+        screens: {
+          tablet: '640px',
+        },
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

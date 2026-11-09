@@ -60,13 +60,13 @@ const Login = () => {
   };
   return (
     <form
-      className='flex flex-col shadow-lg py-12 px-6 border rounded-lg lg:rounded-3xl'
+      className='bg-white flex flex-col shadow-lg py-12 px-6 border rounded-lg lg:rounded-3xl'
       onSubmit={handleLogin}
     >
       <div className='space-y-3'>
         <div className='text-center h-0.5 w-10 bg-tertiary mx-auto'></div>
       </div>
-      <h1 className='text-center font-bold text-2xl lg:text-3xl text-prime'>
+      <h1 className='text-center font-semibold text-xl lg:text-2xl text-primary'>
         Masuk ke Akun
       </h1>
       <p className='text-center text-[0.7rem] text-black/50 mt-2 mb-3 lg:text-base'>
@@ -91,7 +91,7 @@ const Login = () => {
           subtitle={
             <button
               type='button'
-              className='text-prime text-[0.55rem] lg:text-sm border-b border-primary font-semibold'
+              className='text-prime text-[0.65rem] lg:text-sm border-b border-primary font-semibold'
               onClick={() => navigate('/forgot-password')}
             >
               Lupa Sandi?
@@ -122,7 +122,7 @@ const Login = () => {
             <ArrowRight className='size-4 ml-2 lg:size-5' />
           </span>
         </Button>
-        <p className='text-sm text-center lg:text-base'>
+        <p className='text-xs text-center lg:text-base'>
           Belum Punya Akun?{' '}
           <NavLink to='/register' className='font-bold text-prime '>
             Daftar Sekarang
